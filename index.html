@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tamasha</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS VARIABLES (theme tokens) ────────────────────────── */
+    :root {
+      /* Accent */
+      --accent-from:    #7c3aed;
+      --accent-to:      #a855f7;
+      --accent-grad:    linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      /* Typography */
+      --heading-font:   'Manrope', sans-serif;
+      --body-font:      'Inter', sans-serif;
+      /* Page Theme */
+      --bg:             linear-gradient(180deg,#1a1040 0%,#0d0b1e 28%,#0a0a0a 100%);
+      --surface:        #1a1a2e;
+      --surface-ch:     radial-gradient(circle at center,#1e1b4b 0%,#0a0a0a 100%);
+      --nav-bg:         rgba(17,17,17,0.9);
+      --panel-bg:       #141414;
+      --text:           #ffffff;
+      --text-dim:       rgba(255,255,255,0.5);
+      --border-subtle:  rgba(255,255,255,0.1);
+      --surface-hover:  rgba(255,255,255,0.07);
+      --scrollbar-bg:   #0a0a0a;
+      --scrollbar-thumb:#333333;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      font-family: var(--body-font);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 70px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center;
+      padding: 0 40px; z-index: 200; gap: 20px;
+    }
+    .logo { flex-shrink: 0; }
+    .logo img { height: 46px; width: auto; object-fit: contain; }
+
+    .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; }
+    .nav-links a {
+      color: var(--text); text-decoration: none;
+      font-family: var(--body-font);
+      font-size: 14px; font-weight: 500;
+      opacity: 0.75; transition: opacity .2s; cursor: pointer; white-space: nowrap;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a.active { opacity: 1; font-weight: 700; }
+
+    /* ─── FONT SWITCHER PILLS ─────────────────────────────────── */
+    .font-switcher {
+      display: flex; align-items: center; gap: 6px;
+      flex: 1; justify-content: center;
+    }
+    .font-pill {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 5px 13px; border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      background: transparent; color: var(--text-dim);
+      cursor: pointer; transition: all .2s; white-space: nowrap;
+      line-height: 1.2;
+    }
+    .font-pill:hover { border-color: var(--text); color: var(--text); }
+    .font-pill.active {
+      background: var(--accent-grad);
+      border-color: transparent; color: #fff;
+    }
+    .font-pill-name { font-size: 13px; font-weight: 700; }
+    .font-pill-sub  { font-size: 9px; opacity: 0.75; letter-spacing: .03em; }
+
+    /* ─── NAV RIGHT ───────────────────────────────────────────── */
+    .nav-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+
+    .search-icon, .palette-btn {
+      cursor: pointer; opacity: .85; transition: opacity .2s;
+      background: none; border: none; color: var(--text);
+      display: flex; align-items: center;
+    }
+    .search-icon:hover, .palette-btn:hover { opacity: 1; }
+    .palette-btn .material-icons { font-size: 22px; }
+
+    .coins-pill {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,200,0,0.3);
+      border-radius: 20px; padding: 4px 12px 4px 8px;
+      cursor: pointer; transition: background .2s;
+    }
+    .coins-pill:hover { background: rgba(255,200,0,0.12); }
+    .coins-pill .material-icons { font-size: 18px; color: #facc15; }
+    .coins-pill .coin-count { font-size: 13px; font-weight: 600; color: #facc15; }
+
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid #fff;
+      background: linear-gradient(135deg,#c084fc,#818cf8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+
+    .pro-badge {
+      background: var(--accent-grad);
+      color: #fff; font-size: 10px; font-weight: 800;
+      padding: 3px 9px; border-radius: 5px;
+      letter-spacing: .06em;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .user-name { font-size: 13px; font-weight: 500; }
+
+    /* ─── THEME PANEL ─────────────────────────────────────────── */
+    .theme-panel {
+      position: fixed; top: 70px; right: 0;
+      width: 420px; max-height: calc(100vh - 70px);
+      background: var(--panel-bg);
+      border-left: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      border-bottom-left-radius: 16px;
+      padding: 24px;
+      z-index: 190;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+      box-shadow: -8px 0 40px rgba(0,0,0,.6);
+    }
+    .theme-panel.open { transform: translateX(0); }
+
+    .tp-heading {
+      font-family: var(--heading-font);
+      font-size: 18px; font-weight: 700;
+      color: #fff; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tp-close {
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-size: 20px; line-height: 1;
+      transition: color .2s;
+    }
+    .tp-close:hover { color: var(--text); }
+
+    .tp-section { margin-bottom: 24px; }
+    .tp-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    /* Font options */
+    .tp-font-grid { display: flex; flex-direction: column; gap: 8px; }
+    .tp-font-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--surface-hover);
+      cursor: pointer; transition: all .2s; text-align: left;
+    }
+    .tp-font-btn:hover { border-color: var(--text-dim); background: var(--surface-hover); }
+    .tp-font-btn.active { border-color: var(--accent-from); background: rgba(124,58,237,0.12); }
+    .tp-font-name { font-size: 18px; font-weight: 700; color: var(--text); }
+    .tp-font-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .tp-font-check { font-size: 18px; color: var(--accent-from); opacity: 0; }
+    .tp-font-btn.active .tp-font-check { opacity: 1; }
+
+    /* Color swatches */
+    .tp-color-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    }
+    .tp-swatch {
+      height: 52px; border-radius: 10px; cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .15s, border-color .15s;
+      position: relative; overflow: hidden;
+    }
+    .tp-swatch:hover { transform: scale(1.06); }
+    .tp-swatch.active { border-color: #fff; }
+    .tp-swatch-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.55);
+      font-size: 9px; font-weight: 700; color: #fff;
+      text-align: center; padding: 3px 2px;
+      letter-spacing: .04em;
+    }
+    .tp-swatch.active::after {
+      content: '✓';
+      position: absolute; top: 4px; right: 6px;
+      font-size: 13px; color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,.8);
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────── */
+    .hero {
+      margin-top: 70px;
+      position: relative; height: 520px; overflow: hidden;
+    }
+    .hero-track {
+      display: flex; height: 100%;
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
+    }
+    .hero-slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; }
+    .hero-slide > img.hero-bg {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
+    }
+    .hero-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.5) 45%,rgba(10,10,10,.05) 100%);
+    }
+    .hero-content { position: absolute; bottom: 64px; left: 80px; max-width: 480px; }
+    .hero-genre-badge {
+      display: inline-block;
+      background: linear-gradient(90deg,#f97316,#eab308);
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 4px; margin-bottom: 14px;
+    }
+    .hero-title {
+      font-family: var(--heading-font);
+      font-size: 46px; font-weight: 800; line-height: 1.08;
+      margin-bottom: 14px; color: #fffff1;
+      text-shadow: 0 2px 12px rgba(0,0,0,.5);
+    }
+    .hero-meta {
+      font-size: 13px; color: rgba(255,255,255,.72);
+      margin-bottom: 22px; display: flex; gap: 14px;
+      align-items: center; flex-wrap: wrap;
+    }
+    .hero-buttons { display: flex; gap: 12px; }
+    .btn-play {
+      background: #fff; color: #111; border: none;
+      padding: 11px 28px; border-radius: 6px;
+      font-family: var(--body-font);
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 7px;
+      transition: background .2s;
+    }
+    .btn-play:hover { background: #e5e5e5; }
+    .btn-info {
+      background: rgba(255,255,255,.18); color: #fff; border: none;
+      padding: 11px 22px; border-radius: 6px;
+      font-family: var(--body-font);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      backdrop-filter: blur(4px); transition: background .2s;
+    }
+    .btn-info:hover { background: rgba(255,255,255,.28); }
+
+    .hero-pro-tag {
+      position: absolute; top: 0; left: 0;
+      background: var(--accent-grad);
+      padding: 6px 18px 6px 12px;
+      border-bottom-right-radius: 8px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700;
+    }
+
+    .hero-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 33px; height: 33px; background: #282828;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 10; border: none;
+      transition: background .2s;
+    }
+    .hero-arrow:hover { background: #555; }
+    .hero-arrow.left { left: 14px; }
+    .hero-arrow.right { right: 14px; }
+
+    .hero-dots {
+      position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 7px; z-index: 10;
+    }
+    .hero-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,.35); cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .hero-dot.active { background: #fff; transform: scale(1.3); }
+
+    /* ─── SECTION ──────────────────────────────────────────────── */
+    .section { padding: 28px 60px 4px; }
+    .section.hidden { display: none; }
+
+    .section-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--heading-font);
+      font-size: 22px; font-weight: 700;
+      color: var(--text); letter-spacing: .01em;
+    }
+    .view-more {
+      font-size: 13px; color: var(--text-dim); cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      text-decoration: none; transition: color .2s;
+    }
+    .view-more:hover { color: var(--text); }
+
+    .cards-row {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none; -ms-overflow-style: none;
+      padding: 28px 4px 12px;
+      margin-top: -28px;
+    }
+    .cards-row::-webkit-scrollbar { display: none; }
+
+    /* ─── CARD WRAPPER ─────────────────────────────────────────── */
+    .card-wrap {
+      flex-shrink: 0; position: relative;
+      overflow: visible;
+      transition: transform .22s, box-shadow .22s;
+      cursor: pointer; border-radius: 6px;
+    }
+    .card-wrap:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 40px rgba(0,0,0,.7);
+      z-index: 10;
+    }
+    .card-wrap.portrait  { width: 180px; height: 270px; }
+    .card-wrap.landscape { width: 256px; height: 144px; }
+    .card-wrap.wide      { width: 220px; height: 148px; }
+
+    .card-inner {
+      width: 100%; height: 100%;
+      border-radius: 6px; overflow: hidden;
+      position: relative; background: var(--surface);
+    }
+    .card-inner img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .card-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 55%;
+      background: linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 100%);
+      pointer-events: none;
+    }
+    .pro-lock-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.5);
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .pro-lock-overlay .material-icons {
+      font-size: 42px; color: rgba(255,255,255,.9);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+    }
+
+    .card-badge {
+      position: absolute; top: 0; left: 0;
+      border-bottom-right-radius: 8px;
+      padding: 7px 14px 7px 10px;
+      font-size: 14px; font-weight: 900;
+      color: #fff; letter-spacing: .07em;
+      display: flex; align-items: center; gap: 5px;
+      background: var(--accent-grad);
+      pointer-events: none; z-index: 2;
+    }
+    .badge-icon { width: 18px; height: 13px; flex-shrink: 0; }
+
+    /* ─── LIVE TV ──────────────────────────────────────────────── */
+    .ch-bg {
+      position: absolute; inset: 0;
+      background: var(--surface-ch);
+    }
+    .card-inner .ch-logo {
+      position: absolute; inset: 0;
+      width: auto !important; height: auto !important;
+      max-width: 65%; max-height: 65%;
+      margin: auto; object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.5));
+    }
+    .live-pill {
+      position: absolute; top: 10px; right: 10px;
+      background: #e11d48;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 3px;
+      letter-spacing: .06em; z-index: 2;
+    }
+
+    /* ─── PROGRESS BAR ─────────────────────────────────────────── */
+    .progress-track {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: rgba(255,255,255,.2);
+    }
+    .progress-fill { height: 100%; background: var(--accent-from); border-radius: 2px; }
+
+    /* ─── SCROLL ENTRANCE ANIMATIONS ─────────────────────────── */
+    /* Only hidden when JS marks them for animation (off-screen on load) */
+    .will-animate {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.65s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cards-row.will-animate { transition-delay: 0.1s; }
+    .will-animate.anim-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    /* ─── FOOTER ───────────────────────────────────────────────── */
+    .footer-space { height: 70px; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+    /* ─── PAGE THEME GRID ─────────────────────────────────────── */
+    .tp-theme-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    }
+    .tp-theme-card {
+      border-radius: 10px; overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer; transition: transform .15s, border-color .15s;
+      position: relative;
+    }
+    .tp-theme-card:hover { transform: scale(1.04); }
+    .tp-theme-card.active { border-color: #fff; }
+    .tp-theme-card.active::after {
+      content: '✓';
+      position: absolute; top: 5px; right: 7px;
+      font-size: 11px; font-weight: 900; color: #fff;
+      background: rgba(0,0,0,0.5); border-radius: 50%;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 18px; text-align: center;
+    }
+    .tp-theme-preview { height: 52px; width: 100%; }
+    .tp-theme-name {
+      font-size: 10px; font-weight: 700; text-align: center;
+      padding: 5px 4px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--text); background: var(--surface-hover);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════ NAVBAR ════════════════════════ -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="Tamashalogo.png" alt="Tamasha" />
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" class="active" data-filter="home">Home</a></li>
+    <li><a href="#" data-filter="tv-shows">TV Shows</a></li>
+    <li><a href="#" data-filter="movies">Movies</a></li>
+    <li><a href="#" data-filter="live-tv">Live TV</a></li>
+    <li><a href="#" data-filter="shorts">Shorts</a></li>
+  </ul>
+
+  <!-- Font switcher pills -->
+  <div class="font-switcher" id="fontSwitcher">
+    <button class="font-pill active" data-font="premium"
+      style="font-family:'Manrope',sans-serif"
+      onclick="setFont('premium',this)">
+      <span class="font-pill-name">Manrope</span>
+      <span class="font-pill-sub">Premium · Cinematic</span>
+    </button>
+    <button class="font-pill" data-font="youth"
+      style="font-family:'Space Grotesk',sans-serif"
+      onclick="setFont('youth',this)">
+      <span class="font-pill-name">Space Grotesk</span>
+      <span class="font-pill-sub">Bold · Youth</span>
+    </button>
+    <button class="font-pill" data-font="editorial"
+      style="font-family:'Playfair Display',serif"
+      onclick="setFont('editorial',this)">
+      <span class="font-pill-name">Playfair Display</span>
+      <span class="font-pill-sub">Classic · Editorial</span>
+    </button>
+  </div>
+
+  <div class="nav-right">
+    <!-- Palette icon -->
+    <button class="palette-btn" onclick="toggleThemePanel()" title="Themes">
+      <span class="material-icons">palette</span>
+    </button>
+
+    <!-- Search -->
+    <div class="search-icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </div>
+
+    <!-- Coins -->
+    <div class="coins-pill">
+      <span class="material-icons">monetization_on</span>
+      <span class="coin-count">1,250</span>
+    </div>
+
+    <!-- Avatar + PRO -->
+    <div class="avatar">JD</div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <span class="user-name">John D.</span>
+      <div class="pro-badge">
+        <svg style="width:14px;height:10px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        PRO
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════ THEME PANEL ════════════════════════ -->
+<div class="theme-panel" id="themePanel">
+  <div class="tp-heading">
+    Appearance
+    <button class="tp-close" onclick="toggleThemePanel()">✕</button>
+  </div>
+
+  <!-- Page Theme -->
+  <div class="tp-section">
+    <div class="tp-label">Page Theme</div>
+    <div class="tp-theme-grid" id="tpThemeGrid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="tp-section">
+    <div class="tp-label">Typography</div>
+    <div class="tp-font-grid" id="tpFontGrid">
+      <button class="tp-font-btn active" data-font="premium" onclick="setFont('premium',null,this)">
+        <div>
+          <div class="tp-font-name" style="font-family:'Manrope',sans-serif">Manrope</div>
+          <div class="tp-font-meta">Premium · Cinematic · Apple TV+ feel</div>
+        </div>
+        <span class="material-icons tp-font-check">check_circle</span>
+      </button>
+      <button class="tp-font-btn" data-font="youth" onclick="setFont('youth',null,this)">
+        <div>
+          <div class="tp-font-name" style="font-family:'Space Grotesk',sans-serif">Space Grotesk</div>
+          <div class="tp-font-meta">Bold · Youth · Hotstar / JioCinema feel</div>
+        </div>
+        <span class="material-icons tp-font-check">check_circle</span>
+      </button>
+      <button class="tp-font-btn" data-font="editorial" onclick="setFont('editorial',null,this)">
+        <div>
+          <div class="tp-font-name" style="font-family:'Playfair Display',serif">Playfair Display</div>
+          <div class="tp-font-meta">Classic · Editorial · Mubi / Criterion feel</div>
+        </div>
+        <span class="material-icons tp-font-check">check_circle</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Accent Color -->
+  <div class="tp-section">
+    <div class="tp-label">Accent Color — Gradients</div>
+    <div class="tp-color-grid" id="tpColorGrid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <div class="tp-section">
+    <div class="tp-label">Accent Color — Solid</div>
+    <div class="tp-color-grid" id="tpSolidGrid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ HERO ════════════════════════ -->
+<section class="hero" id="heroSection">
+  <div class="hero-track" id="heroTrack"></div>
+  <button class="hero-arrow left" onclick="heroSlide(-1)">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="hero-arrow right" onclick="heroSlide(1)">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="hero-dots" id="heroDots"></div>
+</section>
+
+<!-- ════════════════ CONTINUE WATCHING ════════════════ -->
+<section class="section" data-category="continue" id="sec-continue">
+  <div class="section-header">
+    <h2 class="section-title">Continue Watching</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="continueRow"></div>
+</section>
+
+<!-- ════════════════════ MOVIES ════════════════════ -->
+<section class="section" data-category="movies" id="sec-movies">
+  <div class="section-header">
+    <h2 class="section-title">Movies</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="moviesRow"></div>
+</section>
+
+<!-- ════════════════════ LIVE TV ════════════════════ -->
+<section class="section" data-category="live-tv" id="sec-live">
+  <div class="section-header">
+    <h2 class="section-title">Live TV</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="liveTVRow"></div>
+</section>
+
+<!-- ═══════════════ TOP RATED MOVIES ═══════════════ -->
+<section class="section" data-category="movies" id="sec-top-movies">
+  <div class="section-header">
+    <h2 class="section-title">Top Rated Movies</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="topMoviesRow"></div>
+</section>
+
+<!-- ════════════════ TV SHOWS ════════════════════ -->
+<section class="section" data-category="tv-shows" id="sec-tvshows">
+  <div class="section-header">
+    <h2 class="section-title">TV Shows</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="tvShowsRow"></div>
+</section>
+
+<!-- ══════════════ TOP RATED TV SHOWS ══════════════ -->
+<section class="section" data-category="tv-shows" id="sec-top-tvshows">
+  <div class="section-header">
+    <h2 class="section-title">Top Rated TV Shows</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="topTVRow"></div>
+</section>
+
+<!-- ══════════════ LIVE SPORTS ══════════════ -->
+<section class="section" data-category="sports" id="sec-live-sports">
+  <div class="section-header">
+    <h2 class="section-title">Live Sports</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="liveSportsRow"></div>
+</section>
+
+<!-- ══════════════ HIGHLIGHTS ══════════════ -->
+<section class="section" data-category="sports" id="sec-highlights">
+  <div class="section-header">
+    <h2 class="section-title">Highlights</h2>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="highlightsRow"></div>
+</section>
+
+<div class="footer-space"></div>
+
+<script>
+// ─── PATHS ───────────────────────────────────────────────────────
+const B = "Tamasha%20Baneers%202/";
+const C = "Live%20Channel%20logos/";
+const S = "Sports/";
+function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
+function cp(file)         { return C + encodeURIComponent(file); }
+function sp(file)         { return S + encodeURIComponent(file); }
+
+// ─── WAVE SVG ────────────────────────────────────────────────────
+const WAVE  = `<svg class="badge-icon" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const BADGE = `<div class="card-badge">${WAVE}PRO</div>`;
+const LOCK  = `<div class="pro-lock-overlay"><span class="material-icons">lock</span></div>`;
+
+// ─── FONT VARIANTS ───────────────────────────────────────────────
+const FONTS = {
+  premium:   { heading: "'Manrope', sans-serif",        body: "'Inter', sans-serif" },
+  youth:     { heading: "'Space Grotesk', sans-serif",  body: "'Inter', sans-serif" },
+  editorial: { heading: "'Playfair Display', serif",    body: "'Inter', sans-serif" },
+};
+
+function setFont(key, navBtn, panelBtn) {
+  const f = FONTS[key];
+  const root = document.documentElement;
+  root.style.setProperty('--heading-font', f.heading);
+  root.style.setProperty('--body-font',    f.body);
+
+  // sync navbar pills
+  document.querySelectorAll('.font-pill').forEach(p =>
+    p.classList.toggle('active', p.dataset.font === key));
+
+  // sync panel buttons
+  document.querySelectorAll('.tp-font-btn').forEach(p =>
+    p.classList.toggle('active', p.dataset.font === key));
+}
+
+// ─── PAGE THEMES ─────────────────────────────────────────────────
+const PAGE_THEMES = [
+  {
+    id: 'dark', name: 'Dark',
+    preview: 'linear-gradient(135deg,#1a1040 0%,#0d0b1e 55%,#0a0a0a 100%)',
+    vars: {
+      '--bg':             'linear-gradient(180deg,#1a1040 0%,#0d0b1e 28%,#0a0a0a 100%)',
+      '--surface':        '#1a1a2e',
+      '--surface-ch':     'radial-gradient(circle at center,#1e1b4b 0%,#0a0a0a 100%)',
+      '--nav-bg':         'rgba(17,17,17,0.9)',
+      '--panel-bg':       '#141414',
+      '--text':           '#ffffff',
+      '--text-dim':       'rgba(255,255,255,0.5)',
+      '--border-subtle':  'rgba(255,255,255,0.1)',
+      '--surface-hover':  'rgba(255,255,255,0.07)',
+      '--scrollbar-bg':   '#0a0a0a',
+      '--scrollbar-thumb':'#333333',
+    }
+  },
+  {
+    id: 'amoled', name: 'AMOLED',
+    preview: '#000000',
+    vars: {
+      '--bg':             '#000000',
+      '--surface':        '#111111',
+      '--surface-ch':     'radial-gradient(circle at center,#1a1a1a 0%,#000 100%)',
+      '--nav-bg':         'rgba(0,0,0,0.98)',
+      '--panel-bg':       '#080808',
+      '--text':           '#ffffff',
+      '--text-dim':       'rgba(255,255,255,0.5)',
+      '--border-subtle':  'rgba(255,255,255,0.08)',
+      '--surface-hover':  'rgba(255,255,255,0.06)',
+      '--scrollbar-bg':   '#000000',
+      '--scrollbar-thumb':'#222222',
+    }
+  },
+  {
+    id: 'cinema', name: 'Cinema',
+    preview: 'linear-gradient(135deg,#1a0e00 0%,#0f0900 55%,#080500 100%)',
+    vars: {
+      '--bg':             'linear-gradient(180deg,#1a0e00 0%,#0f0900 28%,#080500 100%)',
+      '--surface':        '#1e1300',
+      '--surface-ch':     'radial-gradient(circle at center,#2a1c00 0%,#0a0500 100%)',
+      '--nav-bg':         'rgba(20,12,0,0.9)',
+      '--panel-bg':       '#130c00',
+      '--text':           '#fff8ef',
+      '--text-dim':       'rgba(255,240,210,0.5)',
+      '--border-subtle':  'rgba(255,220,150,0.1)',
+      '--surface-hover':  'rgba(255,200,100,0.07)',
+      '--scrollbar-bg':   '#080500',
+      '--scrollbar-thumb':'#3a2a00',
+    }
+  },
+  {
+    id: 'ocean', name: 'Ocean',
+    preview: 'linear-gradient(135deg,#001833 0%,#00102a 55%,#000b1e 100%)',
+    vars: {
+      '--bg':             'linear-gradient(180deg,#001833 0%,#00102a 28%,#000b1e 100%)',
+      '--surface':        '#001428',
+      '--surface-ch':     'radial-gradient(circle at center,#002a4a 0%,#000b1e 100%)',
+      '--nav-bg':         'rgba(0,8,25,0.9)',
+      '--panel-bg':       '#000b1e',
+      '--text':           '#e8f4ff',
+      '--text-dim':       'rgba(200,230,255,0.5)',
+      '--border-subtle':  'rgba(100,180,255,0.1)',
+      '--surface-hover':  'rgba(100,180,255,0.06)',
+      '--scrollbar-bg':   '#000b1e',
+      '--scrollbar-thumb':'#003366',
+    }
+  },
+  {
+    id: 'forest', name: 'Forest',
+    preview: 'linear-gradient(135deg,#071a0e 0%,#040f08 55%,#020805 100%)',
+    vars: {
+      '--bg':             'linear-gradient(180deg,#071a0e 0%,#040f08 28%,#020805 100%)',
+      '--surface':        '#0d2416',
+      '--surface-ch':     'radial-gradient(circle at center,#0e2d18 0%,#020805 100%)',
+      '--nav-bg':         'rgba(4,10,6,0.9)',
+      '--panel-bg':       '#020805',
+      '--text':           '#e8ffe0',
+      '--text-dim':       'rgba(180,255,160,0.5)',
+      '--border-subtle':  'rgba(100,200,100,0.1)',
+      '--surface-hover':  'rgba(100,200,100,0.06)',
+      '--scrollbar-bg':   '#020805',
+      '--scrollbar-thumb':'#0e3318',
+    }
+  },
+  {
+    id: 'light', name: 'Light',
+    preview: 'linear-gradient(135deg,#f0effa 0%,#e8e6f5 55%,#f0f0f0 100%)',
+    vars: {
+      '--bg':             'linear-gradient(180deg,#f0effa 0%,#e8e6f5 28%,#f0f0f0 100%)',
+      '--surface':        '#ffffff',
+      '--surface-ch':     'radial-gradient(circle at center,#e8e6f8 0%,#f0eeff 100%)',
+      '--nav-bg':         'rgba(250,250,255,0.92)',
+      '--panel-bg':       '#f5f5f8',
+      '--text':           '#0f0f1a',
+      '--text-dim':       'rgba(0,0,20,0.5)',
+      '--border-subtle':  'rgba(0,0,0,0.1)',
+      '--surface-hover':  'rgba(0,0,0,0.05)',
+      '--scrollbar-bg':   '#e0e0e8',
+      '--scrollbar-thumb':'#aaaaaa',
+    }
+  },
+];
+
+let activePageThemeId = 'dark';
+
+function applyPageTheme(id) {
+  const theme = PAGE_THEMES.find(t => t.id === id);
+  if (!theme) return;
+  activePageThemeId = id;
+  const root = document.documentElement;
+  Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+  document.querySelectorAll('.tp-theme-card').forEach(c =>
+    c.classList.toggle('active', c.dataset.theme === id));
+}
+
+function buildThemes() {
+  const grid = document.getElementById('tpThemeGrid');
+  PAGE_THEMES.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'tp-theme-card' + (i === 0 ? ' active' : '');
+    el.dataset.theme = t.id;
+    el.innerHTML = `<div class="tp-theme-preview" style="background:${t.preview}"></div><div class="tp-theme-name">${t.name}</div>`;
+    el.onclick = () => applyPageTheme(t.id);
+    grid.appendChild(el);
+  });
+}
+buildThemes();
+
+// ─── COLOR THEMES ────────────────────────────────────────────────
+const GRADIENTS = [
+  { label: 'Default',       from: '#7c3aed', to: '#a855f7' },
+  { label: 'Rose → Indigo', from: '#F44369', to: '#3E3B92' },
+  { label: 'Crimson Night', from: '#C11E38', to: '#220B34' },
+  { label: 'Neon Fusion',   from: '#F90C71', to: '#30001A' },
+  { label: 'Cosmic Iris',   from: '#8711C1', to: '#2472FC' },
+  { label: 'Steel Horizon', from: '#243748', to: '#4B749F' },
+  { label: 'Nebula',        from: '#0E0725', to: '#E536AB' },
+  { label: 'Ocean Deep',    from: '#08203E', to: '#557C93' },
+];
+
+const SOLIDS = [
+  { label: 'Deep Purple', color: '#7c3aed' },
+  { label: 'Crimson',     color: '#C11E38' },
+  { label: 'Hot Pink',    color: '#F90C71' },
+  { label: 'Royal Blue',  color: '#2472FC' },
+  { label: 'Teal',        color: '#557C93' },
+  { label: 'Violet',      color: '#8711C1' },
+  { label: 'Magenta',     color: '#E536AB' },
+  { label: 'Navy',        color: '#0A1647' },
+];
+
+let activeSwatchEl = null;
+
+function applyAccent(from, to) {
+  const r = document.documentElement;
+  r.style.setProperty('--accent-from', from);
+  r.style.setProperty('--accent-to',   to);
+  // update computed gradient property
+  r.style.setProperty('--accent-grad',
+    `linear-gradient(90deg, ${from}, ${to})`);
+}
+
+function buildSwatches() {
+  const gradGrid  = document.getElementById('tpColorGrid');
+  const solidGrid = document.getElementById('tpSolidGrid');
+
+  GRADIENTS.forEach((g, i) => {
+    const el = document.createElement('div');
+    el.className = 'tp-swatch' + (i === 0 ? ' active' : '');
+    el.style.background = `linear-gradient(135deg, ${g.from}, ${g.to})`;
+    el.innerHTML = `<div class="tp-swatch-label">${g.label}</div>`;
+    el.onclick = () => {
+      document.querySelectorAll('.tp-swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      applyAccent(g.from, g.to);
+    };
+    gradGrid.appendChild(el);
+    if (i === 0) activeSwatchEl = el;
+  });
+
+  SOLIDS.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'tp-swatch';
+    el.style.background = s.color;
+    el.innerHTML = `<div class="tp-swatch-label">${s.label}</div>`;
+    el.onclick = () => {
+      document.querySelectorAll('.tp-swatch').forEach(sw => sw.classList.remove('active'));
+      el.classList.add('active');
+      applyAccent(s.color, s.color);
+    };
+    solidGrid.appendChild(el);
+  });
+}
+buildSwatches();
+
+// ─── THEME PANEL TOGGLE ──────────────────────────────────────────
+function toggleThemePanel() {
+  document.getElementById('themePanel').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const panel  = document.getElementById('themePanel');
+  const btn    = document.querySelector('.palette-btn');
+  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+// ─── DATA ────────────────────────────────────────────────────────
+const heroMovies = [
+  { folder:"SPIDER-MAN (2002)",              banner:"banner.jpg",  title:"Spider-Man",                    year:"2002", rating:"7.3", genre:"Action · Adventure" },
+  { folder:"BLADE RUNNER 2049",              banner:"Banner.jpg",  title:"Blade Runner 2049",             year:"2017", rating:"8.0", genre:"Sci-Fi · Thriller"   },
+  { folder:"JUMANJI_ WELCOME TO THE JUNGLE", banner:"banner.jpg",  title:"Jumanji: Welcome to the Jungle",year:"2017", rating:"6.9", genre:"Action · Comedy"     },
+];
+const continueData = [
+  { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", progress:62, pro:false},
+  { folder:"ZOMBIELAND_ DOUBLE TAP",                thumb:"thumbnail.jpg", progress:35, pro:true               },
+  { folder:"SPIDER-MAN 3 (2007)",                   thumb:"thumnail.jpg",  progress:80, pro:false},
+  { folder:"JUMANJI_ THE NEXT LEVEL",               thumb:"thumbnail.jpg", progress:20, pro:true               },
+  { folder:"EQUALIZER, THE (FEATURE)",              thumb:"thumbnail.jpg", progress:55, pro:false              },
+  { folder:"HANNA (2011)",                          thumb:"Thumbnail.jpg", progress:45, pro:true               },
+];
+const moviesData = [
+  { folder:"HOTEL TRANSYLVANIA",   thumb:"thumbnail.jpg", pro:true},
+  { folder:"BAD BOYS (1995)",       thumb:"thumbnail.jpg", pro:false},
+  { folder:"GLADIATOR (1992)",      thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"GODZILLA (1998)",       thumb:"Thumbnail.jpg", pro:false},
+  { folder:"GHOSTBUSTERS (2016)",   thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"JUMANJI (1995)",        thumb:"thumbnail.jpg", pro:false              },
+  { folder:"BABY DRIVER",           thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"ZOMBIELAND (2009)",     thumb:"thumbnail.jpg", pro:false},
+];
+const liveChannels = [
+  { file:"ary-digital-live-logo.webp",      name:"ARY Digital"       },
+  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment" },
+  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray"       },
+  { file:"dawn-news-live.webp",             name:"Dawn News"         },
+  { file:"samaa-tv-live.webp",              name:"Samaa TV"          },
+  { file:"express-entertainment-live.webp", name:"Express Ent."      },
+  { file:"bol-entertainment-live.webp",     name:"BOL Entertainment" },
+  { file:"geo-news-live.webp",              name:"Geo News"          },
+];
+const topMoviesData = [
+  { folder:"CAPTAIN PHILLIPS",                 thumb:"thumbnail.jpg", pro:true},
+  { folder:"SOCIAL NETWORK, THE",              thumb:"thumbnail.jpg", pro:false              },
+  { folder:"PURSUIT OF HAPPYNESS, THE (2006)", thumb:"thumbnail.jpg", pro:true},
+  { folder:"BLACK HAWK DOWN",                  thumb:"thumbnail.jpg", pro:false},
+  { folder:"HANNA (2011)",                     thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"CONCUSSION",                       thumb:"Thumbnail.jpg", pro:false              },
+  { folder:"JERRY MAGUIRE",                    thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"DA VINCI CODE, THE",               thumb:"Thumbnail.jpg", pro:false},
+];
+const tvShowsData = [
+  { folder:"SPIDER-MAN_ FAR FROM HOME",  thumb:"thumnail.jpg",  pro:true},
+  { folder:"SPIDER-MAN_ HOMECOMING",     thumb:"thumnail.jpg",  pro:false              },
+  { folder:"HOTEL TRANSYLVANIA 2",       thumb:"thumbnail.jpg", pro:true},
+  { folder:"BAD BOYS II",                thumb:"thumbnail.jpg", pro:false              },
+  { folder:"UNDERWORLD EVOLUTION",       thumb:"thumbnail.jpg", pro:true               },
+  { folder:"EVIL DEAD (2013)",           thumb:"Thumbnail.jpg", pro:false},
+  { folder:"ANGRY BIRDS MOVIE, THE",     thumb:"Thumbnail.jpg", pro:true               },
+  { folder:"SPIDER-MAN 2 (2004)",        thumb:"thumnail.jpg",  pro:false},
+];
+const topTVData = [
+  { folder:"SPIDER-MAN_ INTO THE SPIDER-VERSE", thumb:"thumbnails.jpg", pro:true},
+  { folder:"JUMANJI_ THE NEXT LEVEL",           thumb:"thumbnail.jpg",  pro:false},
+  { folder:"ZOMBIELAND_ DOUBLE TAP",            thumb:"thumbnail.jpg",  pro:true               },
+  { folder:"EQUALIZER, THE (FEATURE)",          thumb:"thumbnail.jpg",  pro:false              },
+  { folder:"GHOSTBUSTERS (2016)",               thumb:"Thumbnail.jpg",  pro:true},
+  { folder:"BAD BOYS (1995)",                   thumb:"thumbnail.jpg",  pro:false              },
+  { folder:"CAPTAIN PHILLIPS",                  thumb:"thumbnail.jpg",  pro:true               },
+  { folder:"CONCUSSION",                        thumb:"Thumbnail.jpg",  pro:false              },
+];
+
+const liveSportsData = [
+  { file: 'AFG-VS-SA(300x450).jpg.jpeg',                               label: 'AFG vs SA',        live: true,  pro: false },
+  { file: 'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',             label: 'Live Match',        live: true,  pro: false },
+  { file: 'WhatsApp Image 2026-04-30 at 4.05.20 PM (1).jpeg',         label: 'Live Now',          live: true,  pro: true  },
+  { file: 'CP 2.png',                                                   label: 'Cricket Live',      live: true,  pro: false },
+  { file: 'CP(300 x 450 px).png',                                       label: 'Premier League',    live: true,  pro: true  },
+  { file: 'Channel Posters (87).png',                                   label: 'Sports Event',      live: true,  pro: false },
+];
+
+const highlightsData = [
+  { file: 'WhatsApp Image 2026-01-13 at 11.32.06 PM (1).jpeg',        label: 'Match Highlights',  pro: false },
+  { file: 'WhatsApp Image 2026-02-06 at 2.14.48 PM (4).jpeg',         label: 'Best Moments',      pro: false },
+  { file: 'WhatsApp Image 2026-02-10 at 5.41.24 PM (1).jpeg',         label: 'Top Goals',         pro: true  },
+  { file: 'WhatsApp Image 2026-02-12 at 4.13.22 PM (1).jpeg',         label: 'Weekly Recap',      pro: false },
+  { file: 'WhatsApp Image 2026-02-13 at 11.37.05 PM.jpeg',            label: 'Classic Match',     pro: true  },
+  { file: 'WhatsApp Image 2026-03-18 at 3.23.01 PM (2).jpeg',         label: 'Super Over',        pro: false },
+];
+
+// ─── HERO ────────────────────────────────────────────────────────
+let heroIdx = 0;
+const track  = document.getElementById('heroTrack');
+const dotsEl = document.getElementById('heroDots');
+heroMovies.forEach((m, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'hero-slide';
+  slide.innerHTML = `
+    <img class="hero-bg" src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>
+    <div class="hero-gradient"></div>
+    <div class="hero-pro-tag"><svg style="width:18px;height:13px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>PRO</div>
+    <div class="hero-content">
+      <div class="hero-genre-badge">${m.genre.split(' · ')[0].toUpperCase()}</div>
+      <div class="hero-title">${m.title}</div>
+      <div class="hero-meta"><span>⭐ ${m.rating}</span><span>${m.year}</span><span>${m.genre}</span></div>
+      <div class="hero-buttons">
+        <button class="btn-play"><svg width="13" height="13" viewBox="0 0 24 24" fill="#111"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play Now</button>
+        <button class="btn-info">More Info</button>
+      </div>
+    </div>`;
+  track.appendChild(slide);
+  const dot = document.createElement('div');
+  dot.className = 'hero-dot' + (i===0?' active':'');
+  dot.onclick = () => goToSlide(i);
+  dotsEl.appendChild(dot);
+});
+function goToSlide(idx) {
+  heroIdx = (idx + heroMovies.length) % heroMovies.length;
+  track.style.transform = `translateX(-${heroIdx*100}%)`;
+  document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===heroIdx));
+}
+function heroSlide(dir) { goToSlide(heroIdx + dir); }
+setInterval(() => heroSlide(1), 6000);
+
+// ─── CARD BUILDERS ───────────────────────────────────────────────
+function makePortraitCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap portrait';
+  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/>${item.pro?LOCK:''}<div class="card-overlay"></div></div>${item.pro?BADGE:''}`;
+  return w;
+}
+function makeWideCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap wide';
+  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/>${item.pro?LOCK:''}<div class="card-overlay"></div><div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div></div>${item.pro?BADGE:''}`;
+  return w;
+}
+function makeLandscapeCard(ch) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap landscape';
+  w.innerHTML = `<div class="card-inner"><div class="ch-bg"></div><img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/><span class="live-pill">LIVE</span></div>`;
+  return w;
+}
+function makeSportsCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap portrait';
+  const liveBadge = item.live ? `<span class="live-pill" style="top:10px;left:10px;right:auto">LIVE</span>` : '';
+  w.innerHTML = `<div class="card-inner"><img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>${liveBadge}${item.pro ? LOCK : ''}<div class="card-overlay"></div><div class="sports-label">${item.label}</div></div>${item.pro ? BADGE : ''}`;
+  return w;
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────
+[['continueRow',continueData,makeWideCard],
+ ['moviesRow',moviesData,makePortraitCard],
+ ['liveTVRow',liveChannels,makeLandscapeCard],
+ ['topMoviesRow',topMoviesData,makePortraitCard],
+ ['tvShowsRow',tvShowsData,makePortraitCard],
+ ['topTVRow',topTVData,makePortraitCard],
+ ['liveSportsRow',liveSportsData,makeSportsCard],
+ ['highlightsRow',highlightsData,makeSportsCard],
+].forEach(([id,data,fn]) => {
+  const row = document.getElementById(id);
+  data.forEach(item => row.appendChild(fn(item)));
+});
+
+// ─── NAV FILTER ──────────────────────────────────────────────────
+const filterMap = {
+  home:       ['continue','movies','live-tv','tv-shows','sports'],
+  movies:     ['continue','movies'],
+  'tv-shows': ['continue','tv-shows'],
+  'live-tv':  ['live-tv'],
+  shorts:     ['continue','movies'],
+};
+document.getElementById('navLinks').addEventListener('click', e => {
+  const a = e.target.closest('a[data-filter]');
+  if (!a) return;
+  e.preventDefault();
+  document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+  a.classList.add('active');
+  const show = filterMap[a.dataset.filter] || [];
+  document.getElementById('heroSection').style.display = a.dataset.filter === 'live-tv' ? 'none' : '';
+  document.querySelectorAll('.section[data-category]').forEach(s => {
+    const hide = !show.includes(s.dataset.category);
+    s.classList.toggle('hidden', hide);
+    // reset anim so re-shown sections can animate again
+    if (!hide) {
+      s.querySelectorAll('.section-header,.cards-row').forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top >= window.innerHeight || r.bottom <= 0) {
+          el.classList.remove('anim-visible');
+          el.classList.add('will-animate');
+          scrollObserver.observe(el);
+        }
+      });
+    }
+  });
+});
+
+// ─── SCROLL ENTRANCE OBSERVER ────────────────────────────────────
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('anim-visible');
+      scrollObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+// Only animate elements that start off-screen; visible ones show immediately
+const vph = window.innerHeight;
+document.querySelectorAll('.section-header, .cards-row').forEach(el => {
+  const r = el.getBoundingClientRect();
+  if (r.top >= vph || r.bottom <= 0) {
+    el.classList.add('will-animate');
+    scrollObserver.observe(el);
+  }
+});
+
+// ─── LENIS SMOOTH SCROLL ─────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof Lenis === 'undefined') return;
+  const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.1 });
+  (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })(0);
+});
+</script>
+</body>
+</html>
