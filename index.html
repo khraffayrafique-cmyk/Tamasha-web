@@ -1169,13 +1169,19 @@ setInterval(() => heroSlide(1), 6000);
 function makePortraitCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
+  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/><div class="card-overlay"></div></div>`;
+  return w;
+}
+function makeTopMovieCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap portrait';
   w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/>${item.pro?LOCK:''}<div class="card-overlay"></div></div>${item.pro?BADGE:''}`;
   return w;
 }
 function makeWideCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap wide';
-  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/>${item.pro?LOCK:''}<div class="card-overlay"></div><div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div></div>${item.pro?BADGE:''}`;
+  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/><div class="card-overlay"></div><div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div></div>`;
   return w;
 }
 function makeLandscapeCard(ch) {
@@ -1188,7 +1194,7 @@ function makeSportsCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
   const liveBadge = item.live ? `<span class="live-pill" style="top:10px;left:10px;right:auto">LIVE</span>` : '';
-  w.innerHTML = `<div class="card-inner"><img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>${liveBadge}${item.pro ? LOCK : ''}<div class="card-overlay"></div><div class="sports-label">${item.label}</div></div>${item.pro ? BADGE : ''}`;
+  w.innerHTML = `<div class="card-inner"><img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>${liveBadge}<div class="card-overlay"></div><div class="sports-label">${item.label}</div></div>`;
   return w;
 }
 
@@ -1196,7 +1202,7 @@ function makeSportsCard(item) {
 [['continueRow',continueData,makeWideCard],
  ['moviesRow',moviesData,makePortraitCard],
  ['liveTVRow',liveChannels,makeLandscapeCard],
- ['topMoviesRow',topMoviesData,makePortraitCard],
+ ['topMoviesRow',topMoviesData,makeTopMovieCard],
  ['tvShowsRow',tvShowsData,makePortraitCard],
  ['topTVRow',topTVData,makePortraitCard],
  ['liveSportsRow',liveSportsData,makeSportsCard],
