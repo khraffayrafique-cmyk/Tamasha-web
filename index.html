@@ -1668,7 +1668,7 @@ const topTVData = [
 const liveSportsData = [
   { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
   { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Live · 8:00 PM PKT', channel:'A Sports',        live:true,  pro:false },
-  { file:'WhatsApp Image 2026-04-30 at 4.05.20 PM (1).jpeg',        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true  },
+  { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true  },
   { file:'CP 2.png',                                                  label:'County Championship',  sub:'Day 3 · Session 2',            score:'286/7 d · 142/4',   channel:'Tamasha Sports',  live:true,  pro:false },
   { file:'CP(300 x 450 px).png',                                      label:'Premier League',       sub:"Liverpool vs Arsenal",         score:"Live · 67′",         channel:'A Sports',        live:true,  pro:true  },
   { file:'Channel Posters (87).png',                                  label:'Asia Cup 2026',        sub:'Final · Toss in 25m',          score:'Starts 7:30 PM',    channel:'PTV Sports',      live:false, pro:false },
@@ -1833,7 +1833,7 @@ function buildHeroLive() {
   clearInterval(heroAutoSlide);
   const sec = document.getElementById('heroSection');
   sec.className = 'hero hero--live'; sec.style.height = '';
-  const m = liveSportsData[2];
+  const m = liveSportsData[2]; // Champions Trophy PAK vs IND
 
   sec.innerHTML = `
     <div class="hero__bg">
