@@ -570,6 +570,254 @@
       padding: 5px 4px; letter-spacing: .06em; text-transform: uppercase;
       color: var(--text); background: var(--surface-hover);
     }
+
+    /* ─── LAYOUT CARDS ─────────────────────────────────────────── */
+    .tp-layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .tp-layout-card {
+      border-radius: 10px; overflow: hidden;
+      border: 2px solid var(--border-subtle);
+      background: var(--surface-hover);
+      cursor: pointer; transition: border-color .2s, transform .15s;
+      position: relative;
+    }
+    .tp-layout-card:hover { border-color: var(--text-dim); transform: scale(1.03); }
+    .tp-layout-card.active { border-color: #fff; }
+    .tp-layout-card.active::after {
+      content: '✓'; position: absolute; top: 6px; right: 8px;
+      font-size: 10px; font-weight: 900; color: #fff;
+      background: rgba(0,0,0,0.5); border-radius: 50%;
+      width: 16px; height: 16px; line-height: 16px; text-align: center;
+    }
+    .tp-layout-preview { height: 58px; display: flex; align-items: center; justify-content: center; padding: 8px; }
+    .tp-layout-preview svg { width: 100%; height: 100%; }
+    .tp-layout-name {
+      font-size: 10px; font-weight: 700; text-align: center;
+      padding: 6px 4px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--text);
+    }
+
+    /* ─── HERO: shared new elements ────────────────────────────── */
+    .hero__bg { position: absolute; inset: 0; z-index: 0; }
+    .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
+    .hero__grad-r { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7,6,15,0.95) 0%, rgba(7,6,15,0.7) 30%, rgba(7,6,15,0.1) 70%, transparent 100%); }
+    .hero__grad-b { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(12,10,26,0.85) 85%, #141414 100%); }
+
+    .hero__content {
+      position: relative; z-index: 1; max-width: 640px;
+      padding: 100px 80px 60px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .hero-eyebrow-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px 5px 9px; font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
+      background: var(--accent-grad); border-radius: 999px; align-self: flex-start;
+    }
+    .hero__title {
+      font-family: var(--heading-font); font-size: 58px; font-weight: 800;
+      line-height: 1.02; letter-spacing: -1.5px; color: #fff; margin: 0;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .hero__title--lg { font-size: 48px; }
+    .hero__meta {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.84);
+    }
+    .hero__meta-rating {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: #FFCB5A; font-weight: 700;
+    }
+    .hero__meta-pill {
+      padding: 3px 8px; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.8px; color: #fff;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 5px;
+    }
+    .hero__synopsis {
+      font-size: 14px; line-height: 1.55; color: rgba(255,255,255,0.78);
+      margin: 0; max-width: 52ch;
+    }
+    .hero__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ─── HERO: cinematic pager & strip ─────────────────────────── */
+    .hero__pager {
+      position: absolute; right: 60px; bottom: 180px;
+      display: flex; align-items: center; gap: 14px; z-index: 2;
+    }
+    .hero__pager-btn {
+      width: 34px; height: 34px; border-radius: 999px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      color: #fff; display: grid; place-items: center;
+      cursor: pointer; backdrop-filter: blur(8px);
+      transition: background .15s;
+    }
+    .hero__pager-btn:hover { background: rgba(255,255,255,0.14); }
+    .hero__pager-dots { display: flex; gap: 8px; }
+    .hero__pager-dot {
+      width: 7px; height: 7px; border-radius: 999px;
+      background: rgba(255,255,255,0.3); border: none; cursor: pointer;
+      transition: width .25s, background .15s;
+    }
+    .hero__pager-dot.is-active { width: 24px; background: var(--accent-from); }
+
+    .hero__featured-strip {
+      position: absolute; left: 60px; right: 60px; bottom: 24px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; z-index: 2;
+    }
+    .hero__fstrip-item {
+      position: relative; height: 90px; border-radius: 10px; overflow: hidden;
+      border: 1.5px solid transparent; cursor: pointer;
+      transition: border-color .15s, transform .15s; text-align: left;
+    }
+    .hero__fstrip-item:hover { transform: translateY(-2px); }
+    .hero__fstrip-item.is-active { border-color: var(--accent-from); }
+    .hero__fstrip-item img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+    .hero__fstrip-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(7,6,15,0.85) 0%, rgba(7,6,15,0.5) 60%, transparent 100%);
+      padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .hero__fstrip-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.35); }
+    .hero__fstrip-item.is-active .hero__fstrip-num { color: var(--accent-to); }
+    .hero__fstrip-name {
+      font-size: 13px; font-weight: 700; color: #fff; line-height: 1.2;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* ─── HERO: new buttons ─────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 20px; border-radius: 9px; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; font-family: var(--body-font);
+      transition: background .15s, transform .12s, box-shadow .15s;
+    }
+    .btn--primary {
+      background: var(--accent-from); color: #fff;
+      box-shadow: 0 6px 20px rgba(124,58,237,0.35);
+    }
+    .btn--primary:hover { background: #6d28d9; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(124,58,237,0.45); }
+    .btn--ghost {
+      background: rgba(255,255,255,0.10); color: #fff;
+      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.18);
+    }
+    .btn--ghost:hover { background: rgba(255,255,255,0.18); }
+    .btn--sm { padding: 8px 14px; font-size: 13px; }
+    .btn--lg { padding: 13px 26px; font-size: 15px; }
+
+    /* ─── HERO: EDITORIAL ───────────────────────────────────────── */
+    .hero--editorial { overflow: hidden; }
+    .hero--editorial .hero__bg img { object-position: right center; }
+    .hero__edit-veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(7,6,15,0.97) 0%, rgba(7,6,15,0.88) 40%, rgba(7,6,15,0.6) 65%, rgba(7,6,15,0.18) 100%);
+    }
+    .hero__edit-grid {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 340px; gap: 56px;
+      padding: 100px 48px 56px; height: 100%; align-items: center;
+    }
+    .hero__edit-left { max-width: 600px; }
+    .hero__edit-mark {
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      color: var(--accent-to); margin-bottom: 20px;
+    }
+    .hero__edit-title {
+      font-size: 76px; line-height: 0.94; font-weight: 800;
+      letter-spacing: -2.5px; margin: 0; color: #fff;
+    }
+    .hero__edit-title-serif { display: block; }
+    .hero__edit-title-italic { display: block; font-style: italic; font-weight: 400; color: var(--accent-to); margin-left: 0.3em; }
+    .hero__edit-rule { width: 56px; height: 2px; background: var(--accent-grad); margin: 24px 0 18px; }
+    .hero__edit-synopsis { font-size: 16px; line-height: 1.55; color: rgba(255,255,255,0.78); max-width: 50ch; margin: 0 0 18px; }
+    .hero__edit-meta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; font-weight: 500; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 26px;
+    }
+    .hero__edit-meta span:first-child { display: inline-flex; align-items: center; gap: 5px; color: #FFCB5A; font-weight: 700; }
+    .hero__edit-right {
+      display: flex; flex-direction: column; gap: 2px;
+      border-left: 1px solid rgba(255,255,255,0.08); padding-left: 26px;
+    }
+    .hero__edit-pageno {
+      font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,0.28);
+      margin-bottom: 12px;
+    }
+    .hero__edit-line {
+      display: grid; grid-template-columns: 26px 1fr auto;
+      align-items: center; gap: 12px; padding: 12px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      border: none; background: none; cursor: pointer; text-align: left;
+      border-radius: 6px; transition: padding-left .2s, background .15s;
+    }
+    .hero__edit-line:hover { background: rgba(255,255,255,0.04); padding-left: 12px; }
+    .hero__edit-line.is-active { background: rgba(255,255,255,0.07); padding-left: 12px; }
+    .hero__edit-line-num { font-size: 13px; color: rgba(255,255,255,0.25); font-weight: 700; }
+    .hero__edit-line.is-active .hero__edit-line-num { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero__edit-line-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hero__edit-line.is-active .hero__edit-line-title { color: #fff; }
+    .hero__edit-line-genre { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+
+    /* ─── HERO: MOSAIC ──────────────────────────────────────────── */
+    .hero--mosaic { height: auto !important; padding: 90px 48px 28px; }
+    .mosaic {
+      display: grid; grid-template-columns: 1.6fr 1fr;
+      grid-template-rows: repeat(2, 224px); gap: 10px;
+    }
+    .mosaic__tile { position: relative; border-radius: 14px; overflow: hidden; cursor: pointer; }
+    .mosaic__tile--lg { grid-row: span 2; }
+    .mosaic__tile img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
+    .mosaic__grad { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,6,15,0) 30%, rgba(7,6,15,0.88) 100%); }
+    .mosaic__content { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 5px; }
+    .mosaic__eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-to); }
+    .mosaic__title { font-family: var(--heading-font); font-weight: 800; line-height: 1.1; color: #fff; margin: 0; letter-spacing: -0.3px; }
+    .mosaic__tile--lg .mosaic__title { font-size: 32px; }
+    .mosaic__tile--sm .mosaic__title { font-size: 18px; }
+    .mosaic__meta { display: flex; gap: 8px; font-size: 11px; color: rgba(255,255,255,0.5); align-items: center; }
+    .mosaic__actions { display: flex; gap: 8px; margin-top: 6px; }
+    .mosaic__pro-tag {
+      position: absolute; top: 14px; left: 14px;
+      padding: 4px 10px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #fff;
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--accent-grad); border-radius: 999px;
+    }
+
+    /* ─── HERO: LIVE FIRST ──────────────────────────────────────── */
+    .hero__live-row { display: flex; align-items: center; gap: 12px; }
+    .hero-live-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px 4px 8px; font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; color: #fff; background: #ED2B1F; border-radius: 5px;
+    }
+    .live-dot-inline {
+      width: 6px; height: 6px; border-radius: 50%; background: #fff;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.35); display: inline-block;
+    }
+    .hero__live-channel { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+    .hero__live-tag {
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.48);
+      padding: 4px 10px; background: rgba(255,255,255,0.08);
+      border-radius: 999px; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero__live-sub { font-size: 14px; color: rgba(255,255,255,0.6); }
+
+    .scoreboard {
+      display: flex; align-items: center; gap: 24px;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+      padding: 14px 20px; width: fit-content;
+    }
+    .scoreboard__team { display: flex; align-items: center; gap: 12px; }
+    .scoreboard__flag {
+      width: 42px; height: 42px; border-radius: 9px;
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 800; color: #fff;
+      border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;
+    }
+    .scoreboard__name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.55); }
+    .scoreboard__score { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .scoreboard__score span { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; margin-left: 2px; }
+    .scoreboard__vs { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 2px; padding: 4px 8px; background: rgba(255,255,255,0.06); border-radius: 999px; }
   </style>
 </head>
 <body>
@@ -662,6 +910,14 @@
   <div class="tp-heading">
     Appearance
     <button class="tp-close" onclick="toggleThemePanel()">✕</button>
+  </div>
+
+  <!-- Homepage Layout -->
+  <div class="tp-section">
+    <div class="tp-label">Homepage Layout</div>
+    <div class="tp-layout-grid" id="tpLayoutGrid">
+      <!-- filled by JS -->
+    </div>
   </div>
 
   <!-- Page Theme -->
@@ -956,6 +1212,26 @@ function applyPageTheme(id) {
     c.classList.toggle('active', c.dataset.theme === id));
 }
 
+// ─── LAYOUT CARDS ────────────────────────────────────────────────
+const LAYOUTS = [
+  { id:'cinematic', name:'Cinematic', icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#111"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#lc1)"/><defs><linearGradient id="lc1" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#7c3aed" stop-opacity=".6"/><stop offset=".5" stop-color="#7c3aed" stop-opacity=".05"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs><rect x="8" y="12" width="28" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="18" width="40" height="6" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="27" width="34" height="2" rx="1" fill="#fff" opacity=".4"/><rect x="8" y="32" width="28" height="2" rx="1" fill="#fff" opacity=".3"/><rect x="8" y="38" width="16" height="5" rx="2.5" fill="#7c3aed"/><rect x="27" y="38" width="13" height="5" rx="2.5" fill="#fff" opacity=".15"/><rect x="6" y="47" width="24" height="5" rx="2" fill="#333"/><rect x="33" y="47" width="24" height="5" rx="2" fill="#333"/><rect x="60" y="47" width="24" height="5" rx="2" fill="#333"/></svg>` },
+  { id:'editorial', name:'Editorial', icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0d0b1e"/><rect x="0" y="0" width="55" height="56" rx="4" fill="#1a1040" opacity=".8"/><rect x="8" y="10" width="16" height="2" rx="1" fill="#a855f7" opacity=".8"/><rect x="8" y="16" width="36" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="26" width="32" height="2" rx="1" fill="#fff" opacity=".4"/><rect x="8" y="30" width="28" height="2" rx="1" fill="#fff" opacity=".3"/><rect x="8" y="36" width="14" height="4" rx="2" fill="#7c3aed"/><rect x="25" y="36" width="11" height="4" rx="2" fill="#fff" opacity=".15"/><line x1="58" y1="4" x2="58" y2="52" stroke="#fff" stroke-opacity=".08"/><rect x="62" y="8" width="6" height="2" rx="1" fill="#a855f7" opacity=".6"/><rect x="62" y="14" width="22" height="2" rx="1" fill="#fff" opacity=".7"/><rect x="62" y="20" width="22" height="2" rx="1" fill="#fff" opacity=".35"/><rect x="62" y="26" width="22" height="2" rx="1" fill="#fff" opacity=".35"/></svg>` },
+  { id:'mosaic',    name:'Mosaic',    icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0d0b1e"/><rect x="4" y="4" width="50" height="48" rx="4" fill="#1a1040"/><rect x="4" y="4" width="50" height="48" rx="4" fill="url(#lm1)" opacity=".5"/><defs><linearGradient id="lm1" x1="4" y1="52" x2="4" y2="4"><stop stop-color="#7c3aed" stop-opacity=".8"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs><rect x="8" y="36" width="30" height="5" rx="1.5" fill="#fff" opacity=".9"/><rect x="8" y="44" width="10" height="4" rx="2" fill="#7c3aed"/><rect x="21" y="44" width="9" height="4" rx="2" fill="#fff" opacity=".15"/><rect x="58" y="4" width="28" height="23" rx="4" fill="#1a1040"/><rect x="58" y="4" width="28" height="23" rx="4" fill="url(#lm2)" opacity=".5"/><defs><linearGradient id="lm2" x1="58" y1="27" x2="58" y2="4"><stop stop-color="#7c3aed" stop-opacity=".8"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs><rect x="62" y="20" width="18" height="3" rx="1.5" fill="#fff" opacity=".8"/><rect x="58" y="29" width="28" height="23" rx="4" fill="#1a1040"/><rect x="62" y="44" width="18" height="3" rx="1.5" fill="#fff" opacity=".8"/></svg>` },
+  { id:'live',      name:'Live First', icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0d0b1e"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#ll1)"/><defs><linearGradient id="ll1" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#1a0505" stop-opacity=".9"/><stop offset="1" stop-color="#0d0b1e" stop-opacity="0"/></linearGradient></defs><rect x="8" y="10" width="14" height="5" rx="2.5" fill="#ED2B1F"/><rect x="25" y="11" width="22" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="18" width="44" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="28" width="32" height="2" rx="1" fill="#fff" opacity=".4"/><rect x="8" y="34" width="56" height="9" rx="4" fill="#fff" opacity=".07"/><rect x="12" y="37" width="16" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="42" y="37" width="18" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="46" width="16" height="5" rx="2.5" fill="#7c3aed"/><rect x="27" y="46" width="14" height="5" rx="2.5" fill="#fff" opacity=".15"/></svg>` },
+];
+
+(function buildLayouts() {
+  const grid = document.getElementById('tpLayoutGrid');
+  LAYOUTS.forEach(l => {
+    const el = document.createElement('div');
+    el.className = 'tp-layout-card' + (l.id === 'cinematic' ? ' active' : '');
+    el.dataset.layout = l.id;
+    el.innerHTML = `<div class="tp-layout-preview">${l.icon}</div><div class="tp-layout-name">${l.name}</div>`;
+    el.onclick = () => applyLayout(l.id);
+    grid.appendChild(el);
+  });
+})();
+
 function buildThemes() {
   const grid = document.getElementById('tpThemeGrid');
   PAGE_THEMES.forEach((t, i) => {
@@ -1050,9 +1326,9 @@ document.addEventListener('click', e => {
 
 // ─── DATA ────────────────────────────────────────────────────────
 const heroMovies = [
-  { folder:"SPIDER-MAN (2002)",              banner:"banner.jpg",  title:"Spider-Man",                    year:"2002", rating:"7.3", genre:"Action · Adventure" },
-  { folder:"BLADE RUNNER 2049",              banner:"Banner.jpg",  title:"Blade Runner 2049",             year:"2017", rating:"8.0", genre:"Sci-Fi · Thriller"   },
-  { folder:"JUMANJI_ WELCOME TO THE JUNGLE", banner:"banner.jpg",  title:"Jumanji: Welcome to the Jungle",year:"2017", rating:"6.9", genre:"Action · Comedy"     },
+  { folder:"BLADE RUNNER 2049",              banner:"Banner.jpg",  title:"Blade Runner 2049",             year:"2017", rating:"8.0", runtime:"2h 44m", genre:"Sci-Fi · Thriller",   tag:"Tamasha Original Pick",  synopsis:"Thirty years after the events of the first film, a new blade runner unearths a long-buried secret with the power to plunge what's left of society into chaos." },
+  { folder:"SPIDER-MAN (2002)",              banner:"banner.jpg",  title:"Spider-Man",                    year:"2002", rating:"7.3", runtime:"2h 1m",  genre:"Action · Adventure",  tag:"Trending This Week",     synopsis:"After a high-school student is bitten by a genetically-altered spider, he becomes the city's most unlikely defender against rising evil." },
+  { folder:"JUMANJI_ WELCOME TO THE JUNGLE", banner:"banner.jpg",  title:"Jumanji: Welcome to the Jungle",year:"2017", rating:"6.9", runtime:"1h 59m", genre:"Action · Comedy",     tag:"Family Night Pick",      synopsis:"Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish it." },
 ];
 const continueData = [
   { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", progress:62, pro:false},
@@ -1132,38 +1408,205 @@ const highlightsData = [
 ];
 
 // ─── HERO ────────────────────────────────────────────────────────
+// ─── HERO LAYOUT SYSTEM ──────────────────────────────────────────
 let heroIdx = 0;
-const track  = document.getElementById('heroTrack');
-const dotsEl = document.getElementById('heroDots');
-heroMovies.forEach((m, i) => {
-  const slide = document.createElement('div');
-  slide.className = 'hero-slide';
-  slide.innerHTML = `
-    <img class="hero-bg" src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>
-    <div class="hero-gradient"></div>
-    <div class="hero-pro-tag"><svg style="width:18px;height:13px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>PRO</div>
-    <div class="hero-content">
-      <div class="hero-genre-badge">${m.genre.split(' · ')[0].toUpperCase()}</div>
-      <div class="hero-title">${m.title}</div>
-      <div class="hero-meta"><span>⭐ ${m.rating}</span><span>${m.year}</span><span>${m.genre}</span></div>
-      <div class="hero-buttons">
-        <button class="btn-play"><svg width="13" height="13" viewBox="0 0 24 24" fill="#111"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play Now</button>
-        <button class="btn-info">More Info</button>
-      </div>
-    </div>`;
-  track.appendChild(slide);
-  const dot = document.createElement('div');
-  dot.className = 'hero-dot' + (i===0?' active':'');
-  dot.onclick = () => goToSlide(i);
-  dotsEl.appendChild(dot);
-});
+let heroAutoSlide = null;
+let currentLayout = 'cinematic';
+
+const _PLAY_W  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>`;
+const _PLAY_B  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="#111"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+const _PLUS    = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+const _BELL    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2zM10 21a2 2 0 0 0 4 0"/></svg>`;
+const _CHEVL   = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
+const _CHEVR   = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+const _STAR    = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#FFCB5A"><polygon points="12 2 15.1 8.5 22 9.3 17 14.1 18.4 21 12 17.5 5.6 21 7 14.1 2 9.3 8.9 8.5"/></svg>`;
+const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z" opacity=".95"/></svg>`;
+
 function goToSlide(idx) {
   heroIdx = (idx + heroMovies.length) % heroMovies.length;
-  track.style.transform = `translateX(-${heroIdx*100}%)`;
-  document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===heroIdx));
+  const t = document.getElementById('heroTrack');
+  if (t) t.style.transform = `translateX(-${heroIdx*100}%)`;
+  document.querySelectorAll('.hero__pager-dot').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
+  document.querySelectorAll('.hero__fstrip-item').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
 }
 function heroSlide(dir) { goToSlide(heroIdx + dir); }
-setInterval(() => heroSlide(1), 6000);
+
+function buildHeroBanner() {
+  clearInterval(heroAutoSlide); heroIdx = 0;
+  const sec = document.getElementById('heroSection');
+  sec.className = 'hero'; sec.style.height = '';
+
+  let slides = heroMovies.map((m, i) => `
+    <div class="hero-slide">
+      <img class="hero-bg" src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>
+      <div class="hero-gradient"></div>
+      <div class="hero-pro-tag">${WAVE}PRO</div>
+      <div class="hero__content">
+        <span class="hero-eyebrow-pill">${_DIAMOND} ${m.tag}</span>
+        <div class="hero__title">${m.title}</div>
+        <div class="hero__meta">
+          <span class="hero__meta-rating">${_STAR} ${m.rating}</span>
+          <span>${m.year}</span><span>·</span><span>${m.runtime}</span><span>·</span>
+          <span>${m.genre}</span><span class="hero__meta-pill">HD · 4K</span>
+        </div>
+        <p class="hero__synopsis">${m.synopsis}</p>
+        <div class="hero__actions">
+          <button class="btn-play">${_PLAY_B}Play Now</button>
+          <button class="btn-info">More Info</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  let strip = heroMovies.map((m,i) => `
+    <button class="hero__fstrip-item ${i===0?'is-active':''}" onclick="goToSlide(${i})">
+      <img src="${bp(m.folder,m.banner)}" alt="" loading="lazy"/>
+      <div class="hero__fstrip-overlay">
+        <div class="hero__fstrip-num">0${i+1}</div>
+        <div class="hero__fstrip-name">${m.title}</div>
+      </div>
+    </button>`).join('');
+
+  let dots = heroMovies.map((_,i) => `<button class="hero__pager-dot ${i===0?'is-active':''}" onclick="goToSlide(${i})"></button>`).join('');
+
+  sec.innerHTML = `
+    <div class="hero-track" id="heroTrack">${slides}</div>
+    <div class="hero__pager">
+      <button class="hero__pager-btn" onclick="heroSlide(-1)">${_CHEVL}</button>
+      <div class="hero__pager-dots">${dots}</div>
+      <button class="hero__pager-btn" onclick="heroSlide(1)">${_CHEVR}</button>
+    </div>
+    <div class="hero__featured-strip">${strip}</div>`;
+
+  heroAutoSlide = setInterval(() => heroSlide(1), 6000);
+}
+
+function buildHeroEditorial(eIdx = 0) {
+  clearInterval(heroAutoSlide);
+  const sec = document.getElementById('heroSection');
+  sec.className = 'hero hero--editorial'; sec.style.height = '';
+  const m = heroMovies[eIdx];
+  const words = m.title.split(' ');
+  const mainWords = words.length > 1 ? words.slice(0,-1).join(' ') : m.title;
+  const lastWord  = words.length > 1 ? words.slice(-1)[0] : '';
+
+  const lines = heroMovies.map((hm, i) => `
+    <button class="hero__edit-line ${i===eIdx?'is-active':''}" onclick="buildHeroEditorial(${i})">
+      <span class="hero__edit-line-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="hero__edit-line-title">${hm.title}</span>
+      <span class="hero__edit-line-genre">${hm.genre.split(' · ')[0]}</span>
+    </button>`).join('');
+
+  sec.innerHTML = `
+    <div class="hero__bg">
+      <img src="${bp(m.folder,m.banner)}" alt="${m.title}"/>
+      <div class="hero__edit-veil"></div>
+    </div>
+    <div class="hero__edit-grid">
+      <div class="hero__edit-left">
+        <div class="hero__edit-mark">— ${m.tag.toUpperCase()}</div>
+        <h1 class="hero__edit-title">
+          <span class="hero__edit-title-serif">${mainWords}</span>
+          ${lastWord ? `<span class="hero__edit-title-italic">${lastWord}</span>` : ''}
+        </h1>
+        <div class="hero__edit-rule"></div>
+        <p class="hero__edit-synopsis">${m.synopsis}</p>
+        <div class="hero__edit-meta">
+          <span>${_STAR} ${m.rating} · IMDb</span>
+          <span>${m.year}</span><span>${m.runtime}</span><span>${m.genre}</span>
+        </div>
+        <div class="hero__actions">
+          <button class="btn btn--primary">${_PLAY_W}Watch Now</button>
+          <button class="btn btn--ghost">${_PLUS}Add to List</button>
+        </div>
+      </div>
+      <div class="hero__edit-right">
+        <div class="hero__edit-pageno">${String(eIdx+1).padStart(2,'0')} / ${String(heroMovies.length).padStart(2,'0')}</div>
+        ${lines}
+      </div>
+    </div>`;
+}
+
+function buildHeroMosaic() {
+  clearInterval(heroAutoSlide);
+  const sec = document.getElementById('heroSection');
+  sec.className = 'hero hero--mosaic'; sec.style.height = 'auto';
+
+  const tiles = heroMovies.map((m, i) => `
+    <div class="mosaic__tile mosaic__tile--${i===0?'lg':'sm'}">
+      <img src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>
+      <div class="mosaic__grad"></div>
+      ${i===0 ? `<div class="mosaic__pro-tag">${_DIAMOND} TAMASHA ORIGINAL</div>` : ''}
+      <div class="mosaic__content">
+        <div class="mosaic__eyebrow">${m.tag}</div>
+        <h2 class="mosaic__title">${m.title}</h2>
+        <div class="mosaic__meta">
+          <span>${_STAR}${m.rating}</span><span>${m.year}</span><span>${m.genre}</span>
+        </div>
+        ${i===0 ? `<div class="mosaic__actions">
+          <button class="btn btn--primary btn--sm">${_PLAY_W}Play</button>
+          <button class="btn btn--ghost btn--sm">${_PLUS}My List</button>
+        </div>` : ''}
+      </div>
+    </div>`).join('');
+
+  sec.innerHTML = `<div class="mosaic">${tiles}</div>`;
+}
+
+function buildHeroLive() {
+  clearInterval(heroAutoSlide);
+  const sec = document.getElementById('heroSection');
+  sec.className = 'hero hero--live'; sec.style.height = '';
+  const m = liveSportsData[2];
+
+  sec.innerHTML = `
+    <div class="hero__bg">
+      <img src="${sp(m.file)}" alt="Champions Trophy" loading="eager"/>
+      <div class="hero__grad-r"></div>
+      <div class="hero__grad-b"></div>
+    </div>
+    <div class="hero__content">
+      <div class="hero__live-row">
+        <span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>
+        <span class="hero__live-channel">PTV Sports</span>
+        <span class="hero__live-tag">12.4M watching</span>
+      </div>
+      <h1 class="hero__title hero__title--lg">Champions Trophy</h1>
+      <div class="hero__live-sub">PAK vs IND · Group Stage · Innings Break</div>
+      <div class="scoreboard">
+        <div class="scoreboard__team">
+          <div class="scoreboard__flag" style="background:linear-gradient(135deg,#01411C 0%,#01411C 45%,#fff 45%,#fff 55%,#01411C 55%)">PAK</div>
+          <div>
+            <div class="scoreboard__name">Pakistan</div>
+            <div class="scoreboard__score">142/3 <span>(14.4 ov)</span></div>
+          </div>
+        </div>
+        <div class="scoreboard__vs">vs</div>
+        <div class="scoreboard__team">
+          <div style="text-align:right">
+            <div class="scoreboard__name">India</div>
+            <div class="scoreboard__score">96/2 <span>(11.2 ov)</span></div>
+          </div>
+          <div class="scoreboard__flag" style="background:linear-gradient(135deg,#FF9933 0%,#FF9933 33%,#fff 33%,#fff 66%,#138808 66%);color:#222">IND</div>
+        </div>
+      </div>
+      <div class="hero__actions">
+        <button class="btn btn--primary">${_PLAY_W}Watch Live</button>
+        <button class="btn btn--ghost">${_BELL}Set Reminder</button>
+      </div>
+    </div>`;
+}
+
+function applyLayout(id) {
+  currentLayout = id;
+  document.querySelectorAll('.tp-layout-card').forEach(c => c.classList.toggle('active', c.dataset.layout === id));
+  if (id === 'cinematic') buildHeroBanner();
+  else if (id === 'editorial') buildHeroEditorial(0);
+  else if (id === 'mosaic')    buildHeroMosaic();
+  else if (id === 'live')      buildHeroLive();
+}
+
+// Init default layout
+buildHeroBanner();
 
 // ─── CARD BUILDERS ───────────────────────────────────────────────
 function makePortraitCard(item) {
