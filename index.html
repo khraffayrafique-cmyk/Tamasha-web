@@ -397,12 +397,11 @@
     .progress-fill { height: 100%; background: var(--accent-from); border-radius: 2px; }
 
     /* ─── SEARCH ─────────────────────────────────────────────── */
-    /* nav-links + font-switcher slide-fade out when search opens */
-    .nav-links, .font-switcher {
+    /* nav-links slide-fade out when search opens */
+    .nav-links {
       transition: opacity .22s ease, transform .22s ease;
     }
-    .navbar.search-open .nav-links,
-    .navbar.search-open .font-switcher {
+    .navbar.search-open .nav-links {
       opacity: 0; pointer-events: none;
       transform: translateY(-5px);
     }
@@ -536,8 +535,173 @@
     }
 
 
+    /* ─── AURORA background ────────────────────────────────────── */
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(1100px 500px at 75% -5%, rgba(124,58,237,0.11), transparent 60%),
+        radial-gradient(800px 500px at 8% 105%, rgba(124,58,237,0.07), transparent 60%);
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ─── SECTION EYEBROW ──────────────────────────────────────── */
+    .section-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent-to);
+      margin-bottom: 5px;
+    }
+
+    /* ─── CARD BODY (text below card image) ────────────────────── */
+    .card-wrap { display: flex; flex-direction: column; }
+    .card-inner { flex-shrink: 0; }
+    .card-body {
+      padding: 8px 4px 4px;
+      min-width: 0;
+    }
+    .card-body-title {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+    .card-body-meta {
+      font-size: 11px; color: var(--text-dim);
+      margin-top: 2px; line-height: 1.4;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-body-sub {
+      font-size: 11px; color: var(--text-dim); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-body-score {
+      font-size: 12px; font-weight: 700; color: var(--accent-to);
+      margin-top: 3px; letter-spacing: .3px;
+    }
+
+    /* ─── CARD HOVER ACTIONS ───────────────────────────────────── */
+    .card-hover-actions {
+      position: absolute; top: 8px; right: 8px;
+      display: flex; gap: 5px;
+      opacity: 0; transition: opacity .18s;
+      z-index: 5;
+    }
+    .card-wrap:hover .card-hover-actions { opacity: 1; }
+    .card-action-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(7,6,15,0.72); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; display: grid; place-items: center;
+      cursor: pointer; backdrop-filter: blur(6px);
+      transition: background .12s, transform .12s;
+      font-size: 0;
+    }
+    .card-action-btn:hover { transform: scale(1.1); background: rgba(7,6,15,0.95); }
+    .card-action-btn.play-btn { background: var(--accent-from); border-color: transparent; }
+    .card-action-btn.play-btn:hover { background: #6d28d9; }
+
+    /* ─── CONTINUE WATCHING: play overlay ─────────────────────── */
+    .continue-play-overlay {
+      position: absolute; left: 12px; bottom: 18px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(7,6,15,0.68); border: 1.5px solid rgba(255,255,255,0.55);
+      color: #fff; display: grid; place-items: center;
+      opacity: 0; transition: opacity .2s, transform .2s;
+      backdrop-filter: blur(6px);
+    }
+    .card-wrap:hover .continue-play-overlay { opacity: 1; transform: scale(1.05); }
+
+    /* ─── HIGHLIGHT: duration + play overlay ──────────────────── */
+    .highlight-duration {
+      position: absolute; right: 8px; bottom: 8px;
+      font-size: 10px; font-weight: 700; color: #fff;
+      padding: 2px 6px; background: rgba(7,6,15,0.78);
+      border-radius: 4px; backdrop-filter: blur(4px);
+    }
+    .highlight-play {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(7,6,15,0.55); border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff; display: grid; place-items: center;
+      opacity: 0; transition: opacity .2s, transform .2s;
+      backdrop-filter: blur(8px);
+    }
+    .card-wrap:hover .highlight-play { opacity: 1; transform: translate(-50%,-50%) scale(1.05); }
+
+    /* ─── BELL NOTIFICATION DOT ────────────────────────────────── */
+    .bell-wrap { position: relative; }
+    .notif-dot {
+      position: absolute; top: -1px; right: -1px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #F2913E; border: 2px solid var(--nav-bg);
+    }
+
+    /* ─── PRO BANNER ───────────────────────────────────────────── */
+    .pro-banner {
+      margin: 0 60px;
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--accent-from) 0%, #4700AB 50%, #2A00A2 100%);
+      border-radius: 20px; padding: 28px 36px;
+      border: 1px solid rgba(169,150,255,0.25);
+    }
+    .pro-banner-inner {
+      display: grid; grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 32px; position: relative; z-index: 2;
+    }
+    .pro-banner-glyph {
+      width: 60px; height: 60px; border-radius: 14px;
+      background: linear-gradient(135deg, #FFD66B, #FF9A3C);
+      display: grid; place-items: center; color: #3D1A00;
+      box-shadow: 0 10px 28px rgba(255,154,60,0.4); flex-shrink: 0;
+    }
+    .pro-banner-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #FFD66B;
+      margin-bottom: 5px; display: flex; align-items: center; gap: 5px;
+    }
+    .pro-banner-title {
+      font-family: var(--heading-font); font-size: 20px; font-weight: 800;
+      color: #fff; margin: 0 0 4px; line-height: 1.25;
+    }
+    .pro-banner-sub {
+      font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.76);
+      margin: 0; max-width: 58ch;
+    }
+    .pro-banner-price { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .pro-banner-price-row { display: inline-flex; align-items: baseline; gap: 8px; }
+    .pro-banner-price-old { font-size: 13px; color: rgba(255,255,255,0.48); text-decoration: line-through; }
+    .pro-banner-price-now { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+    .pro-banner-price-per { font-size: 13px; color: rgba(255,255,255,0.7); }
+    .pro-banner-terms { font-size: 11px; color: rgba(255,255,255,0.55); }
+    .pro-banner-blob { position: absolute; border-radius: 50%; filter: blur(40px); z-index: 1; pointer-events: none; }
+    .pro-banner-blob-1 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(169,150,255,0.5), transparent 70%); top: -70px; right: -30px; }
+    .pro-banner-blob-2 { width: 160px; height: 160px; background: radial-gradient(circle, rgba(255,154,60,0.32), transparent 70%); bottom: -50px; left: 60px; }
+
     /* ─── FOOTER ───────────────────────────────────────────────── */
-    .footer-space { height: 70px; }
+    .site-footer {
+      margin-top: 64px; padding: 48px 60px 32px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 32px;
+    }
+    .footer-col { display: flex; flex-direction: column; gap: 8px; }
+    .footer-logo { height: 26px; width: auto; }
+    .footer-tagline { font-size: 13px; line-height: 1.6; color: var(--text-dim); margin-top: 8px; max-width: 34ch; }
+    .footer-col-h {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.42);
+      margin-bottom: 4px;
+    }
+    .footer-col a {
+      font-size: 13px; color: var(--text-dim); text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-base {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: rgba(255,255,255,0.26);
+      padding-top: 20px; border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap; gap: 8px;
+    }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
@@ -849,33 +1013,17 @@
     </div>
   </div>
 
-  <!-- Font switcher pills -->
-  <div class="font-switcher" id="fontSwitcher">
-    <button class="font-pill active" data-font="premium"
-      style="font-family:'Manrope',sans-serif"
-      onclick="setFont('premium',this)">
-      <span class="font-pill-name">Manrope</span>
-      <span class="font-pill-sub">Premium · Cinematic</span>
-    </button>
-    <button class="font-pill" data-font="youth"
-      style="font-family:'Space Grotesk',sans-serif"
-      onclick="setFont('youth',this)">
-      <span class="font-pill-name">Space Grotesk</span>
-      <span class="font-pill-sub">Bold · Youth</span>
-    </button>
-    <button class="font-pill" data-font="editorial"
-      style="font-family:'Playfair Display',serif"
-      onclick="setFont('editorial',this)">
-      <span class="font-pill-name">Playfair Display</span>
-      <span class="font-pill-sub">Classic · Editorial</span>
-    </button>
-  </div>
-
   <div class="nav-right">
     <!-- Palette icon -->
     <button class="palette-btn" onclick="toggleThemePanel()" title="Themes">
       <span class="material-icons">palette</span>
     </button>
+
+    <!-- Notifications -->
+    <div class="bell-wrap palette-btn" title="Notifications">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+      <div class="notif-dot"></div>
+    </div>
 
     <!-- Search -->
     <div class="search-icon" id="searchTrigger" onclick="openSearch()">
@@ -987,7 +1135,10 @@
 <!-- ════════════════ CONTINUE WATCHING ════════════════ -->
 <section class="section" data-category="continue" id="sec-continue">
   <div class="section-header">
-    <h2 class="section-title">Continue Watching</h2>
+    <div>
+      <div class="section-eyebrow">JUMP BACK IN</div>
+      <h2 class="section-title">Continue Watching</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="continueRow"></div>
@@ -996,7 +1147,10 @@
 <!-- ════════════════════ MOVIES ════════════════════ -->
 <section class="section" data-category="movies" id="sec-movies">
   <div class="section-header">
-    <h2 class="section-title">Movies</h2>
+    <div>
+      <div class="section-eyebrow">FILMS</div>
+      <h2 class="section-title">Movies</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="moviesRow"></div>
@@ -1005,7 +1159,10 @@
 <!-- ════════════════════ LIVE TV ════════════════════ -->
 <section class="section" data-category="live-tv" id="sec-live">
   <div class="section-header">
-    <h2 class="section-title">Live TV</h2>
+    <div>
+      <div class="section-eyebrow">ON AIR NOW</div>
+      <h2 class="section-title">Live TV</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="liveTVRow"></div>
@@ -1014,16 +1171,52 @@
 <!-- ═══════════════ TOP RATED MOVIES ═══════════════ -->
 <section class="section" data-category="movies" id="sec-top-movies">
   <div class="section-header">
-    <h2 class="section-title">Top Rated Movies</h2>
+    <div>
+      <div class="section-eyebrow">TOP 10 THIS WEEK</div>
+      <h2 class="section-title">Top Rated Movies</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="topMoviesRow"></div>
 </section>
 
+<!-- ════════════════ PRO BANNER ═══════════════════ -->
+<div style="padding:16px 0 8px" data-category="promo" class="section" id="sec-pro-banner">
+  <div class="pro-banner">
+    <div class="pro-banner-blob pro-banner-blob-1"></div>
+    <div class="pro-banner-blob pro-banner-blob-2"></div>
+    <div class="pro-banner-inner">
+      <div class="pro-banner-glyph">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#3D1A00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="pro-banner-eyebrow">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD66B"><polygon points="12 2 15.1 8.5 22 9.3 17 14.1 18.4 21 12 17.5 5.6 21 7 14.1 2 9.3 8.9 8.5"/></svg>
+          UPGRADE TO PRO
+        </div>
+        <h3 class="pro-banner-title">Unlock the Full Tamasha Experience</h3>
+        <p class="pro-banner-sub">Ad-free streaming · 4K Ultra HD · Download &amp; watch offline · Exclusive originals and live sports coverage. Cancel anytime.</p>
+      </div>
+      <div class="pro-banner-price">
+        <div class="pro-banner-price-row">
+          <span class="pro-banner-price-old">Rs 599</span>
+          <span class="pro-banner-price-now">Rs 299</span>
+          <span class="pro-banner-price-per">/mo</span>
+        </div>
+        <button class="btn btn--primary btn--sm" style="background:linear-gradient(135deg,#FFD66B,#FF9A3C);color:#3D1A00;border:none;font-weight:800;box-shadow:0 6px 20px rgba(255,154,60,0.4)">Get Pro Now</button>
+        <span class="pro-banner-terms">50% off · First 3 months</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ════════════════ TV SHOWS ════════════════════ -->
 <section class="section" data-category="tv-shows" id="sec-tvshows">
   <div class="section-header">
-    <h2 class="section-title">TV Shows</h2>
+    <div>
+      <div class="section-eyebrow">SERIES</div>
+      <h2 class="section-title">TV Shows</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="tvShowsRow"></div>
@@ -1032,7 +1225,10 @@
 <!-- ══════════════ TOP RATED TV SHOWS ══════════════ -->
 <section class="section" data-category="tv-shows" id="sec-top-tvshows">
   <div class="section-header">
-    <h2 class="section-title">Top Rated TV Shows</h2>
+    <div>
+      <div class="section-eyebrow">TOP RATED</div>
+      <h2 class="section-title">Top Rated TV Shows</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="topTVRow"></div>
@@ -1041,7 +1237,10 @@
 <!-- ══════════════ LIVE SPORTS ══════════════ -->
 <section class="section" data-category="sports" id="sec-live-sports">
   <div class="section-header">
-    <h2 class="section-title">Live Sports</h2>
+    <div>
+      <div class="section-eyebrow">LIVE NOW</div>
+      <h2 class="section-title">Live Sports</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="liveSportsRow"></div>
@@ -1050,13 +1249,51 @@
 <!-- ══════════════ HIGHLIGHTS ══════════════ -->
 <section class="section" data-category="sports" id="sec-highlights">
   <div class="section-header">
-    <h2 class="section-title">Highlights</h2>
+    <div>
+      <div class="section-eyebrow">BEST MOMENTS</div>
+      <h2 class="section-title">Highlights</h2>
+    </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="highlightsRow"></div>
 </section>
 
-<div class="footer-space"></div>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <img src="Tamashalogo.png" alt="Tamasha" class="footer-logo" />
+      <p class="footer-tagline">Pakistan's home for movies, TV shows, live sports, and more. Stream anywhere, anytime.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-h">Watch</div>
+      <a href="#">Movies</a>
+      <a href="#">TV Shows</a>
+      <a href="#">Live TV</a>
+      <a href="#">Sports</a>
+      <a href="#">Originals</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-h">Company</div>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Advertise</a>
+      <a href="#">Blog</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-h">Help</div>
+      <a href="#">Help Center</a>
+      <a href="#">Account</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-base">
+    <span>© 2026 Tamasha Entertainment Pvt. Ltd. All rights reserved.</span>
+    <span>Made with ♥ in Pakistan</span>
+  </div>
+</footer>
 
 <script>
 // ─── PATHS ───────────────────────────────────────────────────────
@@ -1331,80 +1568,76 @@ const heroMovies = [
   { folder:"JUMANJI_ WELCOME TO THE JUNGLE", banner:"banner.jpg",  title:"Jumanji: Welcome to the Jungle",year:"2017", rating:"6.9", runtime:"1h 59m", genre:"Action · Comedy",     tag:"Family Night Pick",      synopsis:"Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish it." },
 ];
 const continueData = [
-  { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", progress:62, pro:false},
-  { folder:"ZOMBIELAND_ DOUBLE TAP",                thumb:"thumbnail.jpg", progress:35, pro:true               },
-  { folder:"SPIDER-MAN 3 (2007)",                   thumb:"thumnail.jpg",  progress:80, pro:false},
-  { folder:"JUMANJI_ THE NEXT LEVEL",               thumb:"thumbnail.jpg", progress:20, pro:true               },
-  { folder:"EQUALIZER, THE (FEATURE)",              thumb:"thumbnail.jpg", progress:55, pro:false              },
-  { folder:"HANNA (2011)",                          thumb:"Thumbnail.jpg", progress:45, pro:true               },
+  { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", title:"Hotel Transylvania 3", sub:"S1 · E4 · Cruise Day Three", progress:62,  pro:false },
+  { folder:"ZOMBIELAND_ DOUBLE TAP",                thumb:"thumbnail.jpg", title:"Zombieland: Double Tap", sub:"35 min left",              progress:35,  pro:true  },
+  { folder:"SPIDER-MAN 3 (2007)",                   thumb:"thumnail.jpg",  title:"Spider-Man 3",           sub:"24 min left",              progress:80,  pro:false },
+  { folder:"JUMANJI_ THE NEXT LEVEL",               thumb:"thumbnail.jpg", title:"Jumanji: The Next Level", sub:"1h 32m left",             progress:20,  pro:true  },
+  { folder:"EQUALIZER, THE (FEATURE)",              thumb:"thumbnail.jpg", title:"The Equalizer",          sub:"52 min left",              progress:55,  pro:false },
+  { folder:"HANNA (2011)",                          thumb:"Thumbnail.jpg", title:"Hanna",                  sub:"38 min left",              progress:45,  pro:true  },
 ];
 const moviesData = [
-  { folder:"HOTEL TRANSYLVANIA",   thumb:"thumbnail.jpg", pro:true},
-  { folder:"BAD BOYS (1995)",       thumb:"thumbnail.jpg", pro:false},
-  { folder:"GLADIATOR (1992)",      thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"GODZILLA (1998)",       thumb:"Thumbnail.jpg", pro:false},
-  { folder:"GHOSTBUSTERS (2016)",   thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"JUMANJI (1995)",        thumb:"thumbnail.jpg", pro:false              },
-  { folder:"BABY DRIVER",           thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"ZOMBIELAND (2009)",     thumb:"thumbnail.jpg", pro:false},
+  { folder:"HOTEL TRANSYLVANIA",   thumb:"thumbnail.jpg", title:"Hotel Transylvania", meta:"2012 · Animation",  pro:true  },
+  { folder:"BAD BOYS (1995)",       thumb:"thumbnail.jpg", title:"Bad Boys",            meta:"1995 · Action",     pro:false },
+  { folder:"GLADIATOR (1992)",      thumb:"Thumbnail.jpg", title:"Gladiator",           meta:"2000 · Drama",      pro:true  },
+  { folder:"GODZILLA (1998)",       thumb:"Thumbnail.jpg", title:"Godzilla",            meta:"1998 · Sci-Fi",     pro:false },
+  { folder:"GHOSTBUSTERS (2016)",   thumb:"Thumbnail.jpg", title:"Ghostbusters",        meta:"2016 · Comedy",     pro:true  },
+  { folder:"BABY DRIVER",           thumb:"Thumbnail.jpg", title:"Baby Driver",         meta:"2017 · Thriller",   pro:true  },
+  { folder:"ZOMBIELAND (2009)",     thumb:"thumbnail.jpg", title:"Zombieland",          meta:"2009 · Horror",     pro:false },
 ];
 const liveChannels = [
-  { file:"ary-digital-live-logo.webp",      name:"ARY Digital"       },
-  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment" },
-  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray"       },
-  { file:"dawn-news-live.webp",             name:"Dawn News"         },
-  { file:"samaa-tv-live.webp",              name:"Samaa TV"          },
-  { file:"express-entertainment-live.webp", name:"Express Ent."      },
-  { file:"bol-entertainment-live.webp",     name:"BOL Entertainment" },
-  { file:"geo-news-live.webp",              name:"Geo News"          },
+  { file:"ary-digital-live-logo.webp",      name:"ARY Digital",      tag:"Now: Jeeto Pakistan"   },
+  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment",tag:"Now: Khaie"             },
+  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray",      tag:"Now: Dastaan"           },
+  { file:"dawn-news-live.webp",             name:"Dawn News",         tag:"Now: News Update"      },
+  { file:"samaa-tv-live.webp",              name:"Samaa TV",          tag:"Now: Capital Talk"     },
+  { file:"express-entertainment-live.webp", name:"Express Ent.",      tag:"Now: Mohabbat Tujhe"   },
+  { file:"geo-news-live.webp",              name:"Geo News",          tag:"Now: Aaj Shahzeb"      },
+  { file:"HUM-News-Channel-logo.webp",      name:"HUM News",          tag:"Now: Breaking Now"     },
 ];
 const topMoviesData = [
-  { folder:"CAPTAIN PHILLIPS",                 thumb:"thumbnail.jpg", pro:true},
-  { folder:"SOCIAL NETWORK, THE",              thumb:"thumbnail.jpg", pro:false              },
-  { folder:"PURSUIT OF HAPPYNESS, THE (2006)", thumb:"thumbnail.jpg", pro:true},
-  { folder:"BLACK HAWK DOWN",                  thumb:"thumbnail.jpg", pro:false},
-  { folder:"HANNA (2011)",                     thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"CONCUSSION",                       thumb:"Thumbnail.jpg", pro:false              },
-  { folder:"JERRY MAGUIRE",                    thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"DA VINCI CODE, THE",               thumb:"Thumbnail.jpg", pro:false},
+  { folder:"CAPTAIN PHILLIPS",                 thumb:"thumbnail.jpg", title:"Captain Phillips",        meta:"2013 · Thriller", pro:true  },
+  { folder:"SOCIAL NETWORK, THE",              thumb:"thumbnail.jpg", title:"The Social Network",      meta:"2010 · Drama",    pro:false },
+  { folder:"PURSUIT OF HAPPYNESS, THE (2006)", thumb:"thumbnail.jpg", title:"The Pursuit of Happyness",meta:"2006 · Drama",    pro:true  },
+  { folder:"BLACK HAWK DOWN",                  thumb:"thumbnail.jpg", title:"Black Hawk Down",         meta:"2001 · War",      pro:false },
+  { folder:"HANNA (2011)",                     thumb:"Thumbnail.jpg", title:"Hanna",                   meta:"2011 · Action",   pro:true  },
+  { folder:"BLADE RUNNER 2049",                thumb:"Thumbnail.jpg", title:"Blade Runner 2049",       meta:"2017 · Sci-Fi",   pro:false },
+  { folder:"GLADIATOR (1992)",                 thumb:"Thumbnail.jpg", title:"Gladiator",               meta:"1992 · Drama",    pro:true  },
 ];
 const tvShowsData = [
-  { folder:"SPIDER-MAN_ FAR FROM HOME",  thumb:"thumnail.jpg",  pro:true},
-  { folder:"SPIDER-MAN_ HOMECOMING",     thumb:"thumnail.jpg",  pro:false              },
-  { folder:"HOTEL TRANSYLVANIA 2",       thumb:"thumbnail.jpg", pro:true},
-  { folder:"BAD BOYS II",                thumb:"thumbnail.jpg", pro:false              },
-  { folder:"UNDERWORLD EVOLUTION",       thumb:"thumbnail.jpg", pro:true               },
-  { folder:"EVIL DEAD (2013)",           thumb:"Thumbnail.jpg", pro:false},
-  { folder:"ANGRY BIRDS MOVIE, THE",     thumb:"Thumbnail.jpg", pro:true               },
-  { folder:"SPIDER-MAN 2 (2004)",        thumb:"thumnail.jpg",  pro:false},
+  { folder:"SPIDER-MAN_ FAR FROM HOME",  thumb:"thumnail.jpg",  title:"Spider-Man: Far From Home", meta:"Marvel · 5 Seasons",   pro:true  },
+  { folder:"SPIDER-MAN_ HOMECOMING",     thumb:"thumnail.jpg",  title:"Spider-Man: Homecoming",    meta:"Marvel · 3 Seasons",   pro:false },
+  { folder:"HOTEL TRANSYLVANIA 2",       thumb:"thumbnail.jpg", title:"Hotel Transylvania 2",       meta:"Animation · 4 Seasons",pro:true  },
+  { folder:"BAD BOYS II",                thumb:"thumbnail.jpg", title:"Bad Boys II",                meta:"Action · 2 Seasons",   pro:false },
+  { folder:"UNDERWORLD EVOLUTION",       thumb:"thumbnail.jpg", title:"Underworld Evolution",       meta:"Fantasy · 3 Seasons",  pro:true  },
+  { folder:"SPIDER-MAN_ INTO THE SPIDER-VERSE", thumb:"thumbnails.jpg", title:"Spider-Verse",       meta:"Animation · 2 Seasons",pro:false },
+  { folder:"JUMANJI_ THE NEXT LEVEL",    thumb:"thumbnail.jpg", title:"Jumanji",                    meta:"Adventure · 1 Season", pro:false },
 ];
 const topTVData = [
-  { folder:"SPIDER-MAN_ INTO THE SPIDER-VERSE", thumb:"thumbnails.jpg", pro:true},
-  { folder:"JUMANJI_ THE NEXT LEVEL",           thumb:"thumbnail.jpg",  pro:false},
-  { folder:"ZOMBIELAND_ DOUBLE TAP",            thumb:"thumbnail.jpg",  pro:true               },
-  { folder:"EQUALIZER, THE (FEATURE)",          thumb:"thumbnail.jpg",  pro:false              },
-  { folder:"GHOSTBUSTERS (2016)",               thumb:"Thumbnail.jpg",  pro:true},
-  { folder:"BAD BOYS (1995)",                   thumb:"thumbnail.jpg",  pro:false              },
-  { folder:"CAPTAIN PHILLIPS",                  thumb:"thumbnail.jpg",  pro:true               },
-  { folder:"CONCUSSION",                        thumb:"Thumbnail.jpg",  pro:false              },
+  { folder:"SPIDER-MAN_ INTO THE SPIDER-VERSE", thumb:"thumbnails.jpg", title:"Spider-Verse",       meta:"Animation · 2 Seasons",pro:true  },
+  { folder:"JUMANJI_ THE NEXT LEVEL",           thumb:"thumbnail.jpg",  title:"Jumanji: The Next Level",meta:"Adventure · 1 Season",pro:false},
+  { folder:"ZOMBIELAND_ DOUBLE TAP",            thumb:"thumbnail.jpg",  title:"Zombieland: Double Tap",meta:"Horror · 2 Seasons", pro:true  },
+  { folder:"EQUALIZER, THE (FEATURE)",          thumb:"thumbnail.jpg",  title:"The Equalizer",       meta:"Action · 3 Seasons",  pro:false },
+  { folder:"GHOSTBUSTERS (2016)",               thumb:"Thumbnail.jpg",  title:"Ghostbusters",        meta:"Comedy · 1 Season",   pro:true  },
+  { folder:"BAD BOYS (1995)",                   thumb:"thumbnail.jpg",  title:"Bad Boys",            meta:"Action · 2 Seasons",  pro:false },
+  { folder:"CAPTAIN PHILLIPS",                  thumb:"thumbnail.jpg",  title:"Captain Phillips",    meta:"Thriller · 1 Season", pro:true  },
 ];
 
 const liveSportsData = [
-  { file: 'AFG-VS-SA(300x450).jpg.jpeg',                               label: 'AFG vs SA',        live: true,  pro: false },
-  { file: 'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',             label: 'Live Match',        live: true,  pro: false },
-  { file: 'WhatsApp Image 2026-04-30 at 4.05.20 PM (1).jpeg',         label: 'Live Now',          live: true,  pro: true  },
-  { file: 'CP 2.png',                                                   label: 'Cricket Live',      live: true,  pro: false },
-  { file: 'CP(300 x 450 px).png',                                       label: 'Premier League',    live: true,  pro: true  },
-  { file: 'Channel Posters (87).png',                                   label: 'Sports Event',      live: true,  pro: false },
+  { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
+  { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Live · 8:00 PM PKT', channel:'A Sports',        live:true,  pro:false },
+  { file:'WhatsApp Image 2026-04-30 at 4.05.20 PM (1).jpeg',        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true  },
+  { file:'CP 2.png',                                                  label:'County Championship',  sub:'Day 3 · Session 2',            score:'286/7 d · 142/4',   channel:'Tamasha Sports',  live:true,  pro:false },
+  { file:'CP(300 x 450 px).png',                                      label:'Premier League',       sub:"Liverpool vs Arsenal",         score:"Live · 67′",         channel:'A Sports',        live:true,  pro:true  },
+  { file:'Channel Posters (87).png',                                  label:'Asia Cup 2026',        sub:'Final · Toss in 25m',          score:'Starts 7:30 PM',    channel:'PTV Sports',      live:false, pro:false },
 ];
 
 const highlightsData = [
-  { file: 'WhatsApp Image 2026-01-13 at 11.32.06 PM (1).jpeg',        label: 'Match Highlights',  pro: false },
-  { file: 'WhatsApp Image 2026-02-06 at 2.14.48 PM (4).jpeg',         label: 'Best Moments',      pro: false },
-  { file: 'WhatsApp Image 2026-02-10 at 5.41.24 PM (1).jpeg',         label: 'Top Goals',         pro: true  },
-  { file: 'WhatsApp Image 2026-02-12 at 4.13.22 PM (1).jpeg',         label: 'Weekly Recap',      pro: false },
-  { file: 'WhatsApp Image 2026-02-13 at 11.37.05 PM.jpeg',            label: 'Classic Match',     pro: true  },
-  { file: 'WhatsApp Image 2026-03-18 at 3.23.01 PM (2).jpeg',         label: 'Super Over',        pro: false },
+  { file:'WhatsApp Image 2026-01-13 at 11.32.06 PM (1).jpeg', label:"Babar's Match-Winning 122",  sub:'8 min · PAK vs ENG', duration:'8:24',    pro:false },
+  { file:'WhatsApp Image 2026-02-06 at 2.14.48 PM (4).jpeg',  label:'Last Over Drama',             sub:'4 min · KAR vs MUL', duration:'4:11',    pro:false },
+  { file:'WhatsApp Image 2026-02-10 at 5.41.24 PM (1).jpeg',  label:'Top 10 Sixes of the Week',   sub:'6 min · PSL X',      duration:'6:02',    pro:true  },
+  { file:'WhatsApp Image 2026-02-12 at 4.13.22 PM (1).jpeg',  label:'Hat-Trick! Shaheen Strikes', sub:'3 min · PAK vs SA',  duration:'3:18',    pro:false },
+  { file:'WhatsApp Image 2026-02-13 at 11.37.05 PM.jpeg',     label:'Classic Match: 1992 Final',  sub:'Full match · Restored',duration:'1:42:08',pro:true  },
+  { file:'WhatsApp Image 2026-03-18 at 3.23.01 PM (2).jpeg',  label:'Super Over Showdown',        sub:'7 min · Asia Cup',   duration:'7:09',    pro:false },
 ];
 
 // ─── HERO ────────────────────────────────────────────────────────
@@ -1609,35 +1842,134 @@ function applyLayout(id) {
 buildHeroBanner();
 
 // ─── CARD BUILDERS ───────────────────────────────────────────────
+
+/* Portrait card: movies / tv shows (no PRO badge, no lock) */
 function makePortraitCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
-  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/><div class="card-overlay"></div></div>`;
+  w.style.height = 'auto';
+  const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
+  const meta  = item.meta  || '';
+  w.innerHTML = `
+    <div class="card-inner" style="height:270px">
+      <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
+      <div class="card-overlay"></div>
+      <div class="card-hover-actions">
+        <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
+        <button class="card-action-btn" title="Add to list">${_PLUS}</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${title}</div>
+      ${meta ? `<div class="card-body-meta">${meta}</div>` : ''}
+    </div>`;
   return w;
 }
+
+/* Top Movies: has numbered PRO badge and lock overlay */
 function makeTopMovieCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
-  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/>${item.pro?LOCK:''}<div class="card-overlay"></div></div>${item.pro?BADGE:''}`;
+  w.style.height = 'auto';
+  const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
+  const meta  = item.meta  || '';
+  w.innerHTML = `
+    <div class="card-inner" style="height:270px">
+      <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
+      ${item.pro ? LOCK : ''}
+      <div class="card-overlay"></div>
+      ${item.pro ? BADGE : ''}
+      <div class="card-hover-actions">
+        <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
+        <button class="card-action-btn" title="Add to list">${_PLUS}</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${title}</div>
+      ${meta ? `<div class="card-body-meta">${meta}</div>` : ''}
+    </div>`;
   return w;
 }
+
+/* Wide (landscape) card: continue watching with progress bar and play overlay */
 function makeWideCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap wide';
-  w.innerHTML = `<div class="card-inner"><img src="${bp(item.folder,item.thumb)}" alt="${item.folder}" loading="lazy"/><div class="card-overlay"></div><div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div></div>`;
+  w.style.height = 'auto';
+  const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
+  w.innerHTML = `
+    <div class="card-inner" style="height:148px">
+      <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
+      <div class="card-overlay"></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div>
+      <div class="continue-play-overlay">${_PLAY_W}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${title}</div>
+      ${item.sub ? `<div class="card-body-sub">${item.sub}</div>` : ''}
+    </div>`;
   return w;
 }
+
+/* Landscape (channel) card: live TV */
 function makeLandscapeCard(ch) {
   const w = document.createElement('div');
   w.className = 'card-wrap landscape';
-  w.innerHTML = `<div class="card-inner"><div class="ch-bg"></div><img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/><span class="live-pill">LIVE</span></div>`;
+  w.style.height = 'auto';
+  w.innerHTML = `
+    <div class="card-inner" style="height:144px">
+      <div class="ch-bg"></div>
+      <img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/>
+      <span class="live-pill">LIVE</span>
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${ch.name}</div>
+      ${ch.tag ? `<div class="card-body-sub">${ch.tag}</div>` : ''}
+    </div>`;
   return w;
 }
+
+/* Sports card: live match with score and channel info */
 function makeSportsCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
-  const liveBadge = item.live ? `<span class="live-pill" style="top:10px;left:10px;right:auto">LIVE</span>` : '';
-  w.innerHTML = `<div class="card-inner"><img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>${liveBadge}<div class="card-overlay"></div><div class="sports-label">${item.label}</div></div>`;
+  w.style.height = 'auto';
+  const liveBadge = item.live
+    ? `<span class="live-pill" style="top:10px;left:10px;right:auto">${item.live ? 'LIVE' : 'SOON'}</span>`
+    : '';
+  w.innerHTML = `
+    <div class="card-inner" style="height:270px">
+      <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
+      ${liveBadge}
+      <div class="card-overlay"></div>
+      ${item.pro ? `<div class="card-badge" style="top:auto;bottom:0;border-radius:0 8px 0 0;padding:4px 10px;font-size:11px">${WAVE}PRO</div>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${item.label}</div>
+      ${item.sub    ? `<div class="card-body-sub">${item.sub}</div>` : ''}
+      ${item.score  ? `<div class="card-body-score">${item.score}</div>` : ''}
+      ${item.channel? `<div class="card-body-meta">${item.channel}</div>` : ''}
+    </div>`;
+  return w;
+}
+
+/* Highlight card: video thumbnail with duration badge + play overlay */
+function makeHighlightCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap wide';
+  w.style.height = 'auto';
+  w.innerHTML = `
+    <div class="card-inner" style="height:148px">
+      <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
+      <div class="card-overlay"></div>
+      <div class="highlight-play">${_PLAY_W}</div>
+      ${item.duration ? `<div class="highlight-duration">${item.duration}</div>` : ''}
+      ${item.pro ? `<div class="card-badge" style="top:auto;bottom:0;border-radius:0 8px 0 0;padding:4px 10px;font-size:11px">${WAVE}PRO</div>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${item.label}</div>
+      ${item.sub ? `<div class="card-body-sub">${item.sub}</div>` : ''}
+    </div>`;
   return w;
 }
 
@@ -1649,7 +1981,7 @@ function makeSportsCard(item) {
  ['tvShowsRow',tvShowsData,makePortraitCard],
  ['topTVRow',topTVData,makePortraitCard],
  ['liveSportsRow',liveSportsData,makeSportsCard],
- ['highlightsRow',highlightsData,makeSportsCard],
+ ['highlightsRow',highlightsData,makeHighlightCard],
 ].forEach(([id,data,fn]) => {
   const row = document.getElementById(id);
   data.forEach(item => row.appendChild(fn(item)));
@@ -1657,11 +1989,11 @@ function makeSportsCard(item) {
 
 // ─── NAV FILTER ──────────────────────────────────────────────────
 const filterMap = {
-  home:       ['continue','movies','live-tv','tv-shows','sports'],
-  movies:     ['continue','movies'],
+  home:       ['continue','movies','live-tv','tv-shows','sports','promo'],
+  movies:     ['continue','movies','promo'],
   'tv-shows': ['continue','tv-shows'],
   'live-tv':  ['live-tv'],
-  shorts:     ['continue','movies'],
+  shorts:     ['continue','movies','promo'],
 };
 document.getElementById('navLinks').addEventListener('click', e => {
   const a = e.target.closest('a[data-filter]');
@@ -1690,13 +2022,13 @@ document.getElementById('navLinks').addEventListener('click', e => {
 
 // ─── SEARCH ──────────────────────────────────────────────────────
 const searchIndex = [
-  ...moviesData.map(i    => ({ title: i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Movies',    pro:i.pro, type:'portrait' })),
-  ...topMoviesData.map(i => ({ title: i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top Movies', pro:i.pro, type:'portrait' })),
-  ...tvShowsData.map(i   => ({ title: i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'TV Shows',   pro:i.pro, type:'portrait' })),
-  ...topTVData.map(i     => ({ title: i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top TV',     pro:i.pro, type:'portrait' })),
-  ...continueData.map(i  => ({ title: i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Continue Watching', pro:i.pro, type:'wide' })),
-  ...liveSportsData.map(i=> ({ title: i.label,                    thumb: sp(i.file),           cat:'Live Sports', pro:i.pro, type:'portrait' })),
-  ...highlightsData.map(i=> ({ title: i.label,                    thumb: sp(i.file),           cat:'Highlights',  pro:i.pro, type:'portrait' })),
+  ...moviesData.map(i    => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Movies',    pro:i.pro, type:'portrait' })),
+  ...topMoviesData.map(i => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top Movies', pro:i.pro, type:'portrait' })),
+  ...tvShowsData.map(i   => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'TV Shows',   pro:i.pro, type:'portrait' })),
+  ...topTVData.map(i     => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top TV',     pro:i.pro, type:'portrait' })),
+  ...continueData.map(i  => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Continue Watching', pro:i.pro, type:'wide' })),
+  ...liveSportsData.map(i=> ({ title: i.label,                               thumb: sp(i.file),           cat:'Live Sports', pro:i.pro, type:'portrait' })),
+  ...highlightsData.map(i=> ({ title: i.label,                               thumb: sp(i.file),           cat:'Highlights',  pro:i.pro, type:'portrait' })),
 ];
 
 function openSearch() {
