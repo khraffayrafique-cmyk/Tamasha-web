@@ -195,17 +195,53 @@
       transition: transform .55s cubic-bezier(.4,0,.2,1);
     }
     .hero-slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; }
-    .hero-slide > img.hero-bg {
+    .hero-slide > img.hero-bg,
+    .hero-slide > video.hero-bg {
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover; object-position: center top; display: block;
+      object-fit: cover; object-position: center center; display: block;
       backface-visibility: hidden; -webkit-backface-visibility: hidden;
       image-rendering: -webkit-optimize-contrast; image-rendering: high-quality;
     }
     .hero-gradient {
-      position: absolute; inset: 0;
+      position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(90deg,rgba(10,10,10,.92) 0%,rgba(10,10,10,.5) 45%,rgba(10,10,10,.05) 100%);
     }
-    .hero-content { position: absolute; bottom: 64px; left: 80px; max-width: 480px; }
+    /* Bottom bleed gradient — extends below hero so sections appear to rise from it */
+    .hero-gradient-b {
+      position: absolute; left: 0; right: 0; z-index: 1;
+      top: 0; bottom: -140px;
+      background: linear-gradient(180deg,
+        transparent 35%,
+        rgba(0,0,0,.45) 58%,
+        rgba(0,0,0,.82) 74%,
+        var(--bg) 90%
+      );
+      pointer-events: none;
+    }
+    .hero-content { position: absolute; bottom: 64px; left: 80px; max-width: 480px; z-index: 2; }
+
+    /* ─── HERO: VARIATION 2 (Netflix-style bleed) ─────────────── */
+    .hero--v2 {
+      height: 720px;
+      overflow: visible;       /* lets gradient-b spill below */
+      margin-bottom: -130px;   /* sections slide under the faded bottom */
+    }
+    .hero--v2 .hero-content {
+      bottom: 200px;           /* sit above the deep fade */
+    }
+    .hero--v2 ~ .section {
+      position: relative; z-index: 2;
+    }
+    /* Mute toggle button */
+    .hero-mute-btn {
+      position: absolute; right: 60px; bottom: 220px; z-index: 10;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(0,0,0,.45); border: 1.5px solid rgba(255,255,255,.55);
+      color: #fff; cursor: pointer; display: grid; place-items: center;
+      backdrop-filter: blur(6px); transition: background .15s;
+    }
+    .hero-mute-btn:hover { background: rgba(255,255,255,.18); }
     .hero-genre-badge {
       display: inline-block;
       background: linear-gradient(90deg,#f97316,#eab308);
@@ -1296,9 +1332,11 @@
 const B = "Tamasha%20Baneers%202/";
 const C = "Live%20Channel%20logos/";
 const S = "Sports/";
+const T = "TV%20Show%20Trailers/";
 function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
 function cp(file)         { return C + encodeURIComponent(file); }
 function sp(file)         { return S + encodeURIComponent(file); }
+function tp(file)         { return T + encodeURIComponent(file); }
 
 // ─── WAVE SVG ────────────────────────────────────────────────────
 const WAVE  = `<svg class="badge-icon" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -1359,12 +1397,14 @@ function applyPageTheme(id) {
 
 // ─── LAYOUT CARDS ────────────────────────────────────────────────
 const LAYOUTS = [
-  { id:'classic',   name:'Classic',    icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#111"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#lcl)"/><defs><linearGradient id="lcl" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#000" stop-opacity=".8"/><stop offset=".55" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="10" y="30" width="22" height="3" rx="1.5" fill="#f97316" opacity=".9"/><rect x="10" y="36" width="36" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="10" y="46" width="28" height="2" rx="1" fill="#fff" opacity=".45"/><rect x="3" y="24" width="6" height="6" rx="3" fill="#333"/><rect x="81" y="24" width="6" height="6" rx="3" fill="#333"/><circle cx="40" cy="52" r="2" fill="#fff" opacity=".7"/><circle cx="47" cy="52" r="1.5" fill="#fff" opacity=".35"/><circle cx="53" cy="52" r="1.5" fill="#fff" opacity=".35"/></svg>` },
-  { id:'live',      name:'Live First', icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0d0b1e"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#ll1)"/><defs><linearGradient id="ll1" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#1a0505" stop-opacity=".9"/><stop offset="1" stop-color="#0d0b1e" stop-opacity="0"/></linearGradient></defs><rect x="8" y="10" width="14" height="5" rx="2.5" fill="#ED2B1F"/><rect x="25" y="11" width="22" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="18" width="44" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="28" width="32" height="2" rx="1" fill="#fff" opacity=".4"/><rect x="8" y="34" width="56" height="9" rx="4" fill="#fff" opacity=".07"/><rect x="12" y="37" width="16" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="42" y="37" width="18" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="46" width="16" height="5" rx="2.5" fill="#7c3aed"/><rect x="27" y="46" width="14" height="5" rx="2.5" fill="#fff" opacity=".15"/></svg>` },
+  { id:'classic',   name:'Classic',      icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#111"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#lcl)"/><defs><linearGradient id="lcl" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#000" stop-opacity=".8"/><stop offset=".55" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="10" y="30" width="22" height="3" rx="1.5" fill="#f97316" opacity=".9"/><rect x="10" y="36" width="36" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="10" y="46" width="28" height="2" rx="1" fill="#fff" opacity=".45"/><rect x="3" y="24" width="6" height="6" rx="3" fill="#333"/><rect x="81" y="24" width="6" height="6" rx="3" fill="#333"/><circle cx="40" cy="52" r="2" fill="#fff" opacity=".7"/><circle cx="47" cy="52" r="1.5" fill="#fff" opacity=".35"/><circle cx="53" cy="52" r="1.5" fill="#fff" opacity=".35"/></svg>` },
+  { id:'live',      name:'Live First',   icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0d0b1e"/><rect x="0" y="0" width="90" height="56" rx="4" fill="url(#ll1)"/><defs><linearGradient id="ll1" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#1a0505" stop-opacity=".9"/><stop offset="1" stop-color="#0d0b1e" stop-opacity="0"/></linearGradient></defs><rect x="8" y="10" width="14" height="5" rx="2.5" fill="#ED2B1F"/><rect x="25" y="11" width="22" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="18" width="44" height="7" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="28" width="32" height="2" rx="1" fill="#fff" opacity=".4"/><rect x="8" y="34" width="56" height="9" rx="4" fill="#fff" opacity=".07"/><rect x="12" y="37" width="16" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="42" y="37" width="18" height="3" rx="1.5" fill="#fff" opacity=".5"/><rect x="8" y="46" width="16" height="5" rx="2.5" fill="#7c3aed"/><rect x="27" y="46" width="14" height="5" rx="2.5" fill="#fff" opacity=".15"/></svg>` },
+  { id:'v2',        name:'Variation 2',  icon:`<svg viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="56" rx="4" fill="#0a0a0a"/><rect x="0" y="0" width="90" height="38" rx="4" fill="url(#lv2a)"/><defs><linearGradient id="lv2a" x1="0" y1="0" x2="0" y2="38"><stop stop-color="#2a1060" stop-opacity=".9"/><stop offset="1" stop-color="#0a0a0a" stop-opacity="1"/></linearGradient></defs><rect x="0" y="0" width="90" height="38" fill="url(#lv2b)"/><defs><linearGradient id="lv2b" x1="0" y1="0" x2="90" y2="0"><stop stop-color="#000" stop-opacity=".7"/><stop offset=".6" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="8" y="9" width="18" height="2.5" rx="1.2" fill="#f97316" opacity=".9"/><rect x="8" y="14" width="34" height="6" rx="2" fill="#fff" opacity=".9"/><rect x="8" y="23" width="28" height="1.5" rx=".75" fill="#fff" opacity=".4"/><rect x="8" y="27" width="14" height="4" rx="2" fill="#fff" opacity=".9"/><rect x="25" y="27" width="11" height="4" rx="2" fill="#fff" opacity=".12"/><rect x="6" y="36" width="24" height="5" rx="2" fill="#1a1a1a"/><rect x="33" y="36" width="24" height="5" rx="2" fill="#1a1a1a"/><rect x="60" y="36" width="24" height="5" rx="2" fill="#1a1a1a"/><rect x="6" y="43" width="24" height="5" rx="2" fill="#161616"/><rect x="33" y="43" width="24" height="5" rx="2" fill="#161616"/><rect x="60" y="43" width="24" height="5" rx="2" fill="#161616"/></svg>` },
 ];
 
 (function buildLayouts() {
   const grid = document.getElementById('tpLayoutGrid');
+  if (LAYOUTS.length % 2 !== 0) grid.classList.add('has-five');
   LAYOUTS.forEach(l => {
     const el = document.createElement('div');
     el.className = 'tp-layout-card' + (l.id === 'classic' ? ' active' : '');
@@ -1469,9 +1509,10 @@ document.addEventListener('click', e => {
 
 // ─── DATA ────────────────────────────────────────────────────────
 const heroMovies = [
-  { folder:"BLADE RUNNER 2049",              banner:"Banner.jpg",  title:"Blade Runner 2049",             year:"2017", rating:"8.0", runtime:"2h 44m", genre:"Sci-Fi · Thriller",   tag:"Tamasha Original Pick",  synopsis:"Thirty years after the events of the first film, a new blade runner unearths a long-buried secret with the power to plunge what's left of society into chaos." },
-  { folder:"SPIDER-MAN (2002)",              banner:"banner.jpg",  title:"Spider-Man",                    year:"2002", rating:"7.3", runtime:"2h 1m",  genre:"Action · Adventure",  tag:"Trending This Week",     synopsis:"After a high-school student is bitten by a genetically-altered spider, he becomes the city's most unlikely defender against rising evil." },
-  { folder:"JUMANJI_ WELCOME TO THE JUNGLE", banner:"banner.jpg",  title:"Jumanji: Welcome to the Jungle",year:"2017", rating:"6.9", runtime:"1h 59m", genre:"Action · Comedy",     tag:"Family Night Pick",      synopsis:"Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish it." },
+  { title:"Game of Thrones",                        year:"2011", rating:"9.2", runtime:"57m · ep",  genre:"Fantasy · Drama",    tag:"Tamasha Original Pick", synopsis:"Nine noble families wage war for control of the mythical land of Westeros — and only one can sit on the Iron Throne.",                              trailer:"GAME OF THRONES - SEASON 1- TRAILER - HBO UK (1080p, h264).mp4" },
+  { title:"Game of Thrones: The Final Season",      year:"2019", rating:"7.7", runtime:"80m · ep",  genre:"Fantasy · Drama",    tag:"Season Finale",         synopsis:"The Great War has come to Westeros. Alliances will be tested and the fate of every kingdom rests on the outcome.",                                  trailer:"Game of Thrones Season 8 Official Trailer (HBO) - GameofThrones (1080p, h264).mp4" },
+  { title:"The Lord of the Rings: Fellowship",      year:"2001", rating:"8.8", runtime:"3h 48m",    genre:"Fantasy · Adventure",tag:"Epic Adventure",         synopsis:"A young hobbit is tasked with destroying the most powerful object in the world — before the Dark Lord Sauron reclaims it and enslaves all life.",   trailer:"The Fellowship of the Ring The Lord of the Rings 4K Ultra HD Warner Bros. Entertainment - Warner Bros. Entertainment (1080p, h264).mp4" },
+  { title:"The Penguin",                            year:"2024", rating:"8.2", runtime:"55m · ep",  genre:"Crime · Drama",      tag:"Now Streaming",         synopsis:"Oz Cobb navigates Gotham's brutal criminal underworld, clawing his way toward absolute power in the vacuum left by Falcone's death.",             trailer:"The Penguin Official Teaser Max - Comicbook.mp4" },
 ];
 const continueData = [
   { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", title:"Hotel Transylvania 3", sub:"S1 · E4 · Cruise Day Three", progress:62,  pro:false },
@@ -1553,6 +1594,8 @@ let heroAutoSlide = null;
 let currentLayout = 'classic';
 
 const _PLAY_W  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>`;
+const _VOL_ON  = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+const _VOL_OFF = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
 const _PLAY_B  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="#111"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
 const _PLUS    = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
 const _BELL    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2zM10 21a2 2 0 0 0 4 0"/></svg>`;
@@ -1568,8 +1611,21 @@ function goToSlide(idx) {
   document.querySelectorAll('.hero__pager-dot').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero__fstrip-item').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===heroIdx));
+  // pause all videos, play the active one from the start
+  document.querySelectorAll('.hero-video').forEach((v, i) => {
+    if (i === heroIdx) { v.currentTime = 0; v.play().catch(()=>{}); }
+    else { v.pause(); }
+  });
 }
 function heroSlide(dir) { goToSlide(heroIdx + dir); }
+
+// muted state is global so mute/unmute persists across slides
+let _heroMuted = true;
+function toggleHeroMute(btn) {
+  _heroMuted = !_heroMuted;
+  document.querySelectorAll('.hero-video').forEach(v => { v.muted = _heroMuted; });
+  btn.innerHTML = _heroMuted ? _VOL_OFF : _VOL_ON;
+}
 
 function buildHeroBanner() {
   clearInterval(heroAutoSlide); heroIdx = 0;
@@ -1736,14 +1792,24 @@ function buildHeroLive() {
     </div>`;
 }
 
+function _heroBg(m, i) {
+  if (m.trailer) {
+    return `<video class="hero-bg hero-video" ${i===0?'autoplay':''} muted playsinline preload="metadata" loop>
+      <source src="${tp(m.trailer)}" type="video/mp4">
+    </video>`;
+  }
+  return `<img class="hero-bg" src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>`;
+}
+
 function buildHeroClassic() {
   clearInterval(heroAutoSlide); heroIdx = 0;
+  _heroMuted = true;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero'; sec.style.height = '';
 
   const slides = heroMovies.map((m, i) => `
     <div class="hero-slide">
-      <img class="hero-bg" src="${bp(m.folder,m.banner)}" alt="${m.title}" loading="${i===0?'eager':'lazy'}"/>
+      ${_heroBg(m, i)}
       <div class="hero-gradient"></div>
       <div class="hero-pro-tag">${WAVE}PRO</div>
       <div class="hero-content">
@@ -1766,6 +1832,7 @@ function buildHeroClassic() {
 
   sec.innerHTML = `
     <div class="hero-track" id="heroTrack">${slides}</div>
+    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_VOL_OFF}</button>
     <button class="hero-arrow left" onclick="heroSlide(-1)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
@@ -1774,17 +1841,70 @@ function buildHeroClassic() {
     </button>
     <div class="hero-dots" id="heroDots">${dots}</div>`;
 
-  heroAutoSlide = setInterval(() => heroSlide(1), 5000);
+  // kick off first video
+  setTimeout(() => {
+    const v = sec.querySelector('.hero-video');
+    if (v) v.play().catch(()=>{});
+  }, 80);
+
+  heroAutoSlide = setInterval(() => heroSlide(1), 14000); // longer — videos are ~1-2 min
+}
+
+function buildHeroV2() {
+  clearInterval(heroAutoSlide); heroIdx = 0;
+  _heroMuted = true;
+  const sec = document.getElementById('heroSection');
+  sec.className = 'hero hero--v2'; sec.style.height = '';
+
+  const slides = heroMovies.map((m, i) => `
+    <div class="hero-slide">
+      ${_heroBg(m, i)}
+      <div class="hero-gradient"></div>
+      <div class="hero-gradient-b"></div>
+      <div class="hero-pro-tag">${WAVE}PRO</div>
+      <div class="hero-content">
+        <div class="hero-genre-badge">${m.genre}</div>
+        <div class="hero-title">${m.title}</div>
+        <div class="hero-meta">
+          <span>${_STAR} ${m.rating}</span>
+          <span>${m.year}</span><span>·</span><span>${m.runtime}</span>
+        </div>
+        <p style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.75);margin:0 0 24px;max-width:46ch">${m.synopsis}</p>
+        <div class="hero-buttons">
+          <button class="btn-play">${_PLAY_B}Play</button>
+          <button class="btn-info">More Info</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const dots = heroMovies.map((_, i) =>
+    `<div class="hero-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
+
+  sec.innerHTML = `
+    <div class="hero-track" id="heroTrack">${slides}</div>
+    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_VOL_OFF}</button>
+    <button class="hero-arrow left" onclick="heroSlide(-1)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="hero-arrow right" onclick="heroSlide(1)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div class="hero-dots" id="heroDots">${dots}</div>`;
+
+  setTimeout(() => {
+    const v = sec.querySelector('.hero-video');
+    if (v) v.play().catch(()=>{});
+  }, 80);
+
+  heroAutoSlide = setInterval(() => heroSlide(1), 14000);
 }
 
 function applyLayout(id) {
   currentLayout = id;
   document.querySelectorAll('.tp-layout-card').forEach(c => c.classList.toggle('active', c.dataset.layout === id));
-  if (id === 'cinematic') buildHeroBanner();
-  else if (id === 'editorial') buildHeroEditorial(0);
-  else if (id === 'mosaic')    buildHeroMosaic();
-  else if (id === 'live')      buildHeroLive();
-  else if (id === 'classic')   buildHeroClassic();
+  if      (id === 'classic') buildHeroClassic();
+  else if (id === 'live')    buildHeroLive();
+  else if (id === 'v2')      buildHeroV2();
 }
 
 // Init default layout
