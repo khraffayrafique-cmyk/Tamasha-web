@@ -11,8 +11,8 @@
     /* ─── CSS VARIABLES (theme tokens) ────────────────────────── */
     :root {
       /* Accent */
-      --accent-from:    #7c3aed;
-      --accent-to:      #a855f7;
+      --accent-from:    #2472FC;
+      --accent-to:      #2472FC;
       --accent-grad:    linear-gradient(90deg, var(--accent-from), var(--accent-to));
       /* Typography */
       --heading-font:   'Manrope', sans-serif;
@@ -21,7 +21,7 @@
       --bg:             #141414;
       --surface:        #1a1a2e;
       --surface-ch:     radial-gradient(circle at center,#1e1b4b 0%,#0a0a0a 100%);
-      --nav-bg:         rgba(17,17,17,0.9);
+      --nav-bg:         transparent;
       --panel-bg:       #141414;
       --text:           #ffffff;
       --text-dim:       rgba(255,255,255,0.5);
@@ -46,9 +46,14 @@
       position: fixed; top: 0; left: 0; right: 0;
       height: 70px;
       background: var(--nav-bg);
-      backdrop-filter: blur(12px);
       display: flex; align-items: center;
       padding: 0 40px; z-index: 200; gap: 20px;
+      transition: background .3s;
+    }
+    /* Darken navbar once user scrolls off the hero */
+    .navbar.scrolled {
+      background: rgba(10,10,10,0.88);
+      backdrop-filter: blur(12px);
     }
     .logo { flex-shrink: 0; }
     .logo img { height: 46px; width: auto; object-fit: contain; }
@@ -206,6 +211,12 @@
     .hero-gradient {
       position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(90deg,rgba(10,10,10,.72) 0%,rgba(10,10,10,.32) 45%,rgba(10,10,10,.0) 100%);
+    }
+    /* Top fade so navbar text stays readable over the video */
+    .hero-gradient-t {
+      position: absolute; top: 0; left: 0; right: 0; height: 160px; z-index: 1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, transparent 100%);
+      pointer-events: none;
     }
     /* Bottom bleed gradient — extends below hero so sections appear to rise from it */
     .hero-gradient-b {
@@ -1354,7 +1365,7 @@ const PAGE_THEMES = [
       '--bg':             '#141414',
       '--surface':        '#1a1a2e',
       '--surface-ch':     'radial-gradient(circle at center,#1e1b4b 0%,#0a0a0a 100%)',
-      '--nav-bg':         'rgba(17,17,17,0.9)',
+      '--nav-bg':         'transparent',
       '--panel-bg':       '#141414',
       '--text':           '#ffffff',
       '--text-dim':       'rgba(255,255,255,0.5)',
@@ -1371,7 +1382,7 @@ const PAGE_THEMES = [
       '--bg':             '#000000',
       '--surface':        '#111111',
       '--surface-ch':     'radial-gradient(circle at center,#1a1a1a 0%,#000 100%)',
-      '--nav-bg':         'rgba(0,0,0,0.98)',
+      '--nav-bg':         'transparent',
       '--panel-bg':       '#080808',
       '--text':           '#ffffff',
       '--text-dim':       'rgba(255,255,255,0.5)',
@@ -1821,6 +1832,7 @@ function buildHeroClassic() {
   const slides = heroMovies.map((m, i) => `
     <div class="hero-slide">
       ${_heroBg(m, i)}
+      <div class="hero-gradient-t"></div>
       <div class="hero-gradient"></div>
       <div class="hero-pro-tag">${WAVE}PRO</div>
       <div class="hero-content">
@@ -1870,6 +1882,7 @@ function buildHeroV2() {
   const slides = heroMovies.map((m, i) => `
     <div class="hero-slide">
       ${_heroBg(m, i)}
+      <div class="hero-gradient-t"></div>
       <div class="hero-gradient"></div>
       <div class="hero-gradient-b"></div>
       <div class="hero-pro-tag">${WAVE}PRO</div>
@@ -2193,6 +2206,15 @@ document.querySelectorAll('.section-header, .cards-row').forEach(el => {
     scrollObserver.observe(el);
   }
 });
+
+// ─── NAVBAR SCROLL BEHAVIOUR ─────────────────────────────────────
+// Transparent over hero, solid once scrolled past it
+(function() {
+  const nav = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+})();
 
 // ─── LENIS SMOOTH SCROLL ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
