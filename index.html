@@ -1017,6 +1017,9 @@
       background: var(--accent-grad); border-radius: 999px;
     }
 
+    /* Live First inherits hero--v2 sizing; content sits a touch higher for scoreboard */
+    .hero--live .hero-content { bottom: 160px; }
+
     /* ─── HERO: LIVE FIRST ──────────────────────────────────────── */
     .hero__live-row { display: flex; align-items: center; gap: 12px; }
     .hero-live-pill {
@@ -1771,24 +1774,25 @@ function buildHeroMosaic() {
 }
 
 function buildHeroLive() {
-  clearInterval(heroAutoSlide);
+  stopHeroTimer();
   const sec = document.getElementById('heroSection');
-  sec.className = 'hero hero--live'; sec.style.height = '';
+  // Reuse hero--v2 shell for identical size (720px) and bleed effect
+  sec.className = 'hero hero--v2 hero--live'; sec.style.height = '';
   const m = liveSportsData[2]; // Champions Trophy PAK vs IND
 
   sec.innerHTML = `
-    <div class="hero__bg">
-      <img src="${sp(m.file)}" alt="Champions Trophy" loading="eager"/>
-      <div class="hero__grad-r"></div>
-      <div class="hero__grad-b"></div>
-    </div>
-    <div class="hero__content">
+    <img class="hero-bg" src="${sp(m.file)}" alt="Champions Trophy" loading="eager"/>
+    <div class="hero-gradient-t"></div>
+    <div class="hero-gradient"></div>
+    <div class="hero-gradient-b"></div>
+    <div class="hero-pro-tag">${WAVE}PRO</div>
+    <div class="hero-content hero-content--live">
       <div class="hero__live-row">
         <span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>
         <span class="hero__live-channel">PTV Sports</span>
         <span class="hero__live-tag">12.4M watching</span>
       </div>
-      <h1 class="hero__title hero__title--lg">Champions Trophy</h1>
+      <h1 class="hero-title">Champions Trophy</h1>
       <div class="hero__live-sub">PAK vs IND · Group Stage · Innings Break</div>
       <div class="scoreboard">
         <div class="scoreboard__team">
@@ -1807,9 +1811,9 @@ function buildHeroLive() {
           <div class="scoreboard__flag" style="background:linear-gradient(135deg,#FF9933 0%,#FF9933 33%,#fff 33%,#fff 66%,#138808 66%);color:#222">IND</div>
         </div>
       </div>
-      <div class="hero__actions">
-        <button class="btn btn--primary">${_PLAY_W}Watch Live</button>
-        <button class="btn btn--ghost">${_BELL}Set Reminder</button>
+      <div class="hero-buttons" style="margin-top:18px">
+        <button class="btn-play">${_PLAY_B}Watch Live</button>
+        <button class="btn-info">${_BELL} Set Reminder</button>
       </div>
     </div>`;
 }
