@@ -1593,6 +1593,15 @@ let heroIdx = 0;
 let heroAutoSlide = null;
 let currentLayout = 'v2';
 
+function startHeroTimer() {
+  clearTimeout(heroAutoSlide);
+  heroAutoSlide = setTimeout(() => heroSlide(1), 25000);
+}
+function stopHeroTimer() {
+  clearTimeout(heroAutoSlide);
+  heroAutoSlide = null;
+}
+
 const _PLAY_W  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>`;
 const _VOL_ON  = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
 const _VOL_OFF = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
@@ -1616,6 +1625,8 @@ function goToSlide(idx) {
     if (i === heroIdx) { v.currentTime = 0; v.play().catch(()=>{}); }
     else { v.pause(); }
   });
+  // restart the 25s countdown for this slide
+  startHeroTimer();
 }
 function heroSlide(dir) { goToSlide(heroIdx + dir); }
 
@@ -1628,7 +1639,7 @@ function toggleHeroMute(btn) {
 }
 
 function buildHeroBanner() {
-  clearInterval(heroAutoSlide); heroIdx = 0;
+  stopHeroTimer(); heroIdx = 0;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero'; sec.style.height = '';
 
@@ -1802,7 +1813,7 @@ function _heroBg(m, i) {
 }
 
 function buildHeroClassic() {
-  clearInterval(heroAutoSlide); heroIdx = 0;
+  stopHeroTimer(); heroIdx = 0;
   _heroMuted = true;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero'; sec.style.height = '';
@@ -1847,11 +1858,11 @@ function buildHeroClassic() {
     if (v) v.play().catch(()=>{});
   }, 80);
 
-  heroAutoSlide = setInterval(() => heroSlide(1), 14000); // longer — videos are ~1-2 min
+  startHeroTimer();
 }
 
 function buildHeroV2() {
-  clearInterval(heroAutoSlide); heroIdx = 0;
+  stopHeroTimer(); heroIdx = 0;
   _heroMuted = true;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero hero--v2'; sec.style.height = '';
@@ -1909,6 +1920,11 @@ function applyLayout(id) {
 
 // Init default layout
 buildHeroV2();
+
+// Pause auto-advance while mouse is over the hero
+const _heroEl = document.getElementById('heroSection');
+_heroEl.addEventListener('mouseenter', stopHeroTimer);
+_heroEl.addEventListener('mouseleave', startHeroTimer);
 
 // ─── CARD BUILDERS ───────────────────────────────────────────────
 
