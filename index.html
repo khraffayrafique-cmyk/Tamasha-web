@@ -208,6 +208,19 @@
       backface-visibility: hidden; -webkit-backface-visibility: hidden;
       image-rendering: -webkit-optimize-contrast; image-rendering: high-quality;
     }
+    .hero-vimeo-wrap {
+      position: absolute; inset: 0; overflow: hidden; z-index: 0;
+    }
+    .hero-vimeo-wrap iframe {
+      position: absolute;
+      top: 50%; left: 50%;
+      /* Scale to cover: whichever dimension is smaller gets stretched to fill */
+      width: 177.78vh;   /* 16/9 × 100vh */
+      height: 56.25vw;   /* 9/16 × 100vw */
+      min-width: 100%; min-height: 100%;
+      transform: translate(-50%, -50%);
+      border: none; pointer-events: none;
+    }
     .hero-gradient {
       position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(90deg,rgba(10,10,10,.72) 0%,rgba(10,10,10,.32) 45%,rgba(10,10,10,.0) 100%);
@@ -1524,9 +1537,9 @@ document.addEventListener('click', e => {
 // ─── DATA ────────────────────────────────────────────────────────
 const heroMovies = [
   { title:"Game of Thrones",                        year:"2011", rating:"9.2", runtime:"57m · ep",  genre:"Fantasy · Drama",    tag:"Tamasha Original Pick", synopsis:"Nine noble families wage war for control of the mythical land of Westeros — and only one can sit on the Iron Throne.",                              trailer:"GAME OF THRONES - SEASON 1- TRAILER - HBO UK (1080p, h264).mp4" },
-  { title:"Game of Thrones: The Final Season",      year:"2019", rating:"7.7", runtime:"80m · ep",  genre:"Fantasy · Drama",    tag:"Season Finale",         synopsis:"The Great War has come to Westeros. Alliances will be tested and the fate of every kingdom rests on the outcome.",                                  trailer:"Game of Thrones Season 8 Official Trailer (HBO) - GameofThrones (1080p, h264).mp4" },
-  { title:"The Lord of the Rings: Fellowship",      year:"2001", rating:"8.8", runtime:"3h 48m",    genre:"Fantasy · Adventure",tag:"Epic Adventure",         synopsis:"A young hobbit is tasked with destroying the most powerful object in the world — before the Dark Lord Sauron reclaims it and enslaves all life.",   trailer:"The Fellowship of the Ring The Lord of the Rings 4K Ultra HD Warner Bros. Entertainment - Warner Bros. Entertainment (1080p, h264).mp4" },
-  { title:"The Penguin",                            year:"2024", rating:"8.2", runtime:"55m · ep",  genre:"Crime · Drama",      tag:"Now Streaming",         synopsis:"Oz Cobb navigates Gotham's brutal criminal underworld, clawing his way toward absolute power in the vacuum left by Falcone's death.",             trailer:"The Penguin Official Teaser Max - Comicbook.mp4" },
+  { title:"Game of Thrones: The Final Season",      year:"2019", rating:"7.7", runtime:"80m · ep",  genre:"Fantasy · Drama",    tag:"Season Finale",         synopsis:"The Great War has come to Westeros. Alliances will be tested and the fate of every kingdom rests on the outcome.",                                  vimeo:"1197667567" },
+  { title:"The Lord of the Rings: Fellowship",      year:"2001", rating:"8.8", runtime:"3h 48m",    genre:"Fantasy · Adventure",tag:"Epic Adventure",         synopsis:"A young hobbit is tasked with destroying the most powerful object in the world — before the Dark Lord Sauron reclaims it and enslaves all life.",   vimeo:"1197661746" },
+  { title:"The Penguin",                            year:"2024", rating:"8.2", runtime:"55m · ep",  genre:"Crime · Drama",      tag:"Now Streaming",         synopsis:"Oz Cobb navigates Gotham's brutal criminal underworld, clawing his way toward absolute power in the vacuum left by Falcone's death.",             vimeo:"1197652357" },
 ];
 const continueData = [
   { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", title:"Hotel Transylvania 3", sub:"S1 · E4 · Cruise Day Three", progress:62,  pro:false },
@@ -1634,22 +1647,51 @@ function goToSlide(idx) {
   document.querySelectorAll('.hero__pager-dot').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero__fstrip-item').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===heroIdx));
-  // pause all videos, play the active one from the start
+  // pause all local videos, play the active one
   document.querySelectorAll('.hero-video').forEach((v, i) => {
-    if (i === heroIdx) { v.currentTime = 0; v.play().catch(()=>{}); }
+    if (i === heroIdx) { v.currentTime = 0; v.muted = _heroMuted; v.play().catch(()=>{}); }
     else { v.pause(); }
   });
+  // pause all Vimeo iframes, then play + unmute the one in the active slide
+  clearTimeout(_vimeoStopTimer);
+  document.querySelectorAll('.hero-vimeo-wrap iframe').forEach(fr => vimeoCmd(fr, 'pause'));
+  const activeSlide = document.querySelectorAll('.hero-slide')[heroIdx];
+  if (activeSlide) {
+    const activeVimeo = activeSlide.querySelector('.hero-vimeo-wrap iframe');
+    if (activeVimeo) {
+      vimeoCmd(activeVimeo, 'play');
+      setTimeout(() => vimeoCmd(activeVimeo, 'setVolume', _heroMuted ? 0 : 1), 300);
+      _vimeoStopTimer = setTimeout(() => vimeoCmd(activeVimeo, 'pause'), 30000);
+    }
+  }
   // restart the 25s countdown for this slide
   startHeroTimer();
 }
 function heroSlide(dir) { goToSlide(heroIdx + dir); }
 
 // muted state is global so mute/unmute persists across slides
-let _heroMuted = true;
+let _heroMuted = false;
+let _vimeoStopTimer = null;
+
+function vimeoCmd(iframe, method, value) {
+  try {
+    const msg = value !== undefined
+      ? JSON.stringify({ method, value })
+      : JSON.stringify({ method });
+    iframe.contentWindow.postMessage(msg, 'https://player.vimeo.com');
+  } catch(e) {}
+}
+
 function toggleHeroMute(btn) {
   _heroMuted = !_heroMuted;
   document.querySelectorAll('.hero-video').forEach(v => { v.muted = _heroMuted; });
-  btn.innerHTML = _heroMuted ? _VOL_OFF : _VOL_ON;
+  // Control the active slide's Vimeo iframe
+  const activeSlide = document.querySelectorAll('.hero-slide')[heroIdx];
+  if (activeSlide) {
+    const activeVimeo = activeSlide.querySelector('.hero-vimeo-wrap iframe');
+    if (activeVimeo) vimeoCmd(activeVimeo, 'setVolume', _heroMuted ? 0 : 1);
+  }
+  document.querySelectorAll('.hero-mute-btn').forEach(b => b.innerHTML = _heroMuted ? _VOL_OFF : _VOL_ON);
 }
 
 function buildHeroBanner() {
@@ -1819,6 +1861,9 @@ function buildHeroLive() {
 }
 
 function _heroBg(m, i) {
+  if (m.vimeo) {
+    return `<div class="hero-vimeo-wrap"><iframe src="https://player.vimeo.com/video/${m.vimeo}?background=1&autoplay=1&muted=1&loop=1&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+  }
   if (m.trailer) {
     return `<video class="hero-bg hero-video" ${i===0?'autoplay':''} muted playsinline preload="metadata" loop>
       <source src="${tp(m.trailer)}" type="video/mp4">
@@ -1829,7 +1874,6 @@ function _heroBg(m, i) {
 
 function buildHeroClassic() {
   stopHeroTimer(); heroIdx = 0;
-  _heroMuted = true;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero'; sec.style.height = '';
 
@@ -1859,7 +1903,7 @@ function buildHeroClassic() {
 
   sec.innerHTML = `
     <div class="hero-track" id="heroTrack">${slides}</div>
-    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_VOL_OFF}</button>
+    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_heroMuted ? _VOL_OFF : _VOL_ON}</button>
     <button class="hero-arrow left" onclick="heroSlide(-1)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
@@ -1879,7 +1923,6 @@ function buildHeroClassic() {
 
 function buildHeroV2() {
   stopHeroTimer(); heroIdx = 0;
-  _heroMuted = true;
   const sec = document.getElementById('heroSection');
   sec.className = 'hero hero--v2'; sec.style.height = '';
 
@@ -1910,7 +1953,7 @@ function buildHeroV2() {
 
   sec.innerHTML = `
     <div class="hero-track" id="heroTrack">${slides}</div>
-    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_VOL_OFF}</button>
+    <button class="hero-mute-btn" onclick="toggleHeroMute(this)" title="Toggle sound">${_heroMuted ? _VOL_OFF : _VOL_ON}</button>
     <button class="hero-arrow left" onclick="heroSlide(-1)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
