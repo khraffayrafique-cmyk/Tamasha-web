@@ -1069,6 +1069,258 @@
     .scoreboard__score { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
     .scoreboard__score span { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; margin-left: 2px; }
     .scoreboard__vs { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 2px; padding: 4px 8px; background: rgba(255,255,255,0.06); border-radius: 999px; }
+
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVE  —  tablet (≤900px)  &  phone (≤600px)
+       ══════════════════════════════════════════════════════════════ */
+    html { -webkit-text-size-adjust: 100%; }
+    .cards-row { -webkit-overflow-scrolling: touch; }
+
+    /* ─── CATEGORY SWITCH (fade content + toast cue) ─────────────── */
+    .section { transition: opacity .3s ease, transform .3s ease; }
+    .section.cat-out { opacity: 0; transform: translateY(16px); }
+
+    .cat-toast {
+      position: fixed; top: 88px; left: 50%;
+      transform: translateX(-50%) translateY(-14px) scale(.96);
+      z-index: 300; padding: 9px 20px; border-radius: 999px;
+      background: var(--accent-grad); color: #fff;
+      font-family: var(--heading-font); font-weight: 700; font-size: 14px;
+      letter-spacing: .02em; white-space: nowrap;
+      box-shadow: 0 12px 34px rgba(0,0,0,.45);
+      display: inline-flex; align-items: center; gap: 8px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease, transform .32s cubic-bezier(.34,1.4,.5,1);
+    }
+    .cat-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    .cat-toast .material-icons { font-size: 18px; }
+    @media (max-width: 600px) { .cat-toast { top: 92px; font-size: 13px; padding: 8px 16px; } }
+
+    /* ─── DETAIL SCREEN (show / movie page) ──────────────────────── */
+    .detail-screen { position: fixed; inset: 0; z-index: 150; background: var(--bg); overflow-y: auto; overflow-x: hidden; display: none; opacity: 0; transition: opacity .3s ease; }
+    .detail-screen.open { display: block; }
+    .detail-screen.visible { opacity: 1; }
+    /* content rises + fades in as the screen opens */
+    .dsc-anim { opacity: 0; transform: translateY(30px); transition: opacity .45s ease, transform .55s cubic-bezier(.22,1,.36,1); }
+    .detail-screen.visible .dsc-anim { opacity: 1; transform: none; }
+
+    /* In-flow within the hero so it scrolls away with the page (not pinned) */
+    .dsc-back {
+      position: absolute; top: 88px; left: 40px; z-index: 5;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff;
+      padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer;
+      font-family: var(--body-font); font-size: 14px; font-weight: 600;
+      backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,.4);
+      transition: background .15s, border-color .15s;
+    }
+    .dsc-back:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.36); }
+    .dsc-back svg { width: 15px; height: 15px; }
+
+    .dsc-hero { position: relative; padding: 152px 60px 44px; overflow: hidden; }
+    .dsc-hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .dsc-hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; filter: blur(34px) brightness(.45); transform: scale(1.2); }
+    .dsc-hero-veil { position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, rgba(10,10,10,.55) 0%, rgba(10,10,10,.82) 55%, var(--bg) 100%); }
+    .dsc-hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 240px 1fr; gap: 44px; align-items: flex-end; max-width: 1200px; }
+    .dsc-poster { width: 240px; aspect-ratio: 2/3; object-fit: cover; border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.08); background: var(--surface); }
+    .dsc-info { padding-bottom: 6px; min-width: 0; }
+    .dsc-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent-to); margin-bottom: 10px; }
+    .dsc-title { font-family: var(--heading-font); font-size: 52px; font-weight: 800; line-height: 1.03; letter-spacing: -1px; margin: 0 0 14px; color: #fff; }
+    .dsc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .dsc-chip { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.82); padding: 4px 11px; border: 1px solid var(--border-subtle); border-radius: 999px; background: rgba(255,255,255,.06); }
+    .dsc-synopsis { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.8); max-width: 62ch; margin: 0 0 14px; }
+    .dsc-cast { font-size: 13px; color: var(--text-dim); margin-bottom: 24px; }
+    .dsc-cast span { color: rgba(255,255,255,.5); }
+    .dsc-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .dsc-section { padding: 30px 60px; max-width: 1320px; }
+    .dsc-sec-head { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
+    .dsc-sec-title { font-family: var(--heading-font); font-size: 22px; font-weight: 700; color: #fff; }
+    .dsc-season { background: var(--surface); color: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px 14px; font-family: var(--body-font); font-size: 13px; font-weight: 600; cursor: pointer; }
+
+    .dsc-eps { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 26px 22px; }
+    .dsc-ep { cursor: pointer; }
+    .dsc-ep-thumb { position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: var(--surface); }
+    .dsc-ep-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .dsc-ep:hover .dsc-ep-thumb img { transform: scale(1.05); }
+    .dsc-ep-play { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transition: opacity .2s; background: rgba(0,0,0,.35); }
+    .dsc-ep:hover .dsc-ep-play { opacity: 1; }
+    .dsc-ep-play::before { content: ''; position: absolute; width: 52px; height: 52px; border-radius: 50%; background: var(--accent-from); opacity: .92; }
+    .dsc-ep-play svg { position: relative; z-index: 1; width: 22px; height: 22px; }
+    .dsc-ep-dur { position: absolute; right: 8px; bottom: 8px; font-size: 11px; font-weight: 700; color: #fff; background: rgba(0,0,0,.75); padding: 2px 7px; border-radius: 4px; }
+    .dsc-ep-title { font-size: 14px; font-weight: 600; color: #fff; margin: 10px 0 4px; }
+    .dsc-ep-desc { font-size: 12.5px; line-height: 1.5; color: var(--text-dim); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* ─── VIDEO PLAYER MODAL ─────────────────────────────────────── */
+    .player-modal { position: fixed; inset: 0; z-index: 400; background: #000; display: none; flex-direction: column; opacity: 0; transition: opacity .28s ease; }
+    .player-modal.open { display: flex; }
+    .player-modal.visible { opacity: 1; }
+    .plr-top { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.75), transparent); }
+    .plr-back { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: background .15s; }
+    .plr-back:hover { background: rgba(255,255,255,.18); }
+    .plr-title { font-family: var(--heading-font); font-size: 16px; font-weight: 700; color: #fff; line-height: 1.2; }
+    .plr-sub { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .plr-stage { flex: 1; min-height: 0; display: flex; }
+    .plr-stage iframe { width: 100%; height: 100%; border: 0; }
+
+    @media (max-width: 600px) {
+      .dsc-back { top: 92px; left: 16px; padding: 8px 15px 8px 11px; font-size: 13px; }
+      .dsc-hero { padding: 132px 18px 30px; }
+      .dsc-hero-inner { grid-template-columns: 118px 1fr; gap: 18px; }
+      .dsc-poster { width: 118px; }
+      .dsc-title { font-size: 26px; }
+      .dsc-synopsis { font-size: 13px; }
+      .dsc-actions .btn { padding: 10px 15px; font-size: 13px; }
+      .dsc-section { padding: 22px 16px; }
+      .dsc-eps { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    /* ─── TABLET ─────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .navbar { padding: 0 20px; gap: 14px; }
+      .nav-links { gap: 16px; }
+      .user-name { display: none; }
+      .coins-pill { padding: 4px 10px 4px 7px; }
+
+      .section { padding: 24px 24px 4px; }
+      .pro-banner { margin: 0 24px; }
+      .site-footer { padding: 40px 24px 28px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+
+      .hero-content { left: 40px; }
+      .hero__content { padding: 90px 40px 50px; }
+      .hero__title { font-size: 46px; }
+      .hero__featured-strip, .hero__pager { left: 32px; right: 32px; }
+
+      .hero__edit-grid { grid-template-columns: 1fr; padding: 90px 32px 40px; gap: 24px; }
+      .hero__edit-right { border-left: none; padding-left: 0; }
+      .hero__edit-title { font-size: 54px; }
+
+      .theme-panel { width: 360px; }
+    }
+
+    /* ─── PHONE ──────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      /* NAVBAR → two rows: [logo · icons] then a scrollable link strip */
+      .navbar {
+        height: auto; min-height: 54px;
+        flex-wrap: wrap; padding: 8px 14px;
+        gap: 10px; row-gap: 6px;
+      }
+      .logo { order: 0; }
+      .logo img { height: 34px; }
+      .nav-right { order: 1; margin-left: auto; gap: 12px; }
+      /* Trim clutter: keep palette, search & avatar */
+      .coins-pill, .bell-wrap, .nav-right > div:last-child { display: none; }
+      .avatar { width: 34px; height: 34px; font-size: 12px; }
+
+      /* Search bar collapses to zero height when closed so it adds no row */
+      .search-bar-wrap { order: 3; flex: 0 0 0; width: 0; height: 0; overflow: hidden; }
+      .navbar.search-open .search-bar-wrap {
+        flex-basis: 100%; width: 100%; height: auto; overflow: visible;
+      }
+
+      /* Nav links become a horizontally scrollable strip on their own row */
+      .nav-links {
+        order: 4; flex-basis: 100%;
+        gap: 20px; overflow-x: auto;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .navbar.search-open .nav-links { display: none; }
+
+      /* ─── HERO ─── */
+      .hero { height: 380px; }
+      /* Corner ribbon collides with the logo on the transparent mobile navbar */
+      .hero-pro-tag { display: none; }
+      .hero--v2 { height: 470px; margin-bottom: -80px; }
+      .hero--v2 .hero-content { bottom: 120px; }
+      .hero--live .hero-content { bottom: 110px; }
+
+      .hero-content {
+        left: 18px; right: 18px; bottom: 40px; max-width: none;
+      }
+      .hero-genre-badge { font-size: 10px; margin-bottom: 10px; }
+      .hero-title { font-size: 26px; margin-bottom: 10px; }
+      .hero-meta { font-size: 12px; gap: 8px; margin-bottom: 12px; }
+      .hero-content p { font-size: 13px !important; margin-bottom: 16px !important; max-width: none !important; }
+      .hero-buttons { gap: 8px; }
+      .btn-play, .btn-info { padding: 9px 16px; font-size: 13px; }
+      .hero-pro-tag { font-size: 11px; padding: 5px 12px 5px 10px; }
+      .hero-arrow { display: none; }
+      .hero-dots { bottom: 10px; }
+      .hero-mute-btn { right: 14px; top: 14px; bottom: auto; }
+
+      /* hero (alt layouts) */
+      .hero__content { padding: 80px 18px 40px; gap: 12px; max-width: none; }
+      .hero__title, .hero__title--lg { font-size: 30px; letter-spacing: -0.5px; }
+      .hero__synopsis { font-size: 13px; }
+      .hero__featured-strip { display: none; }
+      .hero__pager { right: 18px; bottom: 120px; }
+
+      .hero--mosaic { padding: 80px 16px 20px; }
+      .mosaic { grid-template-columns: 1fr; grid-template-rows: none; }
+      .mosaic__tile { height: 200px; }
+      .mosaic__tile--lg { grid-row: auto; }
+      .mosaic__tile--lg .mosaic__title { font-size: 24px; }
+
+      .hero__edit-title { font-size: 40px; }
+      .hero__edit-synopsis { font-size: 14px; }
+
+      /* Scoreboard shrinks to fit narrow screens */
+      .scoreboard { gap: 12px; padding: 10px 12px; }
+      .scoreboard__flag { width: 34px; height: 34px; font-size: 9px; }
+      .scoreboard__score { font-size: 16px; }
+      .scoreboard__team { gap: 8px; }
+
+      /* ─── SECTIONS ─── */
+      .section { padding: 18px 14px 4px; }
+      .section-eyebrow { font-size: 9px; }
+      .section-title { font-size: 18px; }
+      .view-more { font-size: 12px; }
+
+      /* ─── CARDS (smaller so more fit; rows still scroll) ─── */
+      .card-wrap.portrait  { width: 138px; }
+      .card-wrap.landscape { width: 210px; }
+      .card-wrap.wide      { width: 190px; }
+      .card-wrap.portrait  .card-inner { height: 207px !important; }
+      .card-wrap.landscape .card-inner { height: 118px !important; }
+      .card-wrap.wide      .card-inner { height: 128px !important; }
+      /* Disable hover-scale on touch to avoid sticky enlarged cards */
+      .card-wrap:hover { transform: translateZ(0); box-shadow: none; }
+      .card-hover-actions { opacity: 1; }
+
+      /* ─── PRO BANNER → stacked ─── */
+      .pro-banner { margin: 0 14px; padding: 20px; border-radius: 16px; }
+      .pro-banner-inner { grid-template-columns: 1fr; gap: 16px; }
+      .pro-banner-glyph { width: 48px; height: 48px; }
+      .pro-banner-title { font-size: 17px; }
+      .pro-banner-sub { font-size: 12px; }
+      .pro-banner-price { text-align: left; align-items: flex-start; }
+
+      /* ─── FOOTER ─── */
+      .site-footer { padding: 32px 16px 24px; margin-top: 40px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 20px 24px; }
+      .footer-base { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+      /* ─── THEME PANEL → near full-width sheet ─── */
+      .theme-panel { width: 100%; max-width: 400px; padding: 20px 18px; }
+      .tp-color-grid { grid-template-columns: repeat(4, 1fr); }
+
+      /* ─── SEARCH DROPDOWN ─── */
+      .search-dropdown { width: 94vw; top: 108px; }
+    }
+
+    /* ─── SMALL PHONE (≤380px) ───────────────────────────────────── */
+    @media (max-width: 380px) {
+      .nav-links { gap: 15px; }
+      .nav-links a { font-size: 13px; }
+      .hero-title { font-size: 23px; }
+      .card-wrap.portrait { width: 124px; }
+      .card-wrap.portrait .card-inner { height: 186px !important; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -1354,6 +1606,12 @@
   </div>
 </footer>
 
+<!-- ════════════ SHOW / MOVIE DETAIL SCREEN ════════════ -->
+<div class="detail-screen" id="detailScreen"></div>
+
+<!-- ════════════════ VIDEO PLAYER MODAL ════════════════ -->
+<div class="player-modal" id="playerModal"></div>
+
 <script>
 // ─── PATHS ───────────────────────────────────────────────────────
 const B = "Tamasha%20Baneers%202/";
@@ -1536,18 +1794,21 @@ document.addEventListener('click', e => {
 
 // ─── DATA ────────────────────────────────────────────────────────
 const heroMovies = [
-  { title:"Game of Thrones",                        year:"2011", rating:"9.2", runtime:"57m · ep",  genre:"Fantasy · Drama",    tag:"Tamasha Original Pick", synopsis:"Nine noble families wage war for control of the mythical land of Westeros — and only one can sit on the Iron Throne.",                              trailer:"GAME OF THRONES - SEASON 1- TRAILER - HBO UK (1080p, h264).mp4" },
   { title:"Game of Thrones: The Final Season",      year:"2019", rating:"7.7", runtime:"80m · ep",  genre:"Fantasy · Drama",    tag:"Season Finale",         synopsis:"The Great War has come to Westeros. Alliances will be tested and the fate of every kingdom rests on the outcome.",                                  vimeo:"1197667567" },
   { title:"The Lord of the Rings: Fellowship",      year:"2001", rating:"8.8", runtime:"3h 48m",    genre:"Fantasy · Adventure",tag:"Epic Adventure",         synopsis:"A young hobbit is tasked with destroying the most powerful object in the world — before the Dark Lord Sauron reclaims it and enslaves all life.",   vimeo:"1197661746" },
   { title:"The Penguin",                            year:"2024", rating:"8.2", runtime:"55m · ep",  genre:"Crime · Drama",      tag:"Now Streaming",         synopsis:"Oz Cobb navigates Gotham's brutal criminal underworld, clawing his way toward absolute power in the vacuum left by Falcone's death.",             vimeo:"1197652357" },
 ];
 const continueData = [
-  { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", title:"Hotel Transylvania 3", sub:"S1 · E4 · Cruise Day Three", progress:62,  pro:false },
-  { folder:"ZOMBIELAND_ DOUBLE TAP",                thumb:"thumbnail.jpg", title:"Zombieland: Double Tap", sub:"35 min left",              progress:35,  pro:true  },
-  { folder:"SPIDER-MAN 3 (2007)",                   thumb:"thumnail.jpg",  title:"Spider-Man 3",           sub:"24 min left",              progress:80,  pro:false },
-  { folder:"JUMANJI_ THE NEXT LEVEL",               thumb:"thumbnail.jpg", title:"Jumanji: The Next Level", sub:"1h 32m left",             progress:20,  pro:true  },
-  { folder:"EQUALIZER, THE (FEATURE)",              thumb:"thumbnail.jpg", title:"The Equalizer",          sub:"52 min left",              progress:55,  pro:false },
-  { folder:"HANNA (2011)",                          thumb:"Thumbnail.jpg", title:"Hanna",                  sub:"38 min left",              progress:45,  pro:true  },
+  { folder:"HOTEL TRANSYLVANIA 3_ SUMMER VACATION", thumb:"thumbnail.jpg", title:"Hotel Transylvania 3", sub:"1h 04m left",              progress:62,  pro:false, cat:"movies"   },
+  { folder:"ZOMBIELAND_ DOUBLE TAP",                thumb:"thumbnail.jpg", title:"Zombieland: Double Tap", sub:"35 min left",              progress:35,  pro:true,  cat:"movies"   },
+  { folder:"SPIDER-MAN 3 (2007)",                   thumb:"thumnail.jpg",  title:"Spider-Man 3",           sub:"24 min left",              progress:80,  pro:false, cat:"movies"   },
+  { folder:"EQUALIZER, THE (FEATURE)",              thumb:"thumbnail.jpg", title:"The Equalizer",          sub:"52 min left",              progress:55,  pro:false, cat:"movies"   },
+  { folder:"HANNA (2011)",                          thumb:"Thumbnail.jpg", title:"Hanna",                  sub:"38 min left",              progress:45,  pro:true,  cat:"movies"   },
+  { folder:"JUMANJI_ THE NEXT LEVEL",               thumb:"thumbnail.jpg", title:"Jumanji: The Next Level",sub:"S1 · E4 · 22 min left",    progress:20,  pro:true,  cat:"tv-shows" },
+  { folder:"SPIDER-MAN_ FAR FROM HOME",             thumb:"thumnail.jpg",  title:"Spider-Man: Far From Home", sub:"S3 · E5 · 31 min left", progress:48,  pro:true,  cat:"tv-shows" },
+  { folder:"HOTEL TRANSYLVANIA 2",                  thumb:"thumbnail.jpg", title:"Hotel Transylvania 2",   sub:"S1 · E2 · 18 min left",    progress:72,  pro:false, cat:"tv-shows" },
+  { folder:"UNDERWORLD EVOLUTION",                  thumb:"thumbnail.jpg", title:"Underworld Evolution",   sub:"S2 · E1 · 44 min left",    progress:30,  pro:true,  cat:"tv-shows" },
+  { folder:"BAD BOYS II",                           thumb:"thumbnail.jpg", title:"Bad Boys II",            sub:"S2 · E7 · 12 min left",    progress:86,  pro:false, cat:"tv-shows" },
 ];
 const moviesData = [
   { folder:"HOTEL TRANSYLVANIA",   thumb:"thumbnail.jpg", title:"Hotel Transylvania", meta:"2012 · Animation",  pro:true  },
@@ -1986,6 +2247,29 @@ const _heroEl = document.getElementById('heroSection');
 _heroEl.addEventListener('mouseenter', stopHeroTimer);
 _heroEl.addEventListener('mouseleave', startHeroTimer);
 
+// ─── PAUSE HERO VIDEO WHEN SCROLLED OUT OF VIEW ──────────────────
+// Stops local <video> and Vimeo iframes (and their audio) once the hero
+// leaves the viewport; resumes the active slide when it scrolls back in.
+function pauseHeroMedia() {
+  clearTimeout(_vimeoStopTimer);
+  _heroEl.querySelectorAll('.hero-video').forEach(v => v.pause());
+  _heroEl.querySelectorAll('.hero-vimeo-wrap iframe').forEach(fr => vimeoCmd(fr, 'pause'));
+}
+
+let _heroInView = true;
+const heroVisibilityObserver = new IntersectionObserver((entries) => {
+  const inView = entries[0].isIntersecting;
+  if (inView === _heroInView) return;
+  _heroInView = inView;
+  if (inView) {
+    goToSlide(heroIdx);   // replays active slide's video + restarts the timer
+  } else {
+    stopHeroTimer();
+    pauseHeroMedia();
+  }
+}, { threshold: 0.1 });
+heroVisibilityObserver.observe(_heroEl);
+
 // ─── CARD BUILDERS ───────────────────────────────────────────────
 
 /* Portrait card: movies / tv shows (no PRO badge, no lock) */
@@ -2118,19 +2402,269 @@ function makeHighlightCard(item) {
   return w;
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────
-[['continueRow',continueData,makeWideCard],
- ['moviesRow',moviesData,makePortraitCard],
- ['liveTVRow',liveChannels,makeLandscapeCard],
- ['topMoviesRow',topMoviesData,makeTopMovieCard],
- ['tvShowsRow',tvShowsData,makePortraitCard],
- ['topTVRow',topTVData,makePortraitCard],
- ['liveSportsRow',liveSportsData,makeSportsCard],
- ['highlightsRow',highlightsData,makeHighlightCard],
-].forEach(([id,data,fn]) => {
-  const row = document.getElementById(id);
-  data.forEach(item => row.appendChild(fn(item)));
+// ─── DETAIL SCREEN + VIDEO PLAYER ────────────────────────────────
+// No local video files exist, so playback uses the same Vimeo clips the hero uses.
+const PLAYABLE_VIMEO = ['1197667567','1197661746','1197652357'];
+const CAST_POOL = ['Ahmad Ali Butt','Sana Javed','Bilal Abbas','Mahira Khan','Fahad Mustafa','Yumna Zaidi','Feroze Khan','Hania Aamir'];
+const EP_DESCS = [
+  'The stakes rise as old secrets surface and loyalties are put to the test.',
+  'A risky plan forces the group to confront a threat they never saw coming.',
+  'Tensions boil over when a long-buried truth finally comes to light.',
+  'An unexpected ally changes everything — but at a dangerous price.',
+  'Everything builds toward a confrontation no one is ready for.',
+  'A quiet day turns chaotic as one small mistake spirals out of control.',
+  'Bonds are tested as a new enemy emerges from the shadows.',
+  'The season races toward its most explosive turning point yet.'
+];
+
+function titleOf(item) {
+  return item.title || item.label || item.name ||
+    (item.folder ? item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim() : 'Untitled');
+}
+function posterOf(item) {
+  if (item.folder) return bp(item.folder, item.thumb);
+  if (item.file && item.name) return cp(item.file);   // live channel
+  if (item.file) return sp(item.file);                // sports / highlight
+  return '';
+}
+function pickVimeo(seed) {
+  const s = String(seed || 'x');
+  let n = 0; for (let i = 0; i < s.length; i++) n += s.charCodeAt(i);
+  return PLAYABLE_VIMEO[n % PLAYABLE_VIMEO.length];
+}
+function seasonCount(item) {
+  const m = /(\d+)\s*Season/i.exec(item.meta || '');
+  return m ? Math.max(1, Math.min(parseInt(m[1], 10), 6)) : 1;
+}
+function makeEpisodes(item, season) {
+  const poster = posterOf(item);
+  const out = [];
+  for (let i = 1; i <= 8; i++) {
+    out.push({
+      ep: i,
+      name: `Episode ${i}`,
+      desc: EP_DESCS[(i - 1) % EP_DESCS.length],
+      dur: '23m',
+      thumb: poster,
+      vimeo: PLAYABLE_VIMEO[(i + season) % PLAYABLE_VIMEO.length],
+    });
+  }
+  return out;
+}
+
+// Open the full-screen player (Vimeo clip we have access to)
+function openPlayer(vimeoId, title, sub) {
+  const modal = document.getElementById('playerModal');
+  modal.innerHTML = `
+    <div class="plr-top">
+      <button class="plr-back" onclick="closePlayer()" aria-label="Close player">✕</button>
+      <div class="plr-titles">
+        <div class="plr-title">${title || ''}</div>
+        ${sub ? `<div class="plr-sub">${sub}</div>` : ''}
+      </div>
+    </div>
+    <div class="plr-stage">
+      <iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0&dnt=1"
+        allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>`;
+  clearTimeout(modal._closeTimer);
+  modal.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('visible')));
+  pauseHeroMedia(); stopHeroTimer();
+}
+function closePlayer() {
+  const modal = document.getElementById('playerModal');
+  if (!modal.classList.contains('open')) return;
+  modal.classList.remove('visible');
+  clearTimeout(modal._closeTimer);
+  modal._closeTimer = setTimeout(() => {
+    modal.classList.remove('open');
+    modal.innerHTML = '';
+  }, 260);
+  if (!document.getElementById('detailScreen').classList.contains('open') && _heroInView) {
+    try { goToSlide(heroIdx); } catch (e) {}
+  }
+}
+
+// Open the show / movie detail screen
+function openDetail(item, kind) {
+  const screen  = document.getElementById('detailScreen');
+  const title   = titleOf(item);
+  const poster  = posterOf(item);
+  const seasons = kind === 'show' ? seasonCount(item) : 1;
+  const cast    = CAST_POOL.slice(0, 5).join(', ');
+  const metaBits = (item.meta || '').split('·').map(s => s.trim()).filter(Boolean);
+  const eyebrow = kind === 'show' ? 'TV SERIES' : 'FILM';
+  const rating  = kind === 'show' ? 'TV-PG' : 'PG-13';
+  const synopsis = kind === 'show'
+    ? `Follow ${title} through a season of twists, rivalries and unforgettable moments — streaming now, only on Tamasha.`
+    : `${title} is a blockbuster experience packed with action and heart. Watch it now in stunning HD, only on Tamasha.`;
+
+  const chipVals = [(kind === 'show' ? 'Drama' : 'Feature'), ...metaBits,
+                    `${seasons} Season${seasons > 1 ? 's' : ''}`, rating];
+  const chips = [...new Set(chipVals)].filter(Boolean).map(c => `<span class="dsc-chip">${c}</span>`).join('');
+
+  const firstVimeo = kind === 'show' ? makeEpisodes(item, 1)[0].vimeo : pickVimeo(title);
+
+  // Related row (same kind, de-duped, excluding the current title)
+  const pool = (kind === 'show' ? tvShowsData.concat(topTVData) : moviesData.concat(topMoviesData));
+  const seen = new Set([title]); const related = [];
+  for (const x of pool) { const t = titleOf(x); if (!seen.has(t)) { seen.add(t); related.push(x); } if (related.length >= 10) break; }
+
+  screen.innerHTML = `
+    <div class="dsc-anim">
+    <div class="dsc-hero">
+      <button class="dsc-back" onclick="closeDetail()">${_CHEVL}<span>Back</span></button>
+      <div class="dsc-hero-bg"><img src="${poster}" alt=""></div>
+      <div class="dsc-hero-veil"></div>
+      <div class="dsc-hero-inner">
+        <img class="dsc-poster" src="${poster}" alt="${title}">
+        <div class="dsc-info">
+          <div class="dsc-eyebrow">${eyebrow}</div>
+          <h1 class="dsc-title">${title}</h1>
+          <div class="dsc-chips">${chips}</div>
+          <p class="dsc-synopsis">${synopsis}</p>
+          <div class="dsc-cast"><span>Featuring:</span> ${cast}</div>
+          <div class="dsc-actions">
+            <button class="btn btn--primary btn--lg dsc-watch">${_PLAY_W}${kind === 'show' ? 'Watch S1 E1' : 'Watch Now'}</button>
+            <button class="btn btn--ghost btn--lg">${_PLUS}My List</button>
+            <button class="btn btn--ghost btn--lg">${_BELL}Notify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    ${kind === 'show' ? `
+    <div class="dsc-section">
+      <div class="dsc-sec-head">
+        <h2 class="dsc-sec-title">Episodes</h2>
+        <select class="dsc-season" id="dscSeason" onchange="renderEpisodes(this.value)">
+          ${Array.from({length: seasons}, (_, i) => `<option value="${i + 1}">Season ${i + 1}</option>`).join('')}
+        </select>
+      </div>
+      <div class="dsc-eps" id="dscEps"></div>
+    </div>` : ''}
+    <div class="dsc-section">
+      <h2 class="dsc-sec-title" style="margin-bottom:20px">You May Also Like</h2>
+      <div class="cards-row" id="dscRelated"></div>
+    </div>
+    </div>`;
+
+  screen._item = item;
+
+  const watchBtn = screen.querySelector('.dsc-watch');
+  watchBtn.addEventListener('click', () =>
+    openPlayer(firstVimeo, title, kind === 'show' ? 'S1 E1 · Episode 1' : 'Feature Film'));
+
+  if (kind === 'show') renderEpisodes(1);
+
+  const relRow = document.getElementById('dscRelated');
+  related.forEach(x => {
+    const el = makePortraitCard(x);
+    attachCardClick(el, x, (tvShowsData.includes(x) || topTVData.includes(x)) ? 'show' : 'movie');
+    relRow.appendChild(el);
+  });
+
+  document.querySelector('.navbar').classList.add('scrolled');
+  clearTimeout(screen._closeTimer);
+  screen.classList.add('open');
+  screen.scrollTop = 0;
+  // next frames: flip to visible so opacity/transform transitions run
+  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
+  pauseHeroMedia(); stopHeroTimer();
+}
+
+function renderEpisodes(season) {
+  const screen = document.getElementById('detailScreen');
+  const item = screen._item; if (!item) return;
+  const s = parseInt(season, 10) || 1;
+  const show = titleOf(item);
+  const wrap = document.getElementById('dscEps'); if (!wrap) return;
+  const eps = makeEpisodes(item, s);
+  wrap.innerHTML = eps.map(ep => `
+    <div class="dsc-ep" data-vimeo="${ep.vimeo}" data-sub="S${s} E${ep.ep} · ${ep.name}">
+      <div class="dsc-ep-thumb">
+        <img src="${ep.thumb}" alt="${ep.name}" loading="lazy">
+        <div class="dsc-ep-play">${_PLAY_W}</div>
+        <span class="dsc-ep-dur">${ep.dur}</span>
+      </div>
+      <div class="dsc-ep-title">S${s} E${ep.ep} · ${ep.name}</div>
+      <div class="dsc-ep-desc">${ep.desc}</div>
+    </div>`).join('');
+  wrap.querySelectorAll('.dsc-ep').forEach(el =>
+    el.addEventListener('click', () => openPlayer(el.dataset.vimeo, show, el.dataset.sub)));
+}
+
+function closeDetail() {
+  const screen = document.getElementById('detailScreen');
+  if (!screen.classList.contains('open')) return;
+  screen.classList.remove('visible');   // fade + slide back out
+  clearTimeout(screen._closeTimer);
+  screen._closeTimer = setTimeout(() => {
+    screen.classList.remove('open');
+    screen.innerHTML = '';
+    screen._item = null;
+  }, 340);
+  if (window.scrollY < 40) document.querySelector('.navbar').classList.remove('scrolled');
+  if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+}
+
+// Make a card open the right destination: show/movie → detail, else → player
+function attachCardClick(el, item, kind) {
+  el.style.cursor = 'pointer';
+  el.addEventListener('click', e => {
+    if (e.target.closest('.card-action-btn:not(.play-btn)')) { e.stopPropagation(); return; } // "+" add button
+    if (e.target.closest('.play-btn, .highlight-play, .continue-play-overlay')) {
+      e.stopPropagation();
+      openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
+      return;
+    }
+    if (kind === 'show' || kind === 'movie') openDetail(item, kind);
+    else openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
+  });
+}
+
+// Close overlays on Escape (player first, then detail)
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
+  else closeDetail();
 });
+
+// ─── RENDER ──────────────────────────────────────────────────────
+[['moviesRow',moviesData,makePortraitCard,'movie'],
+ ['liveTVRow',liveChannels,makeLandscapeCard,'live'],
+ ['topMoviesRow',topMoviesData,makeTopMovieCard,'movie'],
+ ['tvShowsRow',tvShowsData,makePortraitCard,'show'],
+ ['topTVRow',topTVData,makePortraitCard,'show'],
+ ['liveSportsRow',liveSportsData,makeSportsCard,'sport'],
+ ['highlightsRow',highlightsData,makeHighlightCard,'clip'],
+].forEach(([id,data,fn,kind]) => {
+  const row = document.getElementById(id);
+  data.forEach(item => { const el = fn(item); attachCardClick(el, item, kind); row.appendChild(el); });
+});
+
+// Continue Watching is category-aware — rebuilt whenever the nav filter changes
+function renderContinue(filter) {
+  const row = document.getElementById('continueRow');
+  if (!row) return;
+  let cat = null;
+  if (filter === 'movies' || filter === 'shorts') cat = 'movies';
+  else if (filter === 'tv-shows')                 cat = 'tv-shows';
+  const items = cat ? continueData.filter(i => i.cat === cat) : continueData;
+  row.innerHTML = '';
+  items.forEach(item => {
+    const el = makeWideCard(item);
+    attachCardClick(el, item, item.cat === 'tv-shows' ? 'show' : 'movie');
+    row.appendChild(el);
+  });
+  const eyebrow = document.querySelector('#sec-continue .section-eyebrow');
+  if (eyebrow) {
+    eyebrow.textContent = cat === 'movies'   ? 'MOVIES · JUMP BACK IN'
+                        : cat === 'tv-shows' ? 'TV SHOWS · JUMP BACK IN'
+                        : 'JUMP BACK IN';
+  }
+}
+renderContinue('home');
 
 // ─── NAV FILTER ──────────────────────────────────────────────────
 const filterMap = {
@@ -2140,29 +2674,55 @@ const filterMap = {
   'live-tv':  ['live-tv'],
   shorts:     ['continue','movies','promo'],
 };
+// Category-change toast cue (created once, reused)
+const catToast = document.createElement('div');
+catToast.className = 'cat-toast';
+document.body.appendChild(catToast);
+const CAT_ICON = { home:'home', movies:'movie', 'tv-shows':'live_tv', 'live-tv':'sensors', shorts:'bolt' };
+let _catToastTimer = null;
+function showCatToast(filter, label) {
+  catToast.innerHTML = `<span class="material-icons">${CAT_ICON[filter] || 'category'}</span>${label}`;
+  catToast.classList.add('show');
+  clearTimeout(_catToastTimer);
+  _catToastTimer = setTimeout(() => catToast.classList.remove('show'), 1400);
+}
+
+function selectCategory(a) {
+  const filter = a.dataset.filter;
+  closePlayer(); closeDetail();   // return home from any open detail/player
+  document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+  a.classList.add('active');
+  showCatToast(filter, a.textContent.trim());
+
+  // Bring the user to the top so the new category reads from the start
+  if (window.__lenis) window.__lenis.scrollTo(0, { duration: 0.6 });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 1) Fade the current content out
+  document.querySelectorAll('.section:not(.hidden)').forEach(s => s.classList.add('cat-out'));
+
+  // 2) After the fade, swap content (incl. Continue Watching) and fade back in
+  setTimeout(() => {
+    renderContinue(filter);
+    const show = filterMap[filter] || [];
+    document.getElementById('heroSection').style.display = filter === 'live-tv' ? 'none' : '';
+    document.querySelectorAll('.section[data-category]').forEach(s => {
+      const visible = show.includes(s.dataset.category);
+      s.classList.toggle('hidden', !visible);
+      if (visible) s.classList.add('cat-out');   // start faded so newly-shown rows animate in too
+    });
+    // Commit the hidden/visible + faded state, then release on the next frames
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.querySelectorAll('.section:not(.hidden)').forEach(s => s.classList.remove('cat-out'));
+    }));
+  }, 260);
+}
+
 document.getElementById('navLinks').addEventListener('click', e => {
   const a = e.target.closest('a[data-filter]');
   if (!a) return;
   e.preventDefault();
-  document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
-  a.classList.add('active');
-  const show = filterMap[a.dataset.filter] || [];
-  document.getElementById('heroSection').style.display = a.dataset.filter === 'live-tv' ? 'none' : '';
-  document.querySelectorAll('.section[data-category]').forEach(s => {
-    const hide = !show.includes(s.dataset.category);
-    s.classList.toggle('hidden', hide);
-    // reset anim so re-shown sections can animate again
-    if (!hide) {
-      s.querySelectorAll('.section-header,.cards-row').forEach(el => {
-        const r = el.getBoundingClientRect();
-        if (r.top >= window.innerHeight || r.bottom <= 0) {
-          el.classList.remove('anim-visible');
-          el.classList.add('will-animate');
-          scrollObserver.observe(el);
-        }
-      });
-    }
-  });
+  selectCategory(a);
 });
 
 // ─── SEARCH ──────────────────────────────────────────────────────
@@ -2267,6 +2827,7 @@ document.querySelectorAll('.section-header, .cards-row').forEach(el => {
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof Lenis === 'undefined') return;
   const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.1 });
+  window.__lenis = lenis;
   (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })(0);
 });
 </script>
