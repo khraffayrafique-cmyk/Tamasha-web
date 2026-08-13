@@ -1224,7 +1224,8 @@
     @media (max-width: 600px) { .dsc-tab { font-size: 16px; } .plr-eps-btn span { display: none; } }
 
     /* ─── LIVE TV SCREEN ─────────────────────────────────────────── */
-    .livetv-screen { position: fixed; inset: 0; z-index: 320; background: #000; display: none; opacity: 0; transition: opacity .3s ease; }
+    /* Sits below the site navbar so the nav stays usable */
+    .livetv-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 150; background: #000; display: none; opacity: 0; transition: opacity .3s ease; }
     .livetv-screen.open { display: block; }
     .livetv-screen.visible { opacity: 1; }
     .ltv-stage { position: absolute; inset: 0; }
@@ -1233,13 +1234,11 @@
     .ltv-top { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); }
     .ltv-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
     .ltv-close:hover { background: rgba(255,255,255,.18); }
-    .ltv-now { font-family: var(--heading-font); font-size: 16px; font-weight: 800; color: #fff; }
-    .ltv-now small { display: block; font-family: var(--body-font); font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .ltv-now { display: flex; align-items: center; gap: 11px; font-family: var(--heading-font); font-size: 18px; font-weight: 800; color: #fff; }
+    .ltv-live-tag { display: inline-flex; align-items: center; gap: 6px; background: #ED2B1F; color: #fff; font-family: var(--body-font); font-size: 11px; font-weight: 800; letter-spacing: .05em; padding: 4px 10px 4px 8px; border-radius: 5px; }
+    .ltv-live-tag .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: livePulse 1.6s infinite; }
     .ltv-menu-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 9px 16px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); }
     .ltv-menu-btn:hover { background: rgba(255,255,255,.24); }
-
-    .ltv-live-chip { position: absolute; left: 22px; bottom: 22px; z-index: 4; display: inline-flex; align-items: center; gap: 7px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 7px 15px; font-size: 12px; font-weight: 800; color: #fff; backdrop-filter: blur(8px); }
-    .ltv-live-chip .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ED2B1F; animation: livePulse 1.6s infinite; }
 
     /* Slide-in channel guide */
     .ltv-guide { position: absolute; top: 0; left: 0; bottom: 0; width: min(680px, 94vw); z-index: 5; background: linear-gradient(90deg, rgba(0,0,0,.94) 55%, rgba(0,0,0,0) 100%); padding: 76px 0 20px; display: flex; flex-direction: column; transform: translateX(-102%); transition: transform .32s cubic-bezier(.4,0,.2,1); }
@@ -1262,32 +1261,26 @@
     .ltv-name { font-size: 19px; font-weight: 700; line-height: 1.2; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .ltv-pro-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-grad); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px 3px 7px; border-radius: 999px; }
     .ltv-pro-pill .badge-icon { width: 11px; height: 11px; }
-    .ltv-sub { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 5px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .ltv-all-btn { margin: 8px 28px 0; flex-shrink: 0; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); color: #fff; border-radius: 999px; padding: 10px 20px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; }
     .ltv-all-btn:hover { background: rgba(255,255,255,.2); }
 
-    /* All-channels grid overlay */
-    .ltv-all { position: absolute; inset: 0; z-index: 6; background: rgba(8,8,10,.97); display: none; overflow-y: auto; padding: 92px 60px 60px; }
+    /* All-channels overlay — same row style as the guide, in columns */
+    .ltv-all { position: absolute; inset: 0; z-index: 6; background: rgba(8,8,10,.97); display: none; overflow-y: auto; padding: 28px 40px 60px; }
     .ltv-all.open { display: block; }
-    .ltv-all-head { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+    .ltv-all-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
     .ltv-all-title { font-family: var(--heading-font); font-size: 30px; font-weight: 800; color: #fff; }
-    .ltv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 26px 18px; }
-    .ltv-tile { background: none; border: none; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 9px; }
-    .ltv-tile-art { position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #14141c; border: 2px solid transparent; transition: border-color .15s, transform .15s; }
-    .ltv-tile:hover .ltv-tile-art { transform: translateY(-3px); border-color: rgba(255,255,255,.5); }
-    .ltv-tile.is-playing .ltv-tile-art { border-color: var(--accent-from); }
-    .ltv-tile-art img { width: 100%; height: 100%; object-fit: cover; }
-    .ltv-tile-pro { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent-grad); font-size: 10px; font-weight: 700; letter-spacing: .05em; padding: 4px 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .ltv-tile-pro .badge-icon { width: 11px; height: 11px; }
-    .ltv-tile-name { font-size: 12.5px; font-weight: 600; text-align: center; color: rgba(255,255,255,.85); line-height: 1.3; }
+    .ltv-all .ltv-cats { padding: 0 0 16px; }
+    .ltv-all-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 4px 20px; }
 
     @media (max-width: 600px) {
-      .ltv-guide { width: 100%; background: rgba(0,0,0,.92); padding-top: 70px; }
+      .livetv-screen { top: 96px; }
+      .ltv-guide { width: 100%; background: rgba(0,0,0,.92); padding-top: 64px; }
       .ltv-item { grid-template-columns: 56px 1fr; gap: 12px; padding: 10px 12px; }
       .ltv-logo { width: 56px; height: 34px; }
       .ltv-name { font-size: 16px; }
-      .ltv-all { padding: 84px 16px 50px; }
-      .ltv-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 18px 12px; }
+      .ltv-now { font-size: 15px; }
+      .ltv-all { padding: 20px 16px 50px; }
+      .ltv-all-list { grid-template-columns: 1fr; }
       .ltv-all-title { font-size: 22px; }
       .ltv-menu-btn span { display: none; }
     }
@@ -2123,6 +2116,12 @@ const _CHEVR   = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" st
 const _STAR    = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#FFCB5A"><polygon points="12 2 15.1 8.5 22 9.3 17 14.1 18.4 21 12 17.5 5.6 21 7 14.1 2 9.3 8.9 8.5"/></svg>`;
 const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z" opacity=".95"/></svg>`;
 
+// True while any full-screen overlay covers the homepage — hero media must stay silent
+function overlayActive() {
+  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen']
+    .some(id => { const el = document.getElementById(id); return el && el.classList.contains('open'); });
+}
+
 function goToSlide(idx) {
   const n = document.querySelectorAll('.hero-slide').length || heroMovies.length;
   heroIdx = (idx + n) % n;
@@ -2131,6 +2130,14 @@ function goToSlide(idx) {
   document.querySelectorAll('.hero__pager-dot').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero__fstrip-item').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
   document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===heroIdx));
+  // While an overlay is open, keep every hero video paused (no ghost audio)
+  if (overlayActive()) {
+    clearTimeout(_vimeoStopTimer);
+    document.querySelectorAll('.hero-video').forEach(v => v.pause());
+    document.querySelectorAll('.hero-vimeo-wrap iframe').forEach(fr => vimeoCmd(fr, 'pause'));
+    stopHeroTimer();
+    return;
+  }
   // pause all local videos, play the active one
   document.querySelectorAll('.hero-video').forEach((v, i) => {
     if (i === heroIdx) { v.currentTime = 0; v.muted = _heroMuted; v.play().catch(()=>{}); }
@@ -3049,7 +3056,6 @@ function openLiveTV(startIdx) {
       <div class="ltv-now" id="ltvNow"></div>
       <button class="ltv-menu-btn" onclick="toggleLiveGuide()">${_EPISODES_ICON}<span>Channels</span></button>
     </div>
-    <div class="ltv-live-chip"><span class="live-dot"></span>LIVE</div>
     <div class="ltv-guide" id="ltvGuide">
       <div class="ltv-cats" id="ltvCats"></div>
       <div class="ltv-list" id="ltvList"></div>
@@ -3062,12 +3068,24 @@ function openLiveTV(startIdx) {
   guide.addEventListener('mouseenter', () => { _ltvHovering = true; clearTimeout(_ltvHideTimer); });
   guide.addEventListener('mouseleave', () => { _ltvHovering = false; scheduleGuideHide(); });
 
+  // Clicking anywhere outside the guide closes it
+  screen.addEventListener('click', e => {
+    const g = document.getElementById('ltvGuide');
+    if (!g || !g.classList.contains('open')) return;
+    if (g.contains(e.target) || e.target.closest('.ltv-menu-btn')) return;
+    g.classList.remove('open');
+    clearTimeout(_ltvHideTimer);
+  });
+
   renderLiveCats();
   playChannel(_ltvIdx, true);
 
   screen.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
-  pauseHeroMedia(); stopHeroTimer();
+  stopHeroTimer(); pauseHeroMedia();
+  // Vimeo players can ignore an early postMessage — re-assert once they're ready
+  setTimeout(pauseHeroMedia, 400);
+  setTimeout(pauseHeroMedia, 1200);
 }
 
 function closeLiveTV() {
@@ -3114,6 +3132,18 @@ function renderLiveCats() {
   }));
 }
 
+// One channel row — no EPG data, just the channel name (+ PRO pill)
+function liveItemHTML(ch, i) {
+  return `
+    <button class="ltv-item${i === _ltvIdx ? ' is-playing' : ''}" data-i="${i}">
+      <img class="ltv-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy">
+      <div class="ltv-meta">
+        ${i === _ltvIdx ? `<div class="ltv-watching"><span class="live-dot"></span>WATCHING</div>` : ''}
+        <div class="ltv-name">${ch.name}${ch.pro ? `<span class="ltv-pro-pill">${WAVE}PRO</span>` : ''}</div>
+      </div>
+    </button>`;
+}
+
 function renderLiveList() {
   const list = document.getElementById('ltvList');
   if (!list) return;
@@ -3121,16 +3151,7 @@ function renderLiveList() {
     .map((ch, i) => ({ ch, i }))
     .filter(({ ch }) => _ltvCat === 'All' || ch.cat === _ltvCat);
 
-  list.innerHTML = items.map(({ ch, i }) => `
-    <button class="ltv-item${i === _ltvIdx ? ' is-playing' : ''}" data-i="${i}">
-      <img class="ltv-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy">
-      <div class="ltv-meta">
-        ${i === _ltvIdx ? `<div class="ltv-watching"><span class="live-dot"></span>WATCHING</div>` : ''}
-        <div class="ltv-name">${ch.tag}${ch.pro ? `<span class="ltv-pro-pill">${WAVE}PRO</span>` : ''}</div>
-        <div class="ltv-sub"><span>${ch.left}</span><span>${ch.name.toUpperCase()} SCHEDULE ›</span></div>
-      </div>
-    </button>`).join('');
-
+  list.innerHTML = items.map(({ ch, i }) => liveItemHTML(ch, i)).join('');
   list.querySelectorAll('.ltv-item').forEach(el =>
     el.addEventListener('click', () => playChannel(parseInt(el.dataset.i, 10))));
 }
@@ -3146,7 +3167,7 @@ function playChannel(idx, openGuide) {
       allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   }
   const now = document.getElementById('ltvNow');
-  if (now) now.innerHTML = `${ch.name}<small>${ch.tag} · ${ch.left}</small>`;
+  if (now) now.innerHTML = `<span class="ltv-live-tag"><span class="live-dot"></span>LIVE</span><span>${ch.name}</span>`;
   renderLiveList();
   closeAllChannels();
   if (openGuide) showLiveGuide(); else scheduleGuideHide();
@@ -3161,19 +3182,32 @@ function openAllChannels() {
       <button class="ltv-close" onclick="closeAllChannels()">${_CHEVL}</button>
       <div class="ltv-all-title">All Channels</div>
     </div>
-    <div class="ltv-grid">
-      ${liveChannels.map((ch, i) => `
-        <button class="ltv-tile${i === _ltvIdx ? ' is-playing' : ''}" data-i="${i}">
-          <div class="ltv-tile-art">
-            <img src="${cp(ch.file)}" alt="${ch.name}" loading="lazy">
-            ${ch.pro ? `<div class="ltv-tile-pro">${WAVE}PRO</div>` : ''}
-          </div>
-          <div class="ltv-tile-name">${ch.name}</div>
-        </button>`).join('')}
-    </div>`;
-  all.querySelectorAll('.ltv-tile').forEach(el =>
-    el.addEventListener('click', () => playChannel(parseInt(el.dataset.i, 10))));
+    <div class="ltv-cats" id="ltvAllCats"></div>
+    <div class="ltv-all-list" id="ltvAllList"></div>`;
+  renderAllChannels();
   all.classList.add('open');
+}
+
+// All-channels uses the same row style + category tabs as the side guide
+function renderAllChannels() {
+  const cats = document.getElementById('ltvAllCats');
+  const list = document.getElementById('ltvAllList');
+  if (!cats || !list) return;
+
+  const present = LIVE_CATS.filter(c => c === 'All' || liveChannels.some(ch => ch.cat === c));
+  cats.innerHTML = present.map(c =>
+    `<button class="ltv-cat${c === _ltvCat ? ' is-active' : ''}" data-cat="${c}">${c}</button>`).join('');
+  cats.querySelectorAll('.ltv-cat').forEach(b => b.addEventListener('click', () => {
+    _ltvCat = b.dataset.cat;
+    renderAllChannels(); renderLiveCats(); renderLiveList();
+  }));
+
+  const items = liveChannels
+    .map((ch, i) => ({ ch, i }))
+    .filter(({ ch }) => _ltvCat === 'All' || ch.cat === _ltvCat);
+  list.innerHTML = items.map(({ ch, i }) => liveItemHTML(ch, i)).join('');
+  list.querySelectorAll('.ltv-item').forEach(el =>
+    el.addEventListener('click', () => playChannel(parseInt(el.dataset.i, 10))));
 }
 function closeAllChannels() {
   const all = document.getElementById('ltvAll');
