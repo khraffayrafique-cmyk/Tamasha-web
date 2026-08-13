@@ -6,8 +6,14 @@
   <title>Tamasha</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+    /* ─── MUSEO SANS (self-hosted) ────────────────────────────── */
+    @font-face { font-family:'Museo Sans'; font-weight:100; font-style:normal; font-display:swap; src:url('fonts/MuseoSans.otf') format('opentype'); }
+    @font-face { font-family:'Museo Sans'; font-weight:300; font-style:normal; font-display:swap; src:url('fonts/MuseoSans_0.otf') format('opentype'); }
+    @font-face { font-family:'Museo Sans'; font-weight:500; font-style:normal; font-display:swap; src:url('fonts/MuseoSans_1.otf') format('opentype'); }
+    @font-face { font-family:'Museo Sans'; font-weight:700; font-style:normal; font-display:swap; src:url('fonts/MuseoSans_2.otf') format('opentype'); }
+    @font-face { font-family:'Museo Sans'; font-weight:900; font-style:normal; font-display:swap; src:url('fonts/MuseoSans_3.otf') format('opentype'); }
+
     /* ─── CSS VARIABLES (theme tokens) ────────────────────────── */
     :root {
       /* Accent */
@@ -15,8 +21,8 @@
       --accent-to:      #2472FC;
       --accent-grad:    linear-gradient(90deg, var(--accent-from), var(--accent-to));
       /* Typography */
-      --heading-font:   'Manrope', sans-serif;
-      --body-font:      'Inter', sans-serif;
+      --heading-font:   'Museo Sans', sans-serif;
+      --body-font:      'Museo Sans', sans-serif;
       /* Page Theme */
       --bg:             #141414;
       --surface:        #1a1a2e;
@@ -55,7 +61,7 @@
       backdrop-filter: blur(12px);
     }
     .logo { flex-shrink: 0; margin-right: 30px; }
-    .logo img { height: 46px; width: auto; object-fit: contain; }
+    .logo img { height: 58px; width: auto; object-fit: contain; }
 
     .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; }
     .nav-links a {
@@ -317,7 +323,7 @@
     .hero-pro-pill {
       display: inline-flex; align-items: center; gap: 7px;
       background: var(--accent-grad); color: #fff;
-      font-size: 13px; font-weight: 800; letter-spacing: .03em;
+      font-size: 13px; font-weight: 700; letter-spacing: .03em;
       padding: 6px 14px 6px 11px; border-radius: 999px;
     }
     .hero-pro-pill .badge-icon { width: 15px; height: 15px; }
@@ -1250,7 +1256,7 @@
         gap: 10px; row-gap: 6px;
       }
       .logo { order: 0; }
-      .logo img { height: 34px; }
+      .logo img { height: 42px; }
       .nav-right { order: 1; margin-left: auto; gap: 12px; }
       /* Trim clutter: keep palette, search & avatar */
       .coins-pill, .bell-wrap, .nav-right > div:last-child { display: none; }
