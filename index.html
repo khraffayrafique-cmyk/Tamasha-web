@@ -54,7 +54,7 @@
       background: #000;
       backdrop-filter: blur(12px);
     }
-    .logo { flex-shrink: 0; }
+    .logo { flex-shrink: 0; margin-right: 30px; }
     .logo img { height: 46px; width: auto; object-fit: contain; }
 
     .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; }
@@ -371,11 +371,15 @@
       transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s;
       cursor: pointer; border-radius: 6px;
     }
-    .card-wrap:hover {
-      transform: translateZ(0) scale(1.05);
-      box-shadow: 0 12px 40px rgba(0,0,0,.7);
-      z-index: 10;
+    /* No enlarge on hover — just a grey tint (Apple TV style) */
+    .card-wrap:hover { z-index: 10; }
+    .card-hover-tint {
+      position: absolute; inset: 0;
+      background: rgba(130,130,130,0.30);
+      opacity: 0; transition: opacity .18s ease;
+      pointer-events: none; z-index: 1;
     }
+    .card-wrap:hover .card-hover-tint { opacity: 1; }
     .card-wrap.portrait  { width: 180px; height: 270px; }
     .card-wrap.landscape { width: 256px; height: 144px; }
     .card-wrap.wide      { width: 220px; height: 148px; }
@@ -1322,6 +1326,41 @@
       .card-wrap.portrait .card-inner { height: 186px !important; }
       .footer-grid { grid-template-columns: 1fr; }
     }
+
+    /* ─── MY LIST (+) button added state ─────────────────────────── */
+    .card-action-btn.in-list { background: var(--accent-from); border-color: transparent; color: #fff; }
+
+    /* ─── PRO BANNER clickable ───────────────────────────────────── */
+    .pro-banner { cursor: pointer; transition: transform .15s ease, box-shadow .2s ease; }
+    .pro-banner:hover { transform: translateY(-2px); box-shadow: 0 16px 46px rgba(0,0,0,.45); }
+
+    /* ─── DETAIL: no-poster (hero "More Info") ───────────────────── */
+    .dsc-hero-inner.no-poster { grid-template-columns: 1fr; }
+
+    /* ─── VIEW-MORE / BROWSE SCREEN ──────────────────────────────── */
+    .browse-screen .brs-head { padding: 104px 60px 6px; }
+    .brs-title { font-family: var(--heading-font); font-size: 40px; font-weight: 800; letter-spacing: -1px; color: #fff; margin: 0; }
+    .brs-grid { display: flex; flex-wrap: wrap; gap: 22px; padding: 22px 60px 72px; }
+
+    /* ─── SEARCH SCREEN ──────────────────────────────────────────── */
+    .search-screen {
+      position: fixed; left: 0; right: 0; top: 70px; bottom: 0; z-index: 180;
+      background: var(--bg); overflow-y: auto; display: none;
+      padding: 28px 60px 60px;
+    }
+    .search-screen.open { display: block; }
+    .srch-empty { text-align: center; color: var(--text-dim); font-size: 22px; font-weight: 600; padding: 26px 0 8px; }
+    .srch-block { margin-bottom: 26px; }
+    .srch-h { font-family: var(--heading-font); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .srch-grid { display: flex; flex-wrap: wrap; gap: 18px; }
+
+    @media (max-width: 600px) {
+      .browse-screen .brs-head { padding: 96px 16px 6px; }
+      .brs-title { font-size: 26px; }
+      .brs-grid { gap: 14px; padding: 16px 16px 60px; }
+      .search-screen { padding: 20px 16px 50px; top: 96px; }
+      .srch-empty { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -1354,23 +1393,11 @@
   </div>
 
   <div class="nav-right">
-    <!-- Notifications -->
-    <div class="bell-wrap palette-btn" title="Notifications">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
-      <div class="notif-dot"></div>
-    </div>
-
     <!-- Search -->
     <div class="search-icon" id="searchTrigger" onclick="openSearch()">
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-    </div>
-
-    <!-- Coins -->
-    <div class="coins-pill">
-      <span class="material-icons">monetization_on</span>
-      <span class="coin-count">1,250</span>
     </div>
 
     <!-- Avatar + PRO -->
@@ -1489,7 +1516,7 @@
 
 <!-- ════════════════ PRO BANNER ═══════════════════ -->
 <div style="padding:16px 0 8px" data-category="promo" class="section" id="sec-pro-banner">
-  <div class="pro-banner">
+  <div class="pro-banner" role="button" tabindex="0" onclick="subscribeNow()">
     <div class="pro-banner-blob pro-banner-blob-1"></div>
     <div class="pro-banner-blob pro-banner-blob-2"></div>
     <div class="pro-banner-inner">
@@ -1605,6 +1632,12 @@
 <!-- ════════════ SHOW / MOVIE DETAIL SCREEN ════════════ -->
 <div class="detail-screen" id="detailScreen"></div>
 
+<!-- ════════════ VIEW-MORE / BROWSE SCREEN ════════════ -->
+<div class="detail-screen browse-screen" id="browseScreen"></div>
+
+<!-- ════════════════ SEARCH SCREEN ════════════════════ -->
+<div class="search-screen" id="searchScreen"></div>
+
 <!-- ════════════════ VIDEO PLAYER MODAL ════════════════ -->
 <div class="player-modal" id="playerModal"></div>
 
@@ -1623,6 +1656,8 @@ function tp(file)         { return T + encodeURIComponent(file); }
 const WAVE  = `<svg class="badge-icon" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const BADGE = `<div class="card-badge">${WAVE}PRO</div>`;
 const LOCK  = `<div class="pro-lock-overlay"><span class="material-icons">lock</span></div>`;
+const HOVER = `<div class="card-hover-tint"></div>`;
+const _CHECK = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 // Font fixed to Manrope — no switcher
 
@@ -2252,14 +2287,18 @@ function buildHeroV2() {
     </button>
     <div class="hero-dots" id="heroDots">${dots}</div>`;
 
-  // Wire each slide's play button to the video player
+  // Wire each slide's Play (→ player) and More Info (→ detail) buttons
   sec.querySelectorAll('.hero-slide').forEach((slide, i) => {
     const item = heroItems[i];
-    const btn = slide.querySelector('.btn-play');
-    if (!btn || !item) return;
-    btn.addEventListener('click', () => item._sport
+    if (!item) return;
+    const play = slide.querySelector('.btn-play');
+    if (play) play.addEventListener('click', () => item._sport
       ? openPlayer(pickVimeo(item.label), item.label, item.channel + ' · LIVE')
       : openPlayer(item.vimeo, item.title, 'Featured'));
+    const info = slide.querySelector('.btn-info');
+    if (info) info.addEventListener('click', () => item._sport
+      ? openPlayer(pickVimeo(item.label), item.label, item.channel + ' · LIVE')
+      : openDetail(item, 'movie'));
   });
 
   setTimeout(() => {
@@ -2311,7 +2350,7 @@ heroVisibilityObserver.observe(_heroEl);
 
 // ─── CARD BUILDERS ───────────────────────────────────────────────
 
-/* Portrait card: movies / tv shows (no PRO badge, no lock) */
+/* Portrait card: movies / tv shows — PRO gets lock + badge (top-left) */
 function makePortraitCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
@@ -2320,32 +2359,20 @@ function makePortraitCard(item) {
   w.innerHTML = `
     <div class="card-inner" style="height:270px">
       <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
+      ${item.pro ? LOCK : ''}
+      ${item.pro ? BADGE : ''}
+      ${HOVER}
       <div class="card-hover-actions">
         <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
-        <button class="card-action-btn" title="Add to list">${_PLUS}</button>
+        <button class="card-action-btn" title="Add to My List">${_PLUS}</button>
       </div>
     </div>`;
   return w;
 }
 
-/* Top Movies: has numbered PRO badge and lock overlay */
+/* Top Movies: same treatment as portrait */
 function makeTopMovieCard(item) {
-  const w = document.createElement('div');
-  w.className = 'card-wrap portrait';
-  w.style.height = 'auto';
-  const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
-  w.innerHTML = `
-    <div class="card-inner" style="height:270px">
-      <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
-      ${item.pro ? LOCK : ''}
-      ${item.pro ? '<div class="card-overlay"></div>' : ''}
-      ${item.pro ? BADGE : ''}
-      <div class="card-hover-actions">
-        <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
-        <button class="card-action-btn" title="Add to list">${_PLUS}</button>
-      </div>
-    </div>`;
-  return w;
+  return makePortraitCard(item);
 }
 
 /* Wide (landscape) card: continue watching with progress bar and play overlay */
@@ -2358,6 +2385,7 @@ function makeWideCard(item) {
     <div class="card-inner" style="height:148px">
       <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
       <div class="card-overlay"></div>
+      ${HOVER}
       <div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div>
       <div class="continue-play-overlay">${_PLAY_W}</div>
     </div>
@@ -2368,7 +2396,7 @@ function makeWideCard(item) {
   return w;
 }
 
-/* Landscape (channel) card: live TV */
+/* Landscape (channel) card: live TV — logo tile only, no name */
 function makeLandscapeCard(ch) {
   const w = document.createElement('div');
   w.className = 'card-wrap landscape';
@@ -2378,27 +2406,24 @@ function makeLandscapeCard(ch) {
       <div class="ch-bg"></div>
       <img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/>
       <span class="live-pill">LIVE</span>
-    </div>
-    <div class="card-body">
-      <div class="card-body-title">${ch.name}</div>
-      ${ch.tag ? `<div class="card-body-sub">${ch.tag}</div>` : ''}
+      ${HOVER}
     </div>`;
   return w;
 }
 
-/* Sports card: live match with score and channel info */
+/* Sports card: PRO top-left (lock+badge), LIVE top-right */
 function makeSportsCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
   w.style.height = 'auto';
-  const liveBadge = item.live
-    ? `<span class="live-pill" style="top:10px;left:10px;right:auto">${item.live ? 'LIVE' : 'SOON'}</span>`
-    : '';
+  const liveBadge = item.live ? `<span class="live-pill">LIVE</span>` : '';
   w.innerHTML = `
     <div class="card-inner" style="height:270px">
       <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
+      ${item.pro ? LOCK : ''}
+      ${item.pro ? BADGE : ''}
       ${liveBadge}
-      ${item.pro ? `<div class="card-badge" style="top:auto;bottom:0;border-radius:0 8px 0 0;padding:4px 10px;font-size:11px">${WAVE}PRO</div>` : ''}
+      ${HOVER}
     </div>`;
   return w;
 }
@@ -2412,9 +2437,11 @@ function makeHighlightCard(item) {
     <div class="card-inner" style="height:148px">
       <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
       <div class="card-overlay"></div>
+      ${item.pro ? LOCK : ''}
+      ${item.pro ? BADGE : ''}
+      ${HOVER}
       <div class="highlight-play">${_PLAY_W}</div>
       ${item.duration ? `<div class="highlight-duration">${item.duration}</div>` : ''}
-      ${item.pro ? `<div class="card-badge" style="top:auto;bottom:0;border-radius:0 8px 0 0;padding:4px 10px;font-size:11px">${WAVE}PRO</div>` : ''}
     </div>
     <div class="card-body">
       <div class="card-body-title">${item.label}</div>
@@ -2475,6 +2502,7 @@ function makeEpisodes(item, season) {
 
 // Open the full-screen player (Vimeo clip we have access to)
 function openPlayer(vimeoId, title, sub) {
+  closeSearch();
   const modal = document.getElementById('playerModal');
   modal.innerHTML = `
     <div class="plr-top">
@@ -2509,17 +2537,20 @@ function closePlayer() {
 
 // Open the show / movie detail screen
 function openDetail(item, kind) {
+  closeSearch(); closeBrowse();
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
   const poster  = posterOf(item);
   const seasons = kind === 'show' ? seasonCount(item) : 1;
   const cast    = CAST_POOL.slice(0, 5).join(', ');
-  const metaBits = (item.meta || '').split('·').map(s => s.trim()).filter(Boolean);
+  const metaBits = item.meta
+    ? item.meta.split('·').map(s => s.trim()).filter(Boolean)
+    : [item.year, item.runtime, ...(item.genre ? item.genre.split('·').map(s => s.trim()) : [])].filter(Boolean);
   const eyebrow = kind === 'show' ? 'TV SERIES' : 'FILM';
   const rating  = kind === 'show' ? 'TV-PG' : 'PG-13';
-  const synopsis = kind === 'show'
+  const synopsis = item.synopsis || (kind === 'show'
     ? `Follow ${title} through a season of twists, rivalries and unforgettable moments — streaming now, only on Tamasha.`
-    : `${title} is a blockbuster experience packed with action and heart. Watch it now in stunning HD, only on Tamasha.`;
+    : `${title} is a blockbuster experience packed with action and heart. Watch it now in stunning HD, only on Tamasha.`);
 
   const chipVals = [(kind === 'show' ? 'Drama' : 'Feature'), ...metaBits,
                     `${seasons} Season${seasons > 1 ? 's' : ''}`, rating];
@@ -2536,10 +2567,10 @@ function openDetail(item, kind) {
     <div class="dsc-anim">
     <div class="dsc-hero">
       <button class="dsc-back" onclick="closeDetail()">${_CHEVL}<span>Back</span></button>
-      <div class="dsc-hero-bg"><img src="${poster}" alt=""></div>
+      <div class="dsc-hero-bg">${poster ? `<img src="${poster}" alt="">` : ''}</div>
       <div class="dsc-hero-veil"></div>
-      <div class="dsc-hero-inner">
-        <img class="dsc-poster" src="${poster}" alt="${title}">
+      <div class="dsc-hero-inner${poster ? '' : ' no-poster'}">
+        ${poster ? `<img class="dsc-poster" src="${poster}" alt="${title}">` : ''}
         <div class="dsc-info">
           <div class="dsc-eyebrow">${eyebrow}</div>
           <h1 class="dsc-title">${title}</h1>
@@ -2630,10 +2661,45 @@ function closeDetail() {
 }
 
 // Make a card open the right destination: show/movie → detail, else → player
+// ─── MY LIST (watchlist, persisted in localStorage) ──────────────
+const WATCHLIST_KEY = 'tamasha_watchlist';
+function getWatchlist() { try { return JSON.parse(localStorage.getItem(WATCHLIST_KEY) || '[]'); } catch (e) { return []; } }
+function inWatchlist(id) { return getWatchlist().includes(id); }
+function toggleWatchlist(id) {
+  const wl = getWatchlist();
+  const i = wl.indexOf(id);
+  if (i >= 0) wl.splice(i, 1); else wl.push(id);
+  localStorage.setItem(WATCHLIST_KEY, JSON.stringify(wl));
+  return i < 0;   // true = added
+}
+
+// Transient toast (reuses the category-switch toast element)
+function flashToast(msg) {
+  if (typeof catToast === 'undefined' || !catToast) return;
+  catToast.innerHTML = `<span class="material-icons">check_circle</span>${msg}`;
+  catToast.classList.add('show');
+  clearTimeout(_catToastTimer);
+  _catToastTimer = setTimeout(() => catToast.classList.remove('show'), 1400);
+}
+
+function subscribeNow() { flashToast('Redirecting to subscription…'); }
+
 function attachCardClick(el, item, kind) {
   el.style.cursor = 'pointer';
+  // reflect existing My List state on the "+" button
+  const addBtn = el.querySelector('.card-action-btn:not(.play-btn)');
+  if (addBtn && inWatchlist(titleOf(item))) { addBtn.innerHTML = _CHECK; addBtn.classList.add('in-list'); }
+
   el.addEventListener('click', e => {
-    if (e.target.closest('.card-action-btn:not(.play-btn)')) { e.stopPropagation(); return; } // "+" add button
+    const add = e.target.closest('.card-action-btn:not(.play-btn)');
+    if (add) {   // "+" → toggle My List
+      e.stopPropagation();
+      const added = toggleWatchlist(titleOf(item));
+      add.innerHTML = added ? _CHECK : _PLUS;
+      add.classList.toggle('in-list', added);
+      flashToast(added ? 'Added to My List' : 'Removed from My List');
+      return;
+    }
     if (e.target.closest('.play-btn, .highlight-play, .continue-play-overlay')) {
       e.stopPropagation();
       openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
@@ -2643,13 +2709,6 @@ function attachCardClick(el, item, kind) {
     else openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
   });
 }
-
-// Close overlays on Escape (player first, then detail)
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
-  else closeDetail();
-});
 
 // ─── RENDER ──────────────────────────────────────────────────────
 [['moviesRow',moviesData,makePortraitCard,'movie'],
@@ -2713,7 +2772,7 @@ function showCatToast(filter, label) {
 
 function selectCategory(a) {
   const filter = a.dataset.filter;
-  closePlayer(); closeDetail();   // return home from any open detail/player
+  closePlayer(); closeDetail(); closeBrowse(); closeSearch();   // return home from any open overlay
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
@@ -2749,74 +2808,139 @@ document.getElementById('navLinks').addEventListener('click', e => {
   selectCategory(a);
 });
 
-// ─── SEARCH ──────────────────────────────────────────────────────
-const searchIndex = [
-  ...moviesData.map(i    => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Movies',    pro:i.pro, type:'portrait' })),
-  ...topMoviesData.map(i => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top Movies', pro:i.pro, type:'portrait' })),
-  ...tvShowsData.map(i   => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'TV Shows',   pro:i.pro, type:'portrait' })),
-  ...topTVData.map(i     => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Top TV',     pro:i.pro, type:'portrait' })),
-  ...continueData.map(i  => ({ title: i.title || i.folder.replace(/_/g,' '), thumb: bp(i.folder,i.thumb), cat:'Continue Watching', pro:i.pro, type:'wide' })),
-  ...liveSportsData.map(i=> ({ title: i.label,                               thumb: sp(i.file),           cat:'Live Sports', pro:i.pro, type:'portrait' })),
-  ...highlightsData.map(i=> ({ title: i.label,                               thumb: sp(i.file),           cat:'Highlights',  pro:i.pro, type:'portrait' })),
+// ─── VIEW MORE (browse grid) ─────────────────────────────────────
+const KIND_BUILDER = { movie: makePortraitCard, show: makePortraitCard, sport: makeSportsCard, clip: makeHighlightCard };
+
+const ROW_CONFIG = {
+  continueRow:   { data: () => continueData,   fn: makeWideCard,      kind: 'continue' },
+  moviesRow:     { data: () => moviesData,     fn: makePortraitCard,  kind: 'movie' },
+  liveTVRow:     { data: () => liveChannels,   fn: makeLandscapeCard, kind: 'live' },
+  topMoviesRow:  { data: () => topMoviesData,  fn: makePortraitCard,  kind: 'movie' },
+  tvShowsRow:    { data: () => tvShowsData,    fn: makePortraitCard,  kind: 'show' },
+  topTVRow:      { data: () => topTVData,      fn: makePortraitCard,  kind: 'show' },
+  liveSportsRow: { data: () => liveSportsData, fn: makeSportsCard,    kind: 'sport' },
+  highlightsRow: { data: () => highlightsData, fn: makeHighlightCard, kind: 'clip' },
+};
+
+function openBrowse(title, data, fn, kind) {
+  const screen = document.getElementById('browseScreen');
+  clearTimeout(screen._closeTimer);
+  screen.innerHTML = `
+    <button class="dsc-back" onclick="closeBrowse()">${_CHEVL}<span>Back</span></button>
+    <div class="dsc-anim">
+      <div class="brs-head"><h1 class="brs-title">${title}</h1></div>
+      <div class="brs-grid" id="brsGrid"></div>
+    </div>`;
+  const grid = document.getElementById('brsGrid');
+  data.forEach(item => { const el = fn(item); attachCardClick(el, item, kind); grid.appendChild(el); });
+  document.querySelector('.navbar').classList.add('scrolled');
+  screen.classList.add('open');
+  screen.scrollTop = 0;
+  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
+  pauseHeroMedia(); stopHeroTimer();
+}
+function closeBrowse() {
+  const screen = document.getElementById('browseScreen');
+  if (!screen.classList.contains('open')) return;
+  screen.classList.remove('visible');
+  clearTimeout(screen._closeTimer);
+  screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 340);
+  if (window.scrollY < 40) document.querySelector('.navbar').classList.remove('scrolled');
+  if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+}
+
+// "View more" opens its section as a full browse grid
+document.addEventListener('click', e => {
+  const vm = e.target.closest('.view-more');
+  if (!vm) return;
+  e.preventDefault();
+  const section = vm.closest('.section');
+  const row = section && section.querySelector('.cards-row');
+  const cfg = row && ROW_CONFIG[row.id];
+  const titleEl = section && section.querySelector('.section-title');
+  if (cfg) openBrowse((titleEl ? titleEl.textContent : 'Browse').trim(), cfg.data(), cfg.fn, cfg.kind);
+});
+
+// ─── SEARCH (full-screen results) ────────────────────────────────
+const SEARCHABLE = [
+  ...moviesData.map(i => ({ item: i, kind: 'movie' })),
+  ...topMoviesData.map(i => ({ item: i, kind: 'movie' })),
+  ...tvShowsData.map(i => ({ item: i, kind: 'show' })),
+  ...topTVData.map(i => ({ item: i, kind: 'show' })),
+  ...liveSportsData.map(i => ({ item: i, kind: 'sport' })),
+  ...highlightsData.map(i => ({ item: i, kind: 'clip' })),
 ];
+function _dedupe(arr) {
+  const seen = new Set();
+  return arr.filter(x => { const t = titleOf(x.item).toLowerCase(); if (seen.has(t)) return false; seen.add(t); return true; });
+}
+function _srchFill(container, list) {
+  list.forEach(({ item, kind }) => { const el = KIND_BUILDER[kind](item); attachCardClick(el, item, kind); container.appendChild(el); });
+}
 
 function openSearch() {
   document.querySelector('.navbar').classList.add('search-open');
-  const input = document.getElementById('searchInput');
-  setTimeout(() => input.focus(), 300);
+  document.querySelector('.navbar').classList.add('scrolled');
+  document.getElementById('searchScreen').classList.add('open');
+  renderResults('');
+  pauseHeroMedia(); stopHeroTimer();
+  setTimeout(() => document.getElementById('searchInput').focus(), 300);
 }
-
 function closeSearch() {
+  const screen = document.getElementById('searchScreen');
+  if (!screen.classList.contains('open')) return;
   document.querySelector('.navbar').classList.remove('search-open');
   document.getElementById('searchInput').value = '';
-  document.getElementById('searchDropdown').classList.remove('visible');
-  document.getElementById('searchDropdown').innerHTML = '';
+  screen.classList.remove('open');
+  screen.innerHTML = '';
+  if (window.scrollY < 40) document.querySelector('.navbar').classList.remove('scrolled');
+  if (_heroInView
+      && !document.getElementById('detailScreen').classList.contains('open')
+      && !document.getElementById('playerModal').classList.contains('open')) {
+    try { goToSlide(heroIdx); } catch (e) {}
+  }
 }
 
 function renderResults(query) {
-  const dropdown = document.getElementById('searchDropdown');
-  if (!query.trim()) { dropdown.classList.remove('visible'); return; }
+  const screen = document.getElementById('searchScreen');
+  if (!screen.classList.contains('open')) return;
+  const q = query.trim().toLowerCase();
+  const matches = q ? _dedupe(SEARCHABLE.filter(x => titleOf(x.item).toLowerCase().includes(q))) : [];
+  const topSearches = _dedupe([...topMoviesData.map(i => ({ item: i, kind: 'movie' })), ...tvShowsData.map(i => ({ item: i, kind: 'show' }))]).slice(0, 12);
+  const trending = _dedupe([...topTVData.map(i => ({ item: i, kind: 'show' })), ...moviesData.map(i => ({ item: i, kind: 'movie' }))]).slice(0, 12);
 
-  const q = query.toLowerCase();
-  const matches = searchIndex.filter(item =>
-    item.title.toLowerCase().includes(q)
-  ).slice(0, 8);
+  screen.innerHTML = `
+    ${q && !matches.length ? `<div class="srch-empty">Uh-oh, we couldn't find it!</div>` : ''}
+    ${matches.length ? `<div class="srch-block"><h3 class="srch-h">Results</h3><div class="srch-grid" id="srchResults"></div></div>` : ''}
+    <div class="srch-block"><h3 class="srch-h">Top Searches</h3><div class="cards-row" id="srchTop"></div></div>
+    <div class="srch-block"><h3 class="srch-h">Trending Shows for You</h3><div class="cards-row" id="srchTrend"></div></div>`;
 
-  if (!matches.length) {
-    dropdown.innerHTML = `<div class="search-no-results">No results for "<strong>${query}</strong>"</div>`;
-    dropdown.classList.add('visible');
-    return;
-  }
-
-  dropdown.innerHTML = matches.map(item => `
-    <div class="search-result">
-      <img class="search-result-thumb${item.type==='wide'?' landscape':''}"
-           src="${item.thumb}" alt="${item.title}" loading="lazy" />
-      <div class="search-result-info">
-        <div class="search-result-title">${item.title}</div>
-        <div class="search-result-cat">${item.cat}</div>
-      </div>
-      ${item.pro ? '<span class="search-result-pro">PRO</span>' : ''}
-    </div>
-  `).join('');
-  dropdown.classList.add('visible');
+  if (matches.length) _srchFill(document.getElementById('srchResults'), matches);
+  _srchFill(document.getElementById('srchTop'), topSearches);
+  _srchFill(document.getElementById('srchTrend'), trending);
 }
 
 document.getElementById('searchInput').addEventListener('input', e => renderResults(e.target.value));
 document.getElementById('searchCloseBtn').addEventListener('click', closeSearch);
 
-// Close search when clicking outside
+// Close search when clicking outside the bar / trigger / results screen
 document.addEventListener('click', e => {
-  const bar  = document.getElementById('searchBar');
+  const bar = document.getElementById('searchBar');
   const trigger = document.getElementById('searchTrigger');
-  const drop = document.getElementById('searchDropdown');
-  if (!bar.contains(e.target) && !trigger.contains(e.target) && !drop.contains(e.target)) {
+  const screen = document.getElementById('searchScreen');
+  if (!bar.contains(e.target) && !trigger.contains(e.target) && !screen.contains(e.target)) {
     closeSearch();
   }
 });
 
-// Esc key closes search
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+// Esc closes the top-most open overlay
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
+  else if (document.getElementById('detailScreen').classList.contains('open')) closeDetail();
+  else if (document.getElementById('browseScreen').classList.contains('open')) closeBrowse();
+  else closeSearch();
+});
 
 // ─── SCROLL ENTRANCE OBSERVER ────────────────────────────────────
 const scrollObserver = new IntersectionObserver((entries) => {
