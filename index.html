@@ -304,11 +304,12 @@
     .hero-pro-tag {
       position: absolute; top: 0; left: 0; z-index: 3;
       background: var(--accent-grad);
-      padding: 6px 18px 6px 12px;
-      border-bottom-right-radius: 8px;
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; font-weight: 700;
+      padding: 9px 24px 9px 16px;
+      border-bottom-right-radius: 10px;
+      display: flex; align-items: center; gap: 9px;
+      font-size: 17px; font-weight: 800; letter-spacing: .03em;
     }
+    .hero-pro-tag .badge-icon { width: 19px; height: 19px; }
 
     .hero-arrow {
       position: absolute; top: 50%; transform: translateY(-50%);
@@ -1365,7 +1366,14 @@
     /* ─── VIEW-MORE / BROWSE SCREEN ──────────────────────────────── */
     .browse-screen .brs-head { padding: 152px 60px 6px; }
     .brs-title { font-family: var(--heading-font); font-size: 40px; font-weight: 800; letter-spacing: -1px; color: #fff; margin: 0; }
-    .brs-grid { display: flex; flex-wrap: wrap; gap: 22px; padding: 22px 60px 72px; }
+    /* Grid whose columns stretch to fill the row → equal left/right margins */
+    .brs-grid { display: grid; gap: 22px 20px; padding: 22px 60px 72px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .brs-grid.brs-landscape { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .brs-grid.brs-wide      { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .brs-grid .card-wrap { width: 100% !important; }
+    .brs-grid .card-wrap.portrait  .card-inner { height: auto !important; aspect-ratio: 2 / 3; }
+    .brs-grid .card-wrap.landscape .card-inner { height: auto !important; aspect-ratio: 16 / 9; }
+    .brs-grid .card-wrap.wide      .card-inner { height: auto !important; aspect-ratio: 3 / 2; }
 
     /* ─── SEARCH SCREEN ──────────────────────────────────────────── */
     .search-screen {
@@ -1382,7 +1390,9 @@
     @media (max-width: 600px) {
       .browse-screen .brs-head { padding: 132px 16px 6px; }
       .brs-title { font-size: 26px; }
-      .brs-grid { gap: 14px; padding: 16px 16px 60px; }
+      .brs-grid { gap: 16px 12px; padding: 16px 16px 60px; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+      .brs-grid.brs-landscape { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+      .brs-grid.brs-wide      { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
       .search-screen { padding: 20px 16px 50px; top: 96px; }
       .srch-empty { font-size: 18px; }
     }
@@ -2872,11 +2882,12 @@ const ROW_CONFIG = {
 function openBrowse(title, data, fn, kind) {
   const screen = document.getElementById('browseScreen');
   clearTimeout(screen._closeTimer);
+  const shape = kind === 'live' ? 'brs-landscape' : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
   screen.innerHTML = `
     <button class="dsc-back" onclick="closeBrowse()">${_CHEVL}<span>Back</span></button>
     <div class="dsc-anim">
       <div class="brs-head"><h1 class="brs-title">${title}</h1></div>
-      <div class="brs-grid" id="brsGrid"></div>
+      <div class="brs-grid ${shape}" id="brsGrid"></div>
     </div>`;
   const grid = document.getElementById('brsGrid');
   data.forEach(item => { const el = fn(item); attachCardClick(el, item, kind); grid.appendChild(el); });
