@@ -13,5 +13,6 @@
       "runtimeArgs": ["run", "dev", "--prefix", "/Users/macbook/Downloads/Claude/Abu Vitals", "--", "--port", "5174", "--strictPort"],
       "port": 5174
     }
-  ]
+  ],
+  "autoVerify": false
 }

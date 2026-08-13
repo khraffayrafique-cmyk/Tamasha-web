@@ -45,14 +45,13 @@
     .navbar {
       position: fixed; top: 0; left: 0; right: 0;
       height: 70px;
-      background: var(--nav-bg);
+      background: #000;
       display: flex; align-items: center;
       padding: 0 40px; z-index: 200; gap: 20px;
       transition: background .3s;
     }
-    /* Darken navbar once user scrolls off the hero */
     .navbar.scrolled {
-      background: rgba(10,10,10,0.88);
+      background: #000;
       backdrop-filter: blur(12px);
     }
     .logo { flex-shrink: 0; }
@@ -1133,12 +1132,14 @@
     .dsc-cast span { color: rgba(255,255,255,.5); }
     .dsc-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
-    .dsc-section { padding: 30px 60px; max-width: 1320px; }
+    .dsc-section { padding: 30px 60px; }
     .dsc-sec-head { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
     .dsc-sec-title { font-family: var(--heading-font); font-size: 22px; font-weight: 700; color: #fff; }
     .dsc-season { background: var(--surface); color: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px 14px; font-family: var(--body-font); font-size: 13px; font-weight: 600; cursor: pointer; }
 
-    .dsc-eps { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 26px 22px; }
+    .dsc-eps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px 22px; }
+    @media (max-width: 1100px) { .dsc-eps { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 820px)  { .dsc-eps { grid-template-columns: repeat(2, 1fr); } }
     .dsc-ep { cursor: pointer; }
     .dsc-ep-thumb { position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: var(--surface); }
     .dsc-ep-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
@@ -1353,11 +1354,6 @@
   </div>
 
   <div class="nav-right">
-    <!-- Palette icon -->
-    <button class="palette-btn" onclick="toggleThemePanel()" title="Themes">
-      <span class="material-icons">palette</span>
-    </button>
-
     <!-- Notifications -->
     <div class="bell-wrap palette-btn" title="Notifications">
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
@@ -1902,7 +1898,8 @@ const _STAR    = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#FFCB5A"
 const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z" opacity=".95"/></svg>`;
 
 function goToSlide(idx) {
-  heroIdx = (idx + heroMovies.length) % heroMovies.length;
+  const n = document.querySelectorAll('.hero-slide').length || heroMovies.length;
+  heroIdx = (idx + n) % n;
   const t = document.getElementById('heroTrack');
   if (t) t.style.transform = `translateX(-${heroIdx*100}%)`;
   document.querySelectorAll('.hero__pager-dot').forEach((d,i) => d.classList.toggle('is-active', i===heroIdx));
@@ -2187,7 +2184,11 @@ function buildHeroV2() {
   const sec = document.getElementById('heroSection');
   sec.className = 'hero hero--v2'; sec.style.height = '';
 
-  const slides = heroMovies.map((m, i) => `
+  // Featured movies + a couple of live sports matches share the hero carousel
+  const sportItems = liveSportsData.filter(s => s.live).slice(0, 2).map(s => ({ _sport: true, ...s }));
+  const heroItems = heroMovies.concat(sportItems);
+
+  const movieSlide = (m, i) => `
     <div class="hero-slide">
       ${_heroBg(m, i)}
       <div class="hero-gradient-t"></div>
@@ -2207,9 +2208,33 @@ function buildHeroV2() {
           <button class="btn-info">More Info</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
 
-  const dots = heroMovies.map((_, i) =>
+  const sportSlide = (m) => `
+    <div class="hero-slide">
+      <img class="hero-bg" src="${sp(m.file)}" alt="${m.label}" loading="lazy"/>
+      <div class="hero-gradient-t"></div>
+      <div class="hero-gradient"></div>
+      <div class="hero-gradient-b"></div>
+      ${m.pro ? `<div class="hero-pro-tag">${WAVE}PRO</div>` : ''}
+      <div class="hero-content">
+        <div class="hero__live-row" style="margin-bottom:12px">
+          <span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>
+          <span class="hero__live-channel">${m.channel}</span>
+        </div>
+        <div class="hero-title">${m.label}</div>
+        <div class="hero-meta"><span>${m.sub}</span></div>
+        <p style="font-size:15px;font-weight:600;line-height:1.5;color:#fff;margin:0 0 24px">${m.score}</p>
+        <div class="hero-buttons">
+          <button class="btn-play">${_PLAY_B}Watch Live</button>
+          <button class="btn-info">More Info</button>
+        </div>
+      </div>
+    </div>`;
+
+  const slides = heroItems.map((m, i) => m._sport ? sportSlide(m) : movieSlide(m, i)).join('');
+
+  const dots = heroItems.map((_, i) =>
     `<div class="hero-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
 
   sec.innerHTML = `
@@ -2222,6 +2247,16 @@ function buildHeroV2() {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
     <div class="hero-dots" id="heroDots">${dots}</div>`;
+
+  // Wire each slide's play button to the video player
+  sec.querySelectorAll('.hero-slide').forEach((slide, i) => {
+    const item = heroItems[i];
+    const btn = slide.querySelector('.btn-play');
+    if (!btn || !item) return;
+    btn.addEventListener('click', () => item._sport
+      ? openPlayer(pickVimeo(item.label), item.label, item.channel + ' · LIVE')
+      : openPlayer(item.vimeo, item.title, 'Featured'));
+  });
 
   setTimeout(() => {
     const v = sec.querySelector('.hero-video');
@@ -2654,7 +2689,10 @@ function renderContinue(filter) {
   row.innerHTML = '';
   items.forEach(item => {
     const el = makeWideCard(item);
-    attachCardClick(el, item, item.cat === 'tv-shows' ? 'show' : 'movie');
+    // Continue Watching resumes playback directly — no detail screen
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () =>
+      openPlayer(pickVimeo(titleOf(item)), titleOf(item), item.sub || 'Resume watching'));
     row.appendChild(el);
   });
   const eyebrow = document.querySelector('#sec-continue .section-eyebrow');
