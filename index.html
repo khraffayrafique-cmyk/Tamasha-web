@@ -428,15 +428,15 @@
 
     .card-badge {
       position: absolute; top: 0; left: 0;
-      border-bottom-right-radius: 8px;
-      padding: 7px 14px 7px 10px;
-      font-size: 14px; font-weight: 900;
-      color: #fff; letter-spacing: .07em;
-      display: flex; align-items: center; gap: 5px;
+      border-bottom-right-radius: 7px;
+      padding: 4px 9px 4px 7px;
+      font-size: 11px; font-weight: 800;
+      color: #fff; letter-spacing: .04em;
+      display: flex; align-items: center; gap: 4px;
       background: var(--accent-grad);
       pointer-events: none; z-index: 2;
     }
-    .badge-icon { width: 18px; height: 13px; flex-shrink: 0; }
+    .badge-icon { width: 12px; height: 12px; flex-shrink: 0; }
 
     /* ─── LIVE TV ──────────────────────────────────────────────── */
     .ch-bg {
@@ -445,10 +445,9 @@
     }
     .card-inner .ch-logo {
       position: absolute; inset: 0;
-      width: auto !important; height: auto !important;
-      max-width: 65%; max-height: 65%;
-      margin: auto; object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,.5));
+      width: 100% !important; height: 100% !important;
+      max-width: none; max-height: none;
+      object-fit: cover;
     }
     .live-pill {
       position: absolute; top: 10px; right: 10px;
@@ -1338,7 +1337,7 @@
     .dsc-hero-inner.no-poster { grid-template-columns: 1fr; }
 
     /* ─── VIEW-MORE / BROWSE SCREEN ──────────────────────────────── */
-    .browse-screen .brs-head { padding: 104px 60px 6px; }
+    .browse-screen .brs-head { padding: 152px 60px 6px; }
     .brs-title { font-family: var(--heading-font); font-size: 40px; font-weight: 800; letter-spacing: -1px; color: #fff; margin: 0; }
     .brs-grid { display: flex; flex-wrap: wrap; gap: 22px; padding: 22px 60px 72px; }
 
@@ -1355,7 +1354,7 @@
     .srch-grid { display: flex; flex-wrap: wrap; gap: 18px; }
 
     @media (max-width: 600px) {
-      .browse-screen .brs-head { padding: 96px 16px 6px; }
+      .browse-screen .brs-head { padding: 132px 16px 6px; }
       .brs-title { font-size: 26px; }
       .brs-grid { gap: 14px; padding: 16px 16px 60px; }
       .search-screen { padding: 20px 16px 50px; top: 96px; }
@@ -1653,7 +1652,7 @@ function sp(file)         { return S + encodeURIComponent(file); }
 function tp(file)         { return T + encodeURIComponent(file); }
 
 // ─── WAVE SVG ────────────────────────────────────────────────────
-const WAVE  = `<svg class="badge-icon" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const WAVE  = `<svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6"/></svg>`;
 const BADGE = `<div class="card-badge">${WAVE}PRO</div>`;
 const LOCK  = `<div class="pro-lock-overlay"><span class="material-icons">lock</span></div>`;
 const HOVER = `<div class="card-hover-tint"></div>`;
