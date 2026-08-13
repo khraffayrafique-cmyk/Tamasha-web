@@ -1242,7 +1242,10 @@
     .ltv-menu-btn:hover { background: rgba(255,255,255,.24); }
 
     /* Slide-in channel guide */
-    .ltv-guide { position: absolute; top: 0; left: 0; bottom: 0; width: min(680px, 94vw); z-index: 5; background: linear-gradient(90deg, rgba(0,0,0,.94) 55%, rgba(0,0,0,0) 100%); padding: 76px 0 20px; display: flex; flex-direction: column; transform: translateX(-102%); transition: transform .32s cubic-bezier(.4,0,.2,1); }
+    .ltv-guide { position: absolute; top: 0; left: 0; bottom: 0; width: min(680px, 94vw); z-index: 5; background: linear-gradient(90deg, rgba(0,0,0,.94) 55%, rgba(0,0,0,0) 100%); padding: 16px 0 20px; display: flex; flex-direction: column; transform: translateX(-102%); transition: transform .32s cubic-bezier(.4,0,.2,1); }
+    .ltv-guide-head { display: flex; align-items: center; padding: 0 28px 14px; flex-shrink: 0; }
+    .ltv-guide-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 17px; cursor: pointer; display: grid; place-items: center; transition: background .15s; }
+    .ltv-guide-close:hover { background: rgba(255,255,255,.18); }
     .ltv-guide.open { transform: none; }
     .ltv-cats { display: flex; gap: 22px; padding: 0 28px 14px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
     .ltv-cats::-webkit-scrollbar { display: none; }
@@ -1275,7 +1278,8 @@
 
     @media (max-width: 600px) {
       .livetv-screen { top: 96px; }
-      .ltv-guide { width: 100%; background: rgba(0,0,0,.92); padding-top: 64px; }
+      .ltv-guide { width: 100%; background: rgba(0,0,0,.92); padding-top: 12px; }
+      .ltv-guide-head { padding: 0 16px 10px; }
       .ltv-item { grid-template-columns: 56px 1fr; gap: 12px; padding: 10px 12px; }
       .ltv-logo { width: 56px; height: 34px; }
       .ltv-name { font-size: 16px; }
@@ -3058,6 +3062,9 @@ function openLiveTV(startIdx) {
       <button class="ltv-menu-btn" onclick="toggleLiveGuide()">${_EPISODES_ICON}<span>Channels</span></button>
     </div>
     <div class="ltv-guide" id="ltvGuide">
+      <div class="ltv-guide-head">
+        <button class="ltv-guide-close" onclick="toggleLiveGuide()" aria-label="Close channels">✕</button>
+      </div>
       <div class="ltv-cats" id="ltvCats"></div>
       <div class="ltv-list" id="ltvList"></div>
       <button class="ltv-all-btn" onclick="openAllChannels()">View all channels</button>
