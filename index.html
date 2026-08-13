@@ -1223,6 +1223,75 @@
     .plr-eps-desc { font-size: 12px; color: var(--text-dim); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     @media (max-width: 600px) { .dsc-tab { font-size: 16px; } .plr-eps-btn span { display: none; } }
 
+    /* ─── LIVE TV SCREEN ─────────────────────────────────────────── */
+    .livetv-screen { position: fixed; inset: 0; z-index: 320; background: #000; display: none; opacity: 0; transition: opacity .3s ease; }
+    .livetv-screen.open { display: block; }
+    .livetv-screen.visible { opacity: 1; }
+    .ltv-stage { position: absolute; inset: 0; }
+    .ltv-stage iframe { width: 100%; height: 100%; border: 0; }
+
+    .ltv-top { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); }
+    .ltv-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+    .ltv-close:hover { background: rgba(255,255,255,.18); }
+    .ltv-now { font-family: var(--heading-font); font-size: 16px; font-weight: 800; color: #fff; }
+    .ltv-now small { display: block; font-family: var(--body-font); font-size: 12px; font-weight: 500; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .ltv-menu-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 9px 16px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); }
+    .ltv-menu-btn:hover { background: rgba(255,255,255,.24); }
+
+    .ltv-live-chip { position: absolute; left: 22px; bottom: 22px; z-index: 4; display: inline-flex; align-items: center; gap: 7px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 7px 15px; font-size: 12px; font-weight: 800; color: #fff; backdrop-filter: blur(8px); }
+    .ltv-live-chip .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ED2B1F; animation: livePulse 1.6s infinite; }
+
+    /* Slide-in channel guide */
+    .ltv-guide { position: absolute; top: 0; left: 0; bottom: 0; width: min(680px, 94vw); z-index: 5; background: linear-gradient(90deg, rgba(0,0,0,.94) 55%, rgba(0,0,0,0) 100%); padding: 76px 0 20px; display: flex; flex-direction: column; transform: translateX(-102%); transition: transform .32s cubic-bezier(.4,0,.2,1); }
+    .ltv-guide.open { transform: none; }
+    .ltv-cats { display: flex; gap: 22px; padding: 0 28px 14px; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }
+    .ltv-cats::-webkit-scrollbar { display: none; }
+    .ltv-cat { background: none; border: none; color: rgba(255,255,255,.55); font-family: var(--body-font); font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap; padding-bottom: 5px; position: relative; }
+    .ltv-cat:hover { color: #fff; }
+    .ltv-cat.is-active { color: #fff; font-weight: 700; }
+    .ltv-cat.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #fff; border-radius: 2px; }
+    .ltv-list { overflow-y: auto; padding: 6px 12px 10px; scrollbar-width: none; }
+    .ltv-list::-webkit-scrollbar { display: none; }
+    .ltv-item { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 16px; width: 100%; text-align: left; background: none; border: none; color: #fff; cursor: pointer; padding: 12px 16px; border-radius: 12px; transition: background .12s; }
+    .ltv-item:hover { background: rgba(255,255,255,.08); }
+    .ltv-item.is-playing { background: rgba(255,255,255,.10); }
+    .ltv-logo { width: 72px; height: 44px; object-fit: contain; flex-shrink: 0; }
+    .ltv-meta { min-width: 0; border-left: 2px solid rgba(255,255,255,.14); padding-left: 16px; }
+    .ltv-watching { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: #fff; margin-bottom: 5px; }
+    .ltv-watching .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ED2B1F; }
+    .ltv-name { font-size: 19px; font-weight: 700; line-height: 1.2; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .ltv-pro-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-grad); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px 3px 7px; border-radius: 999px; }
+    .ltv-pro-pill .badge-icon { width: 11px; height: 11px; }
+    .ltv-sub { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 5px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .ltv-all-btn { margin: 8px 28px 0; flex-shrink: 0; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); color: #fff; border-radius: 999px; padding: 10px 20px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; }
+    .ltv-all-btn:hover { background: rgba(255,255,255,.2); }
+
+    /* All-channels grid overlay */
+    .ltv-all { position: absolute; inset: 0; z-index: 6; background: rgba(8,8,10,.97); display: none; overflow-y: auto; padding: 92px 60px 60px; }
+    .ltv-all.open { display: block; }
+    .ltv-all-head { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+    .ltv-all-title { font-family: var(--heading-font); font-size: 30px; font-weight: 800; color: #fff; }
+    .ltv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 26px 18px; }
+    .ltv-tile { background: none; border: none; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+    .ltv-tile-art { position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #14141c; border: 2px solid transparent; transition: border-color .15s, transform .15s; }
+    .ltv-tile:hover .ltv-tile-art { transform: translateY(-3px); border-color: rgba(255,255,255,.5); }
+    .ltv-tile.is-playing .ltv-tile-art { border-color: var(--accent-from); }
+    .ltv-tile-art img { width: 100%; height: 100%; object-fit: cover; }
+    .ltv-tile-pro { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent-grad); font-size: 10px; font-weight: 700; letter-spacing: .05em; padding: 4px 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .ltv-tile-pro .badge-icon { width: 11px; height: 11px; }
+    .ltv-tile-name { font-size: 12.5px; font-weight: 600; text-align: center; color: rgba(255,255,255,.85); line-height: 1.3; }
+
+    @media (max-width: 600px) {
+      .ltv-guide { width: 100%; background: rgba(0,0,0,.92); padding-top: 70px; }
+      .ltv-item { grid-template-columns: 56px 1fr; gap: 12px; padding: 10px 12px; }
+      .ltv-logo { width: 56px; height: 34px; }
+      .ltv-name { font-size: 16px; }
+      .ltv-all { padding: 84px 16px 50px; }
+      .ltv-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 18px 12px; }
+      .ltv-all-title { font-size: 22px; }
+      .ltv-menu-btn span { display: none; }
+    }
+
     .dsc-eps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px 22px; }
     @media (max-width: 1100px) { .dsc-eps { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 820px)  { .dsc-eps { grid-template-columns: repeat(2, 1fr); } }
@@ -1729,6 +1798,9 @@
 <!-- ════════════════ SEARCH SCREEN ════════════════════ -->
 <div class="search-screen" id="searchScreen"></div>
 
+<!-- ════════════════ LIVE TV SCREEN ════════════════════ -->
+<div class="livetv-screen" id="liveTVScreen"></div>
+
 <!-- ════════════════ VIDEO PLAYER MODAL ════════════════ -->
 <div class="player-modal" id="playerModal"></div>
 
@@ -1942,15 +2014,41 @@ const moviesData = [
   { folder:"ZOMBIELAND (2009)",     thumb:"thumbnail.jpg", title:"Zombieland",          meta:"2009 · Horror",     pro:false },
 ];
 const liveChannels = [
-  { file:"ary-digital-live-logo.webp",      name:"ARY Digital",      tag:"Now: Jeeto Pakistan"   },
-  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment",tag:"Now: Khaie"             },
-  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray",      tag:"Now: Dastaan"           },
-  { file:"dawn-news-live.webp",             name:"Dawn News",         tag:"Now: News Update"      },
-  { file:"samaa-tv-live.webp",              name:"Samaa TV",          tag:"Now: Capital Talk"     },
-  { file:"express-entertainment-live.webp", name:"Express Ent.",      tag:"Now: Mohabbat Tujhe"   },
-  { file:"geo-news-live.webp",              name:"Geo News",          tag:"Now: Aaj Shahzeb"      },
-  { file:"HUM-News-Channel-logo.webp",      name:"HUM News",          tag:"Now: Breaking Now"     },
+  { file:"ary-digital-live-logo.webp",      name:"ARY Digital",      tag:"Jeeto Pakistan",        cat:"Entertainment", left:"51m left",     pro:false },
+  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment",tag:"Khaie",                 cat:"Entertainment", left:"22m left",     pro:false },
+  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray",      tag:"Dastaan",               cat:"Drama",         left:"14m left",     pro:true  },
+  { file:"dawn-news-live.webp",             name:"Dawn News",        tag:"News Update",           cat:"News",          left:"12h 39m left", pro:false },
+  { file:"samaa-tv-live.webp",              name:"Samaa TV",         tag:"Capital Talk",          cat:"News",          left:"38m left",     pro:false },
+  { file:"express-entertainment-live.webp", name:"Express Ent.",     tag:"Mohabbat Tujhe",        cat:"Drama",         left:"27m left",     pro:true  },
+  { file:"geo-news-live.webp",              name:"Geo News",         tag:"Aaj Shahzeb Khanzada",  cat:"News",          left:"18m left",     pro:false },
+  { file:"HUM-News-Channel-logo.webp",      name:"HUM News",         tag:"Breaking Now",          cat:"News",          left:"9m left",      pro:false },
+  { file:"champion-tv-live.webp",           name:"Champion TV",      tag:"PAK vs IND · Live",     cat:"Sports",        left:"2h 10m left",  pro:true  },
+  { file:"gtv-new-logo.webp",               name:"GTV Sports",       tag:"PSL Qualifier",         cat:"Sports",        left:"3h 05m left",  pro:true  },
+  { file:"cartoon-network-live.webp",       name:"Cartoon Network",  tag:"Ben 10",                cat:"Kids",          left:"16m left",     pro:false },
+  { file:"baby-tv-live.webp",               name:"Baby TV",          tag:"Playtime",              cat:"Kids",          left:"24m left",     pro:false },
+  { file:"cnn-news-live.webp",              name:"CNN",              tag:"World News Tonight",    cat:"International", left:"31m left",     pro:true  },
+  { file:"DW-english-live.webp",            name:"DW English",       tag:"DW News",               cat:"International", left:"20m left",     pro:false },
+  { file:"bol-entertainment-live.webp",     name:"BOL Entertainment",tag:"Game Show Aisay Chalay",cat:"Entertainment", left:"45m left",     pro:false },
+  { file:"aaj-news-live.webp",              name:"Aaj News",         tag:"Aaj Rana Azeem Ke Sath",cat:"News",          left:"07m left",     pro:false },
+  { file:"abb-takk-news-live.webp",         name:"Abb Takk News",    tag:"Table Talk",            cat:"News",          left:"33m left",     pro:false },
+  { file:"express-news-live.webp",          name:"Express News",     tag:"Kal Tak",               cat:"News",          left:"41m left",     pro:false },
+  { file:"neo-tv-live.webp",                name:"Neo TV",           tag:"Neo Special",           cat:"News",          left:"15m left",     pro:false },
+  { file:"public-news-live.webp",           name:"Public News",      tag:"Public Ki Awaz",        cat:"News",          left:"29m left",     pro:false },
+  { file:"such-tv-live.webp",               name:"Such TV",          tag:"Such Baat",             cat:"News",          left:"11m left",     pro:false },
+  { file:"tv-one-live.webp",                name:"TV One",           tag:"Zara Hat Kay",          cat:"Entertainment", left:"26m left",     pro:false },
+  { file:"a-plus-live.webp",                name:"A Plus",           tag:"Meri Kahani",           cat:"Drama",         left:"19m left",     pro:false },
+  { file:"ary-zindagi-live-logo.webp",      name:"ARY Zindagi",      tag:"Zindagi Gulzar Hai",    cat:"Drama",         left:"36m left",     pro:true  },
+  { file:"filmax-live.webp",                name:"Filmax",           tag:"Blockbuster Movie",     cat:"Movies",        left:"1h 22m left",  pro:true  },
+  { file:"movie-one-live.webp",             name:"Movie One",        tag:"Action Night",          cat:"Movies",        left:"58m left",     pro:true  },
+  { file:"madani-channel-live.webp",        name:"Madani Channel",   tag:"Dars-e-Quran",          cat:"Religious",     left:"48m left",     pro:false },
+  { file:"saudi-quran-makkah-tv-hd-live.webp", name:"Makkah TV",     tag:"Live from Makkah",      cat:"Religious",     left:"Live",         pro:false },
+  { file:"8xm-live.webp",                   name:"8XM",              tag:"Top 20 Countdown",      cat:"Music",         left:"13m left",     pro:false },
+  { file:"jalwa-tv-live.webp",              name:"Jalwa TV",         tag:"Hit Music",             cat:"Music",         left:"21m left",     pro:false },
+  { file:"discover-pakistan-live-logo.webp",name:"Discover Pakistan",tag:"Land of Wonders",       cat:"Entertainment", left:"34m left",     pro:false },
+  { file:"ktn-entertainment-live.webp",     name:"KTN Entertainment",tag:"Sindhi Hits",           cat:"Entertainment", left:"17m left",     pro:false },
 ];
+// Only keep channels whose logo actually exists (some entries are aspirational)
+const LIVE_CATS = ['All','News','Sports','Entertainment','Drama','Movies','Kids','Music','Religious','International'];
 const topMoviesData = [
   { folder:"CAPTAIN PHILLIPS",                 thumb:"thumbnail.jpg", title:"Captain Phillips",        meta:"2013 · Thriller", pro:true  },
   { folder:"SOCIAL NETWORK, THE",              thumb:"thumbnail.jpg", title:"The Social Network",      meta:"2010 · Drama",    pro:false },
@@ -2928,9 +3026,158 @@ function attachCardClick(el, item, kind) {
       openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
       return;
     }
+    if (kind === 'live') { openLiveTV(liveChannels.indexOf(item)); return; }
     if (kind === 'show' || kind === 'movie') openDetail(item, kind);
     else openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
   });
+}
+
+// ─── LIVE TV ─────────────────────────────────────────────────────
+// Full-screen live player: first channel autoplays, the channel guide slides in
+// with it and auto-hides after 5s unless the pointer is over it.
+let _ltvIdx = 0, _ltvCat = 'All', _ltvHideTimer = null, _ltvHovering = false;
+
+function openLiveTV(startIdx) {
+  closeSearch(); closeBrowse(); closeDetail(); closePlayer();
+  _ltvIdx = typeof startIdx === 'number' ? startIdx : 0;
+  const screen = document.getElementById('liveTVScreen');
+  clearTimeout(screen._closeTimer);
+  screen.innerHTML = `
+    <div class="ltv-stage" id="ltvStage"></div>
+    <div class="ltv-top">
+      <button class="ltv-close" onclick="closeLiveTV()" aria-label="Close">✕</button>
+      <div class="ltv-now" id="ltvNow"></div>
+      <button class="ltv-menu-btn" onclick="toggleLiveGuide()">${_EPISODES_ICON}<span>Channels</span></button>
+    </div>
+    <div class="ltv-live-chip"><span class="live-dot"></span>LIVE</div>
+    <div class="ltv-guide" id="ltvGuide">
+      <div class="ltv-cats" id="ltvCats"></div>
+      <div class="ltv-list" id="ltvList"></div>
+      <button class="ltv-all-btn" onclick="openAllChannels()">View all channels</button>
+    </div>
+    <div class="ltv-all" id="ltvAll"></div>`;
+
+  // Guide stays open while hovered; closes 5s after the pointer leaves
+  const guide = document.getElementById('ltvGuide');
+  guide.addEventListener('mouseenter', () => { _ltvHovering = true; clearTimeout(_ltvHideTimer); });
+  guide.addEventListener('mouseleave', () => { _ltvHovering = false; scheduleGuideHide(); });
+
+  renderLiveCats();
+  playChannel(_ltvIdx, true);
+
+  screen.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
+  pauseHeroMedia(); stopHeroTimer();
+}
+
+function closeLiveTV() {
+  const screen = document.getElementById('liveTVScreen');
+  if (!screen.classList.contains('open')) return;
+  clearTimeout(_ltvHideTimer);
+  screen.classList.remove('visible');
+  clearTimeout(screen._closeTimer);
+  screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 320);
+  if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+}
+
+function scheduleGuideHide() {
+  clearTimeout(_ltvHideTimer);
+  _ltvHideTimer = setTimeout(() => {
+    if (_ltvHovering) return;
+    const g = document.getElementById('ltvGuide');
+    if (g) g.classList.remove('open');
+  }, 5000);
+}
+
+function showLiveGuide() {
+  const g = document.getElementById('ltvGuide');
+  if (!g) return;
+  g.classList.add('open');
+  scheduleGuideHide();
+}
+function toggleLiveGuide() {
+  const g = document.getElementById('ltvGuide');
+  if (!g) return;
+  if (g.classList.contains('open')) { g.classList.remove('open'); clearTimeout(_ltvHideTimer); }
+  else showLiveGuide();
+}
+
+function renderLiveCats() {
+  const wrap = document.getElementById('ltvCats');
+  if (!wrap) return;
+  const present = LIVE_CATS.filter(c => c === 'All' || liveChannels.some(ch => ch.cat === c));
+  wrap.innerHTML = present.map(c =>
+    `<button class="ltv-cat${c === _ltvCat ? ' is-active' : ''}" data-cat="${c}">${c}</button>`).join('');
+  wrap.querySelectorAll('.ltv-cat').forEach(b => b.addEventListener('click', () => {
+    _ltvCat = b.dataset.cat;
+    renderLiveCats(); renderLiveList(); scheduleGuideHide();
+  }));
+}
+
+function renderLiveList() {
+  const list = document.getElementById('ltvList');
+  if (!list) return;
+  const items = liveChannels
+    .map((ch, i) => ({ ch, i }))
+    .filter(({ ch }) => _ltvCat === 'All' || ch.cat === _ltvCat);
+
+  list.innerHTML = items.map(({ ch, i }) => `
+    <button class="ltv-item${i === _ltvIdx ? ' is-playing' : ''}" data-i="${i}">
+      <img class="ltv-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy">
+      <div class="ltv-meta">
+        ${i === _ltvIdx ? `<div class="ltv-watching"><span class="live-dot"></span>WATCHING</div>` : ''}
+        <div class="ltv-name">${ch.tag}${ch.pro ? `<span class="ltv-pro-pill">${WAVE}PRO</span>` : ''}</div>
+        <div class="ltv-sub"><span>${ch.left}</span><span>${ch.name.toUpperCase()} SCHEDULE ›</span></div>
+      </div>
+    </button>`).join('');
+
+  list.querySelectorAll('.ltv-item').forEach(el =>
+    el.addEventListener('click', () => playChannel(parseInt(el.dataset.i, 10))));
+}
+
+function playChannel(idx, openGuide) {
+  const ch = liveChannels[idx];
+  if (!ch) return;
+  _ltvIdx = idx;
+  const stage = document.getElementById('ltvStage');
+  if (stage) {
+    const vid = pickVimeo(ch.name);
+    stage.innerHTML = `<iframe src="https://player.vimeo.com/video/${vid}?autoplay=1&title=0&byline=0&portrait=0&dnt=1"
+      allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  }
+  const now = document.getElementById('ltvNow');
+  if (now) now.innerHTML = `${ch.name}<small>${ch.tag} · ${ch.left}</small>`;
+  renderLiveList();
+  closeAllChannels();
+  if (openGuide) showLiveGuide(); else scheduleGuideHide();
+}
+
+function openAllChannels() {
+  const all = document.getElementById('ltvAll');
+  if (!all) return;
+  clearTimeout(_ltvHideTimer);
+  all.innerHTML = `
+    <div class="ltv-all-head">
+      <button class="ltv-close" onclick="closeAllChannels()">${_CHEVL}</button>
+      <div class="ltv-all-title">All Channels</div>
+    </div>
+    <div class="ltv-grid">
+      ${liveChannels.map((ch, i) => `
+        <button class="ltv-tile${i === _ltvIdx ? ' is-playing' : ''}" data-i="${i}">
+          <div class="ltv-tile-art">
+            <img src="${cp(ch.file)}" alt="${ch.name}" loading="lazy">
+            ${ch.pro ? `<div class="ltv-tile-pro">${WAVE}PRO</div>` : ''}
+          </div>
+          <div class="ltv-tile-name">${ch.name}</div>
+        </button>`).join('')}
+    </div>`;
+  all.querySelectorAll('.ltv-tile').forEach(el =>
+    el.addEventListener('click', () => playChannel(parseInt(el.dataset.i, 10))));
+  all.classList.add('open');
+}
+function closeAllChannels() {
+  const all = document.getElementById('ltvAll');
+  if (all) all.classList.remove('open');
 }
 
 // ─── RENDER ──────────────────────────────────────────────────────
@@ -2995,7 +3242,7 @@ function showCatToast(filter, label) {
 
 function selectCategory(a) {
   const filter = a.dataset.filter;
-  closePlayer(); closeDetail(); closeBrowse(); closeSearch();   // return home from any open overlay
+  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV();   // return home from any open overlay
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
@@ -3028,6 +3275,13 @@ document.getElementById('navLinks').addEventListener('click', e => {
   const a = e.target.closest('a[data-filter]');
   if (!a) return;
   e.preventDefault();
+  // Live TV goes straight into the full-screen live experience
+  if (a.dataset.filter === 'live-tv') {
+    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+    a.classList.add('active');
+    openLiveTV(0);
+    return;
+  }
   selectCategory(a);
 });
 
@@ -3160,6 +3414,13 @@ document.addEventListener('click', e => {
 // Esc closes the top-most open overlay
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
+  const ltv = document.getElementById('liveTVScreen');
+  const ltvAll = document.getElementById('ltvAll');
+  if (ltv.classList.contains('open')) {
+    if (ltvAll && ltvAll.classList.contains('open')) closeAllChannels();
+    else closeLiveTV();
+    return;
+  }
   if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
   else if (document.getElementById('detailScreen').classList.contains('open')) closeDetail();
   else if (document.getElementById('browseScreen').classList.contains('open')) closeBrowse();
