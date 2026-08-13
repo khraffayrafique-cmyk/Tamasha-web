@@ -2184,8 +2184,12 @@ function buildHeroV2() {
   const sec = document.getElementById('heroSection');
   sec.className = 'hero hero--v2'; sec.style.height = '';
 
-  // Featured movies + a couple of live sports matches share the hero carousel
-  const sportItems = liveSportsData.filter(s => s.live).slice(0, 2).map(s => ({ _sport: true, ...s }));
+  // Featured movies + live sports matches share the hero carousel.
+  // Always feature the PAK vs IND match, plus a couple of other live games.
+  const pakInd = liveSportsData.find(s => /PAK.*IND|IND.*PAK/i.test(s.sub || s.label || ''));
+  const sportItems = [pakInd, ...liveSportsData.filter(s => s.live && s !== pakInd).slice(0, 2)]
+    .filter(Boolean)
+    .map(s => ({ _sport: true, ...s }));
   const heroItems = heroMovies.concat(sportItems);
 
   const movieSlide = (m, i) => `
@@ -2313,19 +2317,13 @@ function makePortraitCard(item) {
   w.className = 'card-wrap portrait';
   w.style.height = 'auto';
   const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
-  const meta  = item.meta  || '';
   w.innerHTML = `
     <div class="card-inner" style="height:270px">
       <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
-      <div class="card-overlay"></div>
       <div class="card-hover-actions">
         <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
         <button class="card-action-btn" title="Add to list">${_PLUS}</button>
       </div>
-    </div>
-    <div class="card-body">
-      <div class="card-body-title">${title}</div>
-      ${meta ? `<div class="card-body-meta">${meta}</div>` : ''}
     </div>`;
   return w;
 }
@@ -2336,21 +2334,16 @@ function makeTopMovieCard(item) {
   w.className = 'card-wrap portrait';
   w.style.height = 'auto';
   const title = item.title || item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim();
-  const meta  = item.meta  || '';
   w.innerHTML = `
     <div class="card-inner" style="height:270px">
       <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
       ${item.pro ? LOCK : ''}
-      <div class="card-overlay"></div>
+      ${item.pro ? '<div class="card-overlay"></div>' : ''}
       ${item.pro ? BADGE : ''}
       <div class="card-hover-actions">
         <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
         <button class="card-action-btn" title="Add to list">${_PLUS}</button>
       </div>
-    </div>
-    <div class="card-body">
-      <div class="card-body-title">${title}</div>
-      ${meta ? `<div class="card-body-meta">${meta}</div>` : ''}
     </div>`;
   return w;
 }
