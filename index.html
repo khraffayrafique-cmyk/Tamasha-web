@@ -1223,6 +1223,113 @@
     .plr-eps-desc { font-size: 12px; color: var(--text-dim); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     @media (max-width: 600px) { .dsc-tab { font-size: 16px; } .plr-eps-btn span { display: none; } }
 
+    /* ─── ACCOUNT / PROFILE SCREEN ───────────────────────────────── */
+    .account-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 160; background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
+    .account-screen.open { display: block; }
+    .account-screen.visible { opacity: 1; }
+    .acct-wrap { display: grid; grid-template-columns: 260px 1fr; gap: 56px; max-width: 1180px; margin: 0 auto; padding: 40px 40px 80px; }
+
+    .acct-side { position: sticky; top: 24px; align-self: start; }
+    .acct-back { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; color: var(--text); font-family: var(--body-font); font-size: 15px; font-weight: 600; cursor: pointer; padding: 0 0 26px; }
+    .acct-back:hover { opacity: .75; }
+    .acct-nav { display: flex; flex-direction: column; gap: 2px; }
+    .acct-nav-item { display: flex; align-items: center; gap: 14px; background: none; border: none; color: var(--text-dim); font-family: var(--body-font); font-size: 15px; font-weight: 600; cursor: pointer; padding: 11px 12px; border-radius: 10px; text-align: left; transition: background .12s, color .12s; }
+    .acct-nav-item:hover { background: var(--surface-hover); color: var(--text); }
+    .acct-nav-item.is-active { color: #fff; font-weight: 700; background: var(--surface-hover); }
+    .acct-nav-item .material-icons { font-size: 21px; }
+
+    .acct-title { font-family: var(--heading-font); font-size: 40px; font-weight: 800; letter-spacing: -1px; color: #fff; margin: 0 0 6px; }
+    .acct-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 26px; }
+    .acct-label { font-size: 15px; color: var(--text-dim); margin: 30px 0 12px; }
+    .acct-label:first-of-type { margin-top: 0; }
+
+    .acct-card { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 14px; overflow: hidden; }
+    .acct-card-top { padding: 22px 24px; }
+    .acct-pill { display: inline-block; background: var(--accent-grad); color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 999px; margin-bottom: 16px; }
+    .acct-plan-name { font-family: var(--heading-font); font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .acct-meta { font-size: 14px; color: var(--text-dim); margin-bottom: 12px; }
+    .acct-pay { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); }
+    .acct-pay-brand { font-size: 11px; font-weight: 900; padding: 4px 8px; border-radius: 4px; letter-spacing: .04em; flex-shrink: 0; }
+    .acct-pay-brand.visa { background: #fff; color: #1a1f71; }
+    .acct-pay-brand.jazz { background: #C8102E; color: #fff; }
+    .acct-pay-brand.ep   { background: #00A651; color: #fff; }
+
+    /* Payment method chooser */
+    .acct-pay-opt { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: none; border: none; border-top: 1px solid var(--border-subtle); color: var(--text); font-family: var(--body-font); padding: 16px 24px; cursor: pointer; transition: background .12s; }
+    .acct-card > .acct-pay-opt:first-child { border-top: none; }
+    .acct-pay-opt:hover { background: var(--surface-hover); }
+    .acct-pay-opt.is-active { background: rgba(36,114,252,.12); }
+    .acct-pay-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,.3); display: grid; place-items: center; flex-shrink: 0; }
+    .acct-pay-opt.is-active .acct-pay-radio { border-color: var(--accent-from); }
+    .acct-pay-opt.is-active .acct-pay-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-from); }
+    .acct-pay-info { flex: 1; min-width: 0; }
+    .acct-pay-name { font-size: 15px; font-weight: 600; }
+    .acct-pay-sub { font-size: 13px; color: var(--text-dim); margin-top: 3px; }
+
+    .acct-row { display: flex; align-items: center; gap: 16px; width: 100%; background: none; border: none; border-top: 1px solid var(--border-subtle); color: var(--text); font-family: var(--body-font); font-size: 15px; font-weight: 600; text-align: left; padding: 18px 24px; cursor: pointer; transition: background .12s; }
+    .acct-card > .acct-row:first-child { border-top: none; }
+    .acct-row:hover { background: var(--surface-hover); }
+    .acct-row .material-icons { font-size: 22px; color: var(--text-dim); flex-shrink: 0; }
+    .acct-row-main { flex: 1; min-width: 0; }
+    .acct-row-sub { font-size: 13px; font-weight: 500; color: var(--text-dim); margin-top: 3px; }
+    .acct-row-chev { color: var(--text-dim); flex-shrink: 0; }
+    .acct-row-tag { font-size: 11px; font-weight: 700; background: rgba(36,114,252,.2); color: #7fb0ff; padding: 3px 9px; border-radius: 5px; }
+    .acct-danger { color: #f87171; justify-content: center; font-weight: 700; }
+
+    /* Editable profile fields */
+    .acct-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .acct-field { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 12px 16px; }
+    .acct-field-label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+    .acct-field-value { font-size: 16px; font-weight: 600; color: #fff; }
+    .acct-field-value.empty { color: rgba(255,255,255,.3); font-weight: 500; }
+
+    /* Vertical plan list (Netflix "Change Streaming Plan" style) */
+    .acct-plans { display: flex; flex-direction: column; gap: 14px; }
+    .acct-plan { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 22px; width: 100%; text-align: left; background: var(--surface); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 0; cursor: pointer; overflow: hidden; transition: border-color .15s, background .15s; font-family: var(--body-font); color: var(--text); }
+    .acct-plan:hover { border-color: rgba(255,255,255,.3); }
+    .acct-plan.is-current { border-color: var(--accent-from); }
+    .acct-plan-side { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.05); padding: 26px 20px; align-self: stretch; }
+    .acct-plan.is-current .acct-plan-side { background: rgba(36,114,252,.16); }
+    .acct-plan-check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,.28); display: grid; place-items: center; flex-shrink: 0; }
+    .acct-plan.is-current .acct-plan-check { background: var(--accent-from); border-color: transparent; }
+    .acct-plan-check svg { display: none; }
+    .acct-plan.is-current .acct-plan-check svg { display: block; }
+    .acct-plan-label { font-size: 12px; color: var(--text-dim); }
+    .acct-plan-tier { font-size: 17px; font-weight: 800; color: #fff; }
+    .acct-plan-desc { font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.78); padding: 22px 0; }
+    .acct-plan-price { font-size: 20px; font-weight: 800; color: #fff; white-space: nowrap; padding: 22px 26px 22px 0; }
+    .acct-plan-price small { display: block; font-size: 12px; font-weight: 500; color: var(--text-dim); margin-top: 3px; }
+    .acct-actions { display: flex; gap: 12px; margin-top: 26px; }
+
+    /* Billing history */
+    .acct-bill { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+    .acct-bill-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .acct-bill-title { font-family: var(--heading-font); font-size: 18px; font-weight: 800; color: #fff; }
+    .acct-bill-amt { font-size: 13px; font-weight: 700; background: var(--surface-hover); padding: 5px 11px; border-radius: 6px; color: var(--text); }
+    .acct-bill-line { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 7px 0; border-top: 1px solid var(--border-subtle); }
+    .acct-bill-line span:first-child { color: var(--text-dim); }
+    .acct-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .acct-status.ok { background: rgba(34,197,94,.16); color: #4ade80; }
+    .acct-status.fail { background: rgba(239,68,68,.16); color: #f87171; }
+
+    @media (max-width: 900px) {
+      .acct-wrap { grid-template-columns: 1fr; gap: 24px; padding: 26px 20px 70px; }
+      .acct-side { position: static; }
+      .acct-nav { flex-direction: row; overflow-x: auto; gap: 6px; scrollbar-width: none; }
+      .acct-nav::-webkit-scrollbar { display: none; }
+      .acct-nav-item { white-space: nowrap; }
+      .acct-nav-item span:not(.material-icons) { display: none; }
+      .acct-nav-item.is-active span:not(.material-icons) { display: inline; }
+    }
+    @media (max-width: 600px) {
+      .account-screen { top: 96px; }
+      .acct-title { font-size: 28px; }
+      .acct-plan { grid-template-columns: 1fr; gap: 0; }
+      .acct-plan-side { padding: 16px 18px; }
+      .acct-plan-desc { padding: 14px 18px 0; }
+      .acct-plan-price { padding: 12px 18px 18px; font-size: 18px; }
+    }
+
     /* ─── LIVE TV SCREEN ─────────────────────────────────────────── */
     /* Sits below the site navbar so the nav stays usable */
     .livetv-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 150; background: #000; display: none; opacity: 0; transition: opacity .3s ease; }
@@ -1562,9 +1669,9 @@
     </div>
 
     <!-- Avatar + PRO -->
-    <div class="avatar">JD</div>
-    <div style="display:flex;flex-direction:column;gap:3px;">
-      <span class="user-name">John D.</span>
+    <div class="avatar" onclick="openAccount('overview')" title="Account">JD</div>
+    <div style="display:flex;flex-direction:column;gap:3px;cursor:pointer" onclick="openAccount('overview')">
+      <span class="user-name">John Doe</span>
       <div class="pro-badge">
         <svg style="width:14px;height:10px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         PRO
@@ -1798,6 +1905,9 @@
 
 <!-- ════════════════ SEARCH SCREEN ════════════════════ -->
 <div class="search-screen" id="searchScreen"></div>
+
+<!-- ════════════════ ACCOUNT / PROFILE SCREEN ══════════ -->
+<div class="account-screen" id="accountScreen"></div>
 
 <!-- ════════════════ LIVE TV SCREEN ════════════════════ -->
 <div class="livetv-screen" id="liveTVScreen"></div>
@@ -2126,7 +2236,7 @@ const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentC
 
 // True while any full-screen overlay covers the homepage — hero media must stay silent
 function overlayActive() {
-  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen']
+  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen','accountScreen']
     .some(id => { const el = document.getElementById(id); return el && el.classList.contains('open'); });
 }
 
@@ -3018,7 +3128,7 @@ function flashToast(msg) {
   _catToastTimer = setTimeout(() => catToast.classList.remove('show'), 1400);
 }
 
-function subscribeNow() { flashToast('Redirecting to subscription…'); }
+function subscribeNow() { openAccount('plans'); }
 
 function attachCardClick(el, item, kind) {
   el.style.cursor = 'pointer';
@@ -3045,6 +3155,291 @@ function attachCardClick(el, item, kind) {
     if (kind === 'show' || kind === 'movie') openDetail(item, kind);
     else openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
   });
+}
+
+// ─── ACCOUNT / PROFILE ───────────────────────────────────────────
+// UI-only: nothing here collects real payment details; card data is masked mock data.
+const ACCOUNT = {
+  name: 'John Doe', memberSince: '2022', phone: '923071502316',
+  email: 'john.doe@example.com', city: 'Bahawal Nagar', gender: 'Male', birthday: '',
+  subscribed: false, planId: null, cardLast4: '0687', nextPayment: 'Mar 19, 2026',
+  payMethod: 'card',
+};
+// Payment options (display only — no real card/account details are collected)
+const PAY_METHODS = [
+  { id:'card',      name:'Credit / Debit Card', sub:'Visa •••• •••• •••• 0687', badge:'VISA',      cls:'visa' },
+  { id:'jazzcash',  name:'JazzCash',            sub:'Mobile account · 923071502316', badge:'JAZZ', cls:'jazz' },
+  { id:'easypaisa', name:'Easypaisa',           sub:'Mobile account · 923071502316', badge:'EP',   cls:'ep' },
+];
+function payMethod() { return PAY_METHODS.find(p => p.id === ACCOUNT.payMethod) || PAY_METHODS[0]; }
+function payBadge(m) { return `<span class="acct-pay-brand ${m.cls}">${m.badge}</span>`; }
+const PLANS = [
+  { id:'daily',   name:'Daily',   price:'Rs 15',  per:'/day',   desc:'Ad-free streaming for 24 hours. Watch on 1 device in Full HD.' },
+  { id:'weekly',  name:'Weekly',  price:'Rs 100', per:'/week',  desc:'Ad-free streaming all week. Watch on 2 devices in Full HD.' },
+  { id:'monthly', name:'Monthly', price:'Rs 360', per:'/month', desc:'25 GB data · Ad-free experience without interruption · Free streaming data for Jazz users.' },
+];
+const BILLING = [
+  { plan:'Monthly Offer', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:20 PM', renewal:'Mar 19, 2026', status:'ok' },
+  { plan:'Monthly Offer', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:11 PM', renewal:'Mar 19, 2026', status:'fail' },
+];
+let _acctSection = 'overview';
+
+const _CHEV_R = `<svg class="acct-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function openAccount(section) {
+  closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true);
+  _acctSection = section || 'overview';
+  const screen = document.getElementById('accountScreen');
+  clearTimeout(screen._closeTimer);
+  screen.classList.add('open');
+  renderAccount();
+  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
+  stopHeroTimer(); pauseHeroMedia();
+  setTimeout(pauseHeroMedia, 400);
+}
+function closeAccount() {
+  const screen = document.getElementById('accountScreen');
+  if (!screen.classList.contains('open')) return;
+  screen.classList.remove('visible');
+  clearTimeout(screen._closeTimer);
+  screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 260);
+  setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 280);
+}
+function acctGo(section) { _acctSection = section; renderAccount(); document.getElementById('accountScreen').scrollTop = 0; }
+
+const ACCT_NAV = [
+  { id:'overview',   icon:'home',        label:'Overview' },
+  { id:'membership', icon:'credit_card', label:'Membership' },
+  { id:'security',   icon:'verified_user', label:'Security' },
+  { id:'devices',    icon:'devices',     label:'Devices' },
+  { id:'profile',    icon:'person',      label:'Profile' },
+];
+
+function acctRow(icon, title, sub, onclick, extra) {
+  return `<button class="acct-row" ${onclick ? `onclick="${onclick}"` : ''}>
+    ${icon ? `<span class="material-icons">${icon}</span>` : ''}
+    <span class="acct-row-main">${title}${sub ? `<div class="acct-row-sub">${sub}</div>` : ''}</span>
+    ${extra || ''}${_CHEV_R}
+  </button>`;
+}
+
+function renderAccount() {
+  const screen = document.getElementById('accountScreen');
+  const planName = ACCOUNT.subscribed
+    ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).name + ' plan'
+    : 'Not Subscribed';
+
+  const body = {
+    overview: () => `
+      <h1 class="acct-title">Account</h1>
+      <div class="acct-label">Membership Details</div>
+      <div class="acct-card">
+        <div class="acct-card-top">
+          <div class="acct-pill">Member since ${ACCOUNT.memberSince}</div>
+          <div class="acct-plan-name">${planName}</div>
+          ${ACCOUNT.subscribed
+            ? `<div class="acct-meta">Next payment: ${ACCOUNT.nextPayment}</div>
+               <div class="acct-pay">${payBadge(payMethod())}${payMethod().sub}</div>`
+            : `<div class="acct-meta">You have not subscribed to any package.</div>`}
+        </div>
+        ${acctRow('', 'Manage membership', '', "acctGo('membership')")}
+      </div>
+      <div class="acct-label">Quick Links</div>
+      <div class="acct-card">
+        ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "acctGo('plans')")}
+        ${acctRow('credit_card', 'Manage payment method', payMethod().name, "acctGo('payment')")}
+        ${acctRow('devices', 'Manage access and devices', '', "acctGo('devices')")}
+        ${acctRow('lock', 'Update password', '', "acctStub('Update password')")}
+        ${acctRow('receipt_long', 'View payment history', '', "acctGo('billing')")}
+        ${acctRow('shield', 'Adjust parental controls', '', "acctStub('Parental controls')")}
+      </div>`,
+
+    membership: () => `
+      <h1 class="acct-title">Membership</h1>
+      <div class="acct-label">Plan Details</div>
+      <div class="acct-card">
+        <div class="acct-card-top">
+          <div class="acct-plan-name">${planName}</div>
+          <div class="acct-meta" style="margin:0">${ACCOUNT.subscribed
+            ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).desc
+            : 'Subscribe to stream ad-free in Full HD with premium sports and originals.'}</div>
+        </div>
+        ${acctRow('', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "acctGo('plans')")}
+      </div>
+      <div class="acct-label">Payment Info</div>
+      <div class="acct-card">
+        <div class="acct-card-top">
+          <div class="acct-plan-name" style="font-size:18px">Next payment</div>
+          <div class="acct-meta">${ACCOUNT.subscribed ? ACCOUNT.nextPayment : '—'}</div>
+          <div class="acct-pay">${payBadge(payMethod())}${payMethod().sub}</div>
+        </div>
+        ${acctRow('', 'Manage payment method', payMethod().name, "acctGo('payment')")}
+        ${acctRow('', 'Redeem gift or promo code', '', "acctStub('Redeem promo code')")}
+        ${acctRow('', 'View payment history', '', "acctGo('billing')")}
+      </div>
+      ${ACCOUNT.subscribed ? `<div class="acct-card" style="margin-top:22px">
+        <button class="acct-row acct-danger" onclick="acctCancel()">Cancel Membership</button>
+      </div>` : ''}`,
+
+    plans: () => `
+      <h1 class="acct-title">${ACCOUNT.subscribed ? 'Change Streaming Plan' : 'Choose your plan'}</h1>
+      <div class="acct-sub">Get access to all the premium features. Cancel anytime.</div>
+      <div class="acct-plans">
+        ${PLANS.map(p => `
+          <button class="acct-plan${ACCOUNT.planId === p.id ? ' is-current' : ''}" onclick="acctPickPlan('${p.id}')">
+            <span class="acct-plan-side">
+              <span class="acct-plan-check">${_TICK}</span>
+              <span>
+                ${ACCOUNT.planId === p.id ? `<span class="acct-plan-label">Current plan:</span>` : ''}
+                <span class="acct-plan-tier">${p.name}</span>
+              </span>
+            </span>
+            <span class="acct-plan-desc">${p.desc}</span>
+            <span class="acct-plan-price">${p.price}<small>${p.per}</small></span>
+          </button>`).join('')}
+      </div>
+      <div class="acct-label">Pay with</div>
+      <div class="acct-card">${payOptionsHTML()}</div>
+      <div class="acct-actions">
+        <button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button>
+        <button class="btn btn--primary btn--lg" onclick="acctConfirmPlan()">${ACCOUNT.subscribed ? 'Confirm change' : 'Subscribe Now'}</button>
+      </div>`,
+
+    payment: () => `
+      <h1 class="acct-title">Payment Method</h1>
+      <div class="acct-sub">Choose how you'd like to pay for Tamasha.</div>
+      <div class="acct-card">${payOptionsHTML()}</div>
+      <div class="acct-actions">
+        <button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button>
+        <button class="btn btn--primary btn--lg" onclick="acctSavePay()">Save</button>
+      </div>`,
+
+    billing: () => `
+      <h1 class="acct-title">Billing Details</h1>
+      <div class="acct-sub">Your recent Tamasha payments.</div>
+      ${BILLING.map(b => `
+        <div class="acct-bill">
+          <div class="acct-bill-head">
+            <div class="acct-bill-title">${b.plan}</div>
+            <div class="acct-bill-amt">${b.amount}</div>
+          </div>
+          <div class="acct-meta" style="margin:0 0 10px">${b.date}</div>
+          <div class="acct-bill-line"><span>Mobile #</span><span>${ACCOUNT.phone}</span></div>
+          <div class="acct-bill-line"><span>Renewal Date</span><span>${b.renewal}</span></div>
+          <div class="acct-bill-line"><span>Status</span>
+            <span class="acct-status ${b.status}">${b.status === 'ok' ? 'Successful' : 'Failed'}</span></div>
+        </div>`).join('')}
+      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button></div>`,
+
+    security: () => `
+      <h1 class="acct-title">Security</h1>
+      <div class="acct-label">Account Details</div>
+      <div class="acct-card">
+        ${acctRow('lock', 'Password', '', "acctStub('Update password')")}
+        ${acctRow('mail', 'Email', ACCOUNT.email, "acctStub('Change email')")}
+        ${acctRow('smartphone', 'Mobile phone', ACCOUNT.phone, "acctStub('Change phone number')")}
+      </div>
+      <div class="acct-label">Access and Privacy</div>
+      <div class="acct-card">
+        ${acctRow('devices', 'Access and devices', 'Manage signed-in devices', "acctGo('devices')")}
+        ${acctRow('shield', 'Personal info access', 'Request a copy of your personal info', "acctStub('Personal info request')")}
+        ${acctRow('description', 'Terms and Conditions', '', "acctStub('Terms and Conditions')")}
+      </div>`,
+
+    devices: () => `
+      <h1 class="acct-title">Devices</h1>
+      <div class="acct-label">Account Access</div>
+      <div class="acct-card">
+        ${acctRow('devices', 'Access and devices', 'Manage signed-in devices', "acctStub('Signed-in devices')")}
+      </div>
+      <div class="acct-label">Mobile Downloads</div>
+      <div class="acct-card">
+        ${acctRow('download', 'Mobile download devices', 'Using 0 of 2 download devices', "acctStub('Download devices')")}
+      </div>`,
+
+    profile: () => `
+      <h1 class="acct-title">Profile Settings</h1>
+      <div class="acct-sub">For ${ACCOUNT.name}</div>
+      <div class="acct-label">Your Details</div>
+      <div class="acct-fields">
+        <div class="acct-field"><div class="acct-field-label">Name</div><div class="acct-field-value">${ACCOUNT.name}</div></div>
+        <div class="acct-field"><div class="acct-field-label">Phone</div><div class="acct-field-value">${ACCOUNT.phone}</div></div>
+        <div class="acct-field"><div class="acct-field-label">Birthday</div><div class="acct-field-value${ACCOUNT.birthday ? '' : ' empty'}">${ACCOUNT.birthday || 'Not set'}</div></div>
+        <div class="acct-field"><div class="acct-field-label">City</div><div class="acct-field-value">${ACCOUNT.city}</div></div>
+        <div class="acct-field"><div class="acct-field-label">Gender</div><div class="acct-field-value">${ACCOUNT.gender}</div></div>
+      </div>
+      <div class="acct-actions" style="margin-bottom:8px">
+        <button class="btn btn--primary" onclick="acctStub('Edit profile and photo')">Edit Profile and Photo</button>
+      </div>
+      <div class="acct-label">Preferences</div>
+      <div class="acct-card">
+        ${acctRow('translate', 'Languages', 'English, اردو', "acctStub('Language preferences')")}
+        ${acctRow('error_outline', 'Viewing restrictions', 'Edit maturity rating and title restrictions', "acctStub('Viewing restrictions')")}
+        ${acctRow('subtitles', 'Subtitle appearance', 'Customize the way subtitles appear', "acctStub('Subtitle appearance')")}
+        ${acctRow('play_circle_outline', 'Playback settings', 'Set autoplay and audio, video quality', "acctStub('Playback settings')")}
+        ${acctRow('notifications_none', 'Notification settings', 'Manage notifications for email, text, push', "acctStub('Notification settings')")}
+      </div>
+      <div class="acct-card" style="margin-top:22px">
+        <button class="acct-row acct-danger" onclick="acctStub('Logout')">Logout</button>
+      </div>`,
+  };
+
+  // plans / billing / payment are sub-pages of Membership for nav highlighting
+  const navActive = ['plans','billing','payment'].includes(_acctSection) ? 'membership' : _acctSection;
+
+  screen.innerHTML = `
+    <div class="acct-wrap">
+      <aside class="acct-side">
+        <button class="acct-back" onclick="closeAccount()">${_CHEVL}<span>Back to Tamasha</span></button>
+        <nav class="acct-nav">
+          ${ACCT_NAV.map(n => `<button class="acct-nav-item${n.id === navActive ? ' is-active' : ''}" onclick="acctGo('${n.id}')">
+            <span class="material-icons">${n.icon}</span><span>${n.label}</span></button>`).join('')}
+        </nav>
+      </aside>
+      <main class="acct-main">${(body[_acctSection] || body.overview)()}</main>
+    </div>`;
+}
+
+// Placeholder for flows that need a real backend (payments, auth, etc.)
+function acctStub(what) { flashToast(what + ' — coming soon'); }
+
+// Payment method chooser (selection only — no card/account details are entered here)
+function payOptionsHTML() {
+  return PAY_METHODS.map(m => `
+    <button class="acct-pay-opt${m.id === ACCOUNT.payMethod ? ' is-active' : ''}" onclick="acctPickPay('${m.id}')">
+      <span class="acct-pay-radio"></span>
+      ${payBadge(m)}
+      <span class="acct-pay-info">
+        <span class="acct-pay-name">${m.name}</span>
+        <span class="acct-pay-sub">${m.sub}</span>
+      </span>
+    </button>`).join('');
+}
+function acctPickPay(id) {
+  ACCOUNT.payMethod = id;
+  document.querySelectorAll('.acct-pay-opt').forEach((el, i) =>
+    el.classList.toggle('is-active', PAY_METHODS[i].id === id));
+}
+function acctSavePay() { flashToast(payMethod().name + ' set as payment method'); acctGo('membership'); }
+
+let _acctPending = ACCOUNT.planId;
+function acctPickPlan(id) {
+  _acctPending = id;
+  document.querySelectorAll('.acct-plan').forEach((el, i) =>
+    el.classList.toggle('is-current', PLANS[i].id === id));
+}
+function acctConfirmPlan() {
+  if (!_acctPending) { flashToast('Pick a plan first'); return; }
+  ACCOUNT.planId = _acctPending;
+  ACCOUNT.subscribed = true;
+  flashToast((PLANS.find(p => p.id === _acctPending) || {}).name + ' plan · paid with ' + payMethod().name);
+  acctGo('membership');
+}
+function acctCancel() {
+  ACCOUNT.subscribed = false; ACCOUNT.planId = null; _acctPending = null;
+  flashToast('Membership cancelled');
+  acctGo('membership');
 }
 
 // ─── LIVE TV ─────────────────────────────────────────────────────
@@ -3302,7 +3697,7 @@ function showCatToast(filter, label) {
 
 function selectCategory(a) {
   const filter = a.dataset.filter;
-  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true);   // return home from any open overlay
+  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true); closeAccount();   // return home from any open overlay
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
@@ -3484,6 +3879,7 @@ document.addEventListener('keydown', e => {
   if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
   else if (document.getElementById('detailScreen').classList.contains('open')) closeDetail();
   else if (document.getElementById('browseScreen').classList.contains('open')) closeBrowse();
+  else if (document.getElementById('accountScreen').classList.contains('open')) closeAccount();
   else closeSearch();
 });
 
