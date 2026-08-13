@@ -1234,6 +1234,9 @@
     .ltv-top { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); }
     .ltv-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
     .ltv-close:hover { background: rgba(255,255,255,.18); }
+    .ltv-back { display: inline-flex; align-items: center; gap: 7px; background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer; font-family: var(--body-font); font-size: 14px; font-weight: 600; backdrop-filter: blur(10px); flex-shrink: 0; transition: background .15s, border-color .15s; }
+    .ltv-back:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.36); }
+    .ltv-back svg { width: 15px; height: 15px; }
     .ltv-now { display: flex; align-items: center; gap: 11px; font-family: var(--heading-font); font-size: 18px; font-weight: 800; color: #fff; }
     .ltv-now-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 7px; background: rgba(255,255,255,.08); padding: 3px; flex-shrink: 0; }
     .ltv-live-tag { display: inline-flex; align-items: center; gap: 6px; background: #ED2B1F; color: #fff; font-family: var(--body-font); font-size: 11px; font-weight: 800; letter-spacing: .05em; padding: 4px 10px 4px 8px; border-radius: 5px; }
@@ -3057,7 +3060,7 @@ function openLiveTV(startIdx) {
   screen.innerHTML = `
     <div class="ltv-stage" id="ltvStage"></div>
     <div class="ltv-top">
-      <button class="ltv-close" onclick="closeLiveTV()" aria-label="Close">✕</button>
+      <button class="ltv-back" onclick="closeLiveTV()">${_CHEVL}<span>Back</span></button>
       <div class="ltv-now" id="ltvNow"></div>
       <button class="ltv-menu-btn" onclick="toggleLiveGuide()">${_EPISODES_ICON}<span>Channels</span></button>
     </div>
@@ -3096,14 +3099,29 @@ function openLiveTV(startIdx) {
   setTimeout(pauseHeroMedia, 1200);
 }
 
-function closeLiveTV() {
+// skipHome=true when another nav category is taking over (it sets its own state)
+function closeLiveTV(skipHome) {
   const screen = document.getElementById('liveTVScreen');
   if (!screen.classList.contains('open')) return;
   clearTimeout(_ltvHideTimer);
   screen.classList.remove('visible');
   clearTimeout(screen._closeTimer);
   screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 320);
-  if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+
+  if (!skipHome) {
+    // Return to Home and reflect that in the navbar
+    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+    const homeLink = document.querySelector('.nav-links a[data-filter="home"]');
+    if (homeLink) homeLink.classList.add('active');
+    renderContinue('home');
+    const show = filterMap.home || [];
+    document.getElementById('heroSection').style.display = '';
+    document.querySelectorAll('.section[data-category]').forEach(s =>
+      s.classList.toggle('hidden', !show.includes(s.dataset.category)));
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 340);
 }
 
 function scheduleGuideHide() {
@@ -3284,7 +3302,7 @@ function showCatToast(filter, label) {
 
 function selectCategory(a) {
   const filter = a.dataset.filter;
-  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV();   // return home from any open overlay
+  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true);   // return home from any open overlay
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
