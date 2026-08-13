@@ -457,6 +457,27 @@
       letter-spacing: .06em; z-index: 2;
     }
 
+    /* LIVE chip — mirrors the PRO tag, red, top-right (Live Sports only) */
+    .live-badge {
+      position: absolute; top: 0; right: 0;
+      border-bottom-left-radius: 7px;
+      padding: 4px 9px 4px 8px;
+      font-size: 11px; font-weight: 800;
+      color: #fff; letter-spacing: .04em;
+      display: flex; align-items: center; gap: 5px;
+      background: #ED2B1F;
+      pointer-events: none; z-index: 2;
+    }
+    .live-badge .live-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #fff;
+      animation: livePulse 1.6s infinite;
+    }
+    @keyframes livePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.55); }
+      70%  { box-shadow: 0 0 0 5px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    }
+
     /* ─── PROGRESS BAR ─────────────────────────────────────────── */
     .progress-track {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -2415,7 +2436,7 @@ function makeSportsCard(item) {
   const w = document.createElement('div');
   w.className = 'card-wrap portrait';
   w.style.height = 'auto';
-  const liveBadge = item.live ? `<span class="live-pill">LIVE</span>` : '';
+  const liveBadge = item.live ? `<div class="live-badge"><span class="live-dot"></span>LIVE</div>` : '';
   w.innerHTML = `
     <div class="card-inner" style="height:270px">
       <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
@@ -2436,7 +2457,6 @@ function makeHighlightCard(item) {
     <div class="card-inner" style="height:148px">
       <img src="${sp(item.file)}" alt="${item.label}" loading="lazy"/>
       <div class="card-overlay"></div>
-      ${item.pro ? LOCK : ''}
       ${item.pro ? BADGE : ''}
       ${HOVER}
       <div class="highlight-play">${_PLAY_W}</div>
