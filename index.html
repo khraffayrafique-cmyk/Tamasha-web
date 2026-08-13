@@ -1092,6 +1092,11 @@
     .scoreboard__score { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
     .scoreboard__score span { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; margin-left: 2px; }
     .scoreboard__vs { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 2px; padding: 4px 8px; background: rgba(255,255,255,0.06); border-radius: 999px; }
+    .sb-flag { font-size: 30px; line-height: 1; flex-shrink: 0; }
+    @media (max-width: 600px) {
+      .scoreboard { gap: 12px; padding: 10px 12px; }
+      .sb-flag { font-size: 24px; }
+    }
 
     /* ══════════════════════════════════════════════════════════════
        RESPONSIVE  —  tablet (≤900px)  &  phone (≤600px)
@@ -1911,7 +1916,8 @@ const topTVData = [
 const liveSportsData = [
   { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
   { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Live · 8:00 PM PKT', channel:'A Sports',        live:true,  pro:false },
-  { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true  },
+  { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true,
+    board:{ a:{ name:'Pakistan', flag:'🇵🇰', score:'142/3', overs:'14.4 ov' }, b:{ name:'India', flag:'🇮🇳', score:'96/2', overs:'11.2 ov' } } },
   { file:'CP 2.png',                                                  label:'County Championship',  sub:'Day 3 · Session 2',            score:'286/7 d · 142/4',   channel:'Tamasha Sports',  live:true,  pro:false },
   { file:'CP(300 x 450 px).png',                                      label:'Premier League',       sub:"Liverpool vs Arsenal",         score:"Live · 67′",         channel:'A Sports',        live:true,  pro:true  },
   { file:'Channel Posters (87).png',                                  label:'Asia Cup 2026',        sub:'Final · Toss in 25m',          score:'Starts 7:30 PM',    channel:'PTV Sports',      live:false, pro:false },
@@ -2234,6 +2240,28 @@ function buildHeroClassic() {
   startHeroTimer();
 }
 
+// Cricket-style scoreboard for a hero sport slide (flags + score + overs)
+function scoreboardHTML(b) {
+  return `
+    <div class="scoreboard" style="margin:2px 0 20px">
+      <div class="scoreboard__team">
+        <span class="sb-flag">${b.a.flag}</span>
+        <div>
+          <div class="scoreboard__name">${b.a.name}</div>
+          <div class="scoreboard__score">${b.a.score} <span>(${b.a.overs})</span></div>
+        </div>
+      </div>
+      <div class="scoreboard__vs">vs</div>
+      <div class="scoreboard__team">
+        <div style="text-align:right">
+          <div class="scoreboard__name">${b.b.name}</div>
+          <div class="scoreboard__score">${b.b.score} <span>(${b.b.overs})</span></div>
+        </div>
+        <span class="sb-flag">${b.b.flag}</span>
+      </div>
+    </div>`;
+}
+
 function buildHeroV2() {
   stopHeroTimer(); heroIdx = 0;
   const sec = document.getElementById('heroSection');
@@ -2283,7 +2311,7 @@ function buildHeroV2() {
         </div>
         <div class="hero-title">${m.label}</div>
         <div class="hero-meta"><span>${m.sub}</span></div>
-        <p style="font-size:15px;font-weight:600;line-height:1.5;color:#fff;margin:0 0 24px">${m.score}</p>
+        ${m.board ? scoreboardHTML(m.board) : `<p style="font-size:15px;font-weight:600;line-height:1.5;color:#fff;margin:0 0 24px">${m.score}</p>`}
         <div class="hero-buttons">
           <button class="btn-play">${_PLAY_B}Watch Live</button>
           <button class="btn-info">More Info</button>
