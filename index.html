@@ -374,10 +374,14 @@
       display: flex; gap: 10px;
       overflow-x: auto;
       scrollbar-width: none; -ms-overflow-style: none;
-      padding: 28px 4px 12px;
-      margin-top: -28px;
+      /* Bleed out to the section edges so the last card overflows off-screen
+         instead of being clipped at the padding boundary */
+      padding: 28px 60px 12px;
+      margin: -28px -60px 0;
     }
     .cards-row::-webkit-scrollbar { display: none; }
+    @media (max-width: 900px) { .cards-row { padding-left: 24px; padding-right: 24px; margin-left: -24px; margin-right: -24px; } }
+    @media (max-width: 600px) { .cards-row { padding-left: 14px; padding-right: 14px; margin-left: -14px; margin-right: -14px; } }
 
     /* ─── CARD WRAPPER ─────────────────────────────────────────── */
     .card-wrap {
@@ -1180,9 +1184,44 @@
     .dsc-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
     .dsc-section { padding: 30px 60px; }
-    .dsc-sec-head { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
+    .dsc-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
     .dsc-sec-title { font-family: var(--heading-font); font-size: 22px; font-weight: 700; color: #fff; }
-    .dsc-season { background: var(--surface); color: #fff; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px 14px; font-family: var(--body-font); font-size: 13px; font-weight: 600; cursor: pointer; }
+
+    /* Episodes / Trailers / BTS tabs */
+    .dsc-tabs { display: flex; gap: 22px; }
+    .dsc-tab { background: none; border: none; color: var(--text-dim); font-family: var(--heading-font); font-size: 20px; font-weight: 700; cursor: pointer; padding: 2px 0 6px; position: relative; transition: color .15s; }
+    .dsc-tab:hover { color: var(--text); }
+    .dsc-tab.is-active { color: #fff; }
+    .dsc-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 3px; background: var(--accent-grad); }
+
+    /* Custom season dropdown */
+    .dsc-season { position: relative; }
+    .dsc-season-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); color: #fff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 9px 14px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; transition: border-color .15s, background .15s; }
+    .dsc-season-btn:hover { border-color: var(--text-dim); background: var(--surface-hover); }
+    .dsc-season-menu { position: absolute; top: calc(100% + 8px); right: 0; min-width: 180px; background: #1a1a2e; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 6px; box-shadow: 0 20px 50px rgba(0,0,0,.6); z-index: 20; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .18s ease, transform .18s ease, visibility .18s; }
+    .dsc-season-menu.open { opacity: 1; visibility: visible; transform: none; }
+    .dsc-season-opt { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text-dim); font-family: var(--body-font); font-size: 14px; font-weight: 600; padding: 9px 12px; border-radius: 8px; cursor: pointer; transition: background .12s, color .12s; }
+    .dsc-season-opt:hover { background: var(--surface-hover); color: #fff; }
+    .dsc-season-opt.is-active { color: #fff; background: rgba(36,114,252,0.18); }
+
+    /* In-player episode switcher */
+    .plr-eps-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 8px 14px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); transition: background .15s; }
+    .plr-eps-btn:hover { background: rgba(255,255,255,0.24); }
+    .plr-episodes { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 92vw); background: rgba(10,10,12,0.94); backdrop-filter: blur(14px); border-left: 1px solid rgba(255,255,255,0.1); z-index: 3; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+    .plr-episodes.open { transform: none; }
+    .plr-eps-head { display: flex; align-items: center; gap: 14px; padding: 20px 20px 14px; font-family: var(--heading-font); font-size: 20px; font-weight: 800; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+    .plr-eps-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.08); border: none; color: #fff; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+    .plr-eps-close:hover { background: rgba(255,255,255,0.16); }
+    .plr-eps-list { overflow-y: auto; padding: 8px; }
+    .plr-eps-item { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: none; border: none; color: #fff; cursor: pointer; padding: 10px; border-radius: 12px; transition: background .12s; }
+    .plr-eps-item:hover { background: rgba(255,255,255,0.06); }
+    .plr-eps-item.is-playing { background: rgba(36,114,252,0.18); }
+    .plr-eps-num { font-size: 16px; font-weight: 700; color: var(--text-dim); width: 20px; text-align: center; flex-shrink: 0; }
+    .plr-eps-item img { width: 112px; height: 63px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: var(--surface); }
+    .plr-eps-meta { min-width: 0; }
+    .plr-eps-name { font-size: 14px; font-weight: 700; }
+    .plr-eps-desc { font-size: 12px; color: var(--text-dim); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    @media (max-width: 600px) { .dsc-tab { font-size: 16px; } .plr-eps-btn span { display: none; } }
 
     .dsc-eps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px 22px; }
     @media (max-width: 1100px) { .dsc-eps { grid-template-columns: repeat(3, 1fr); } }
@@ -1200,7 +1239,7 @@
     .dsc-ep-desc { font-size: 12.5px; line-height: 1.5; color: var(--text-dim); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* ─── VIDEO PLAYER MODAL ─────────────────────────────────────── */
-    .player-modal { position: fixed; inset: 0; z-index: 400; background: #000; display: none; flex-direction: column; opacity: 0; transition: opacity .28s ease; }
+    .player-modal { position: fixed; inset: 0; z-index: 400; background: #000; display: none; flex-direction: column; overflow: hidden; opacity: 0; transition: opacity .28s ease; }
     .player-modal.open { display: flex; }
     .player-modal.visible { opacity: 1; }
     .plr-top { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.75), transparent); }
@@ -1981,6 +2020,7 @@ const _PLAY_B  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="#111"><p
 const _PLUS    = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
 const _BELL    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2zM10 21a2 2 0 0 0 4 0"/></svg>`;
 const _CHEVL   = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
+const _EPISODES_ICON = `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="15" height="10" rx="1.6"/><line x1="20.5" y1="7" x2="20.5" y2="12"/><line x1="7" y1="18.5" x2="17" y2="18.5"/><line x1="9.5" y1="21.5" x2="14.5" y2="21.5"/></svg>`;
 const _CHEVR   = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
 const _STAR    = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#FFCB5A"><polygon points="12 2 15.1 8.5 22 9.3 17 14.1 18.4 21 12 17.5 5.6 21 7 14.1 2 9.3 8.9 8.5"/></svg>`;
 const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z" opacity=".95"/></svg>`;
@@ -2482,7 +2522,7 @@ function makeLandscapeCard(ch) {
     <div class="card-inner" style="height:144px">
       <div class="ch-bg"></div>
       <img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/>
-      <span class="live-pill">LIVE</span>
+      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
       ${HOVER}
     </div>`;
   return w;
@@ -2576,10 +2616,14 @@ function makeEpisodes(item, season) {
   return out;
 }
 
-// Open the full-screen player (Vimeo clip we have access to)
-function openPlayer(vimeoId, title, sub) {
+// Open the full-screen player (Vimeo clip we have access to).
+// ctx (optional) = { item, season, title, episodes:[...], playingEp } enables the in-player episode switcher.
+let _playerCtx = null;
+function openPlayer(vimeoId, title, sub, ctx) {
   closeSearch();
+  _playerCtx = ctx || null;
   const modal = document.getElementById('playerModal');
+  const hasEps = ctx && ctx.episodes && ctx.episodes.length;
   modal.innerHTML = `
     <div class="plr-top">
       <button class="plr-back" onclick="closePlayer()" aria-label="Close player">✕</button>
@@ -2587,15 +2631,41 @@ function openPlayer(vimeoId, title, sub) {
         <div class="plr-title">${title || ''}</div>
         ${sub ? `<div class="plr-sub">${sub}</div>` : ''}
       </div>
+      ${hasEps ? `<button class="plr-eps-btn" onclick="togglePlayerEpisodes()">${_EPISODES_ICON}<span>Episodes</span></button>` : ''}
     </div>
     <div class="plr-stage">
       <iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0&dnt=1"
         allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-    </div>`;
+    </div>
+    ${hasEps ? `<div class="plr-episodes" id="plrEpisodes"></div>` : ''}`;
   clearTimeout(modal._closeTimer);
   modal.classList.add('open');
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('visible')));
   pauseHeroMedia(); stopHeroTimer();
+}
+
+// Slide-in episode list inside the player (like the reference)
+function togglePlayerEpisodes() {
+  const panel = document.getElementById('plrEpisodes');
+  const ctx = _playerCtx;
+  if (!panel || !ctx) return;
+  if (panel.classList.contains('open')) { panel.classList.remove('open'); return; }
+  panel.innerHTML = `
+    <div class="plr-eps-head">
+      <button class="plr-eps-close" onclick="togglePlayerEpisodes()">${_CHEVL}</button>
+      <span>Season ${ctx.season}</span>
+    </div>
+    <div class="plr-eps-list">
+      ${ctx.episodes.map(ep => `
+        <button class="plr-eps-item${ep.ep === ctx.playingEp ? ' is-playing' : ''}" data-vimeo="${ep.vimeo}" data-ep="${ep.ep}" data-sub="S${ctx.season} E${ep.ep} · ${ep.name}">
+          <span class="plr-eps-num">${ep.ep}</span>
+          <img src="${ep.thumb}" alt="">
+          <div class="plr-eps-meta"><div class="plr-eps-name">${ep.name}</div><div class="plr-eps-desc">${ep.desc}</div></div>
+        </button>`).join('')}
+    </div>`;
+  panel.querySelectorAll('.plr-eps-item').forEach(el => el.addEventListener('click', () =>
+    openPlayer(el.dataset.vimeo, ctx.title, el.dataset.sub, { ...ctx, playingEp: parseInt(el.dataset.ep, 10) })));
+  panel.classList.add('open');
 }
 function closePlayer() {
   const modal = document.getElementById('playerModal');
@@ -2617,7 +2687,7 @@ function openDetail(item, kind) {
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
   const poster  = posterOf(item);
-  const seasons = kind === 'show' ? seasonCount(item) : 1;
+  const seasons = kind === 'show' ? Math.max(3, seasonCount(item)) : 1;
   const cast    = CAST_POOL.slice(0, 5).join(', ');
   const metaBits = item.meta
     ? item.meta.split('·').map(s => s.trim()).filter(Boolean)
@@ -2664,10 +2734,20 @@ function openDetail(item, kind) {
     ${kind === 'show' ? `
     <div class="dsc-section">
       <div class="dsc-sec-head">
-        <h2 class="dsc-sec-title">Episodes</h2>
-        <select class="dsc-season" id="dscSeason" onchange="renderEpisodes(this.value)">
-          ${Array.from({length: seasons}, (_, i) => `<option value="${i + 1}">Season ${i + 1}</option>`).join('')}
-        </select>
+        <div class="dsc-tabs">
+          <button class="dsc-tab is-active" onclick="switchDetailTab('episodes')">Episodes</button>
+          <button class="dsc-tab" onclick="switchDetailTab('trailers')">Trailers</button>
+          <button class="dsc-tab" onclick="switchDetailTab('bts')">BTS</button>
+        </div>
+        <div class="dsc-season" id="dscSeasonWrap">
+          <button class="dsc-season-btn" onclick="toggleSeasonMenu(event)">
+            <span id="dscSeasonLabel">Season 1</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dsc-season-menu" id="dscSeasonMenu">
+            ${Array.from({length: seasons}, (_, i) => `<button class="dsc-season-opt${i === 0 ? ' is-active' : ''}" onclick="selectSeason(${i + 1})">Season ${i + 1}</button>`).join('')}
+          </div>
+        </div>
       </div>
       <div class="dsc-eps" id="dscEps"></div>
     </div>` : ''}
@@ -2680,10 +2760,16 @@ function openDetail(item, kind) {
   screen._item = item;
 
   const watchBtn = screen.querySelector('.dsc-watch');
-  watchBtn.addEventListener('click', () =>
-    openPlayer(firstVimeo, title, kind === 'show' ? 'S1 E1 · Episode 1' : 'Feature Film'));
+  watchBtn.addEventListener('click', () => {
+    if (kind === 'show') {
+      const eps = makeEpisodes(item, 1);
+      openPlayer(eps[0].vimeo, title, 'S1 E1 · Episode 1', { item, season: 1, title, episodes: eps, playingEp: 1 });
+    } else {
+      openPlayer(firstVimeo, title, 'Feature Film');
+    }
+  });
 
-  if (kind === 'show') renderEpisodes(1);
+  if (kind === 'show') { screen._tab = 'episodes'; screen._season = 1; renderDetailContent(); }
 
   const relRow = document.getElementById('dscRelated');
   related.forEach(x => {
@@ -2701,26 +2787,87 @@ function openDetail(item, kind) {
   pauseHeroMedia(); stopHeroTimer();
 }
 
-function renderEpisodes(season) {
+// Trailers / behind-the-scenes clips for a show
+function makeExtras(item, kind) {
+  const poster = posterOf(item);
+  const title = titleOf(item);
+  const sets = {
+    trailers: [
+      { name: 'Official Trailer', desc: `The official trailer for ${title}.`, dur: '2:18' },
+      { name: 'Teaser', desc: 'A first-look teaser.', dur: '0:52' },
+      { name: 'Season Trailer', desc: 'What to expect this season.', dur: '1:40' },
+    ],
+    bts: [
+      { name: 'Behind the Scenes', desc: 'On set with the cast and crew.', dur: '6:20' },
+      { name: 'Cast Interview', desc: 'The cast talk about their roles.', dur: '8:05' },
+      { name: 'The Making Of', desc: 'How the show came together.', dur: '11:32' },
+    ],
+  };
+  return (sets[kind] || []).map((x, i) => ({ ...x, ep: i + 1, thumb: poster, vimeo: PLAYABLE_VIMEO[i % PLAYABLE_VIMEO.length] }));
+}
+
+// Render the active detail tab (episodes / trailers / bts) into #dscEps
+function renderDetailContent() {
   const screen = document.getElementById('detailScreen');
   const item = screen._item; if (!item) return;
-  const s = parseInt(season, 10) || 1;
-  const show = titleOf(item);
   const wrap = document.getElementById('dscEps'); if (!wrap) return;
-  const eps = makeEpisodes(item, s);
-  wrap.innerHTML = eps.map(ep => `
-    <div class="dsc-ep" data-vimeo="${ep.vimeo}" data-sub="S${s} E${ep.ep} · ${ep.name}">
+  const tab = screen._tab || 'episodes';
+  const s = screen._season || 1;
+  const title = titleOf(item);
+  const isEps = tab === 'episodes';
+  const list = isEps ? makeEpisodes(item, s) : makeExtras(item, tab);
+
+  wrap.innerHTML = list.map((ep, idx) => `
+    <div class="dsc-ep" data-idx="${idx}">
       <div class="dsc-ep-thumb">
         <img src="${ep.thumb}" alt="${ep.name}" loading="lazy">
         <div class="dsc-ep-play">${_PLAY_W}</div>
         <span class="dsc-ep-dur">${ep.dur}</span>
       </div>
-      <div class="dsc-ep-title">S${s} E${ep.ep} · ${ep.name}</div>
+      <div class="dsc-ep-title">${isEps ? `S${s} E${ep.ep} · ` : ''}${ep.name}</div>
       <div class="dsc-ep-desc">${ep.desc}</div>
     </div>`).join('');
-  wrap.querySelectorAll('.dsc-ep').forEach(el =>
-    el.addEventListener('click', () => openPlayer(el.dataset.vimeo, show, el.dataset.sub)));
+
+  wrap.querySelectorAll('.dsc-ep').forEach((el, idx) => {
+    const ep = list[idx];
+    const sub = isEps ? `S${s} E${ep.ep} · ${ep.name}` : ep.name;
+    const ctx = isEps ? { item, season: s, title, episodes: list, playingEp: ep.ep } : null;
+    el.addEventListener('click', () => openPlayer(ep.vimeo, title, sub, ctx));
+  });
 }
+
+function switchDetailTab(tab) {
+  const screen = document.getElementById('detailScreen');
+  screen._tab = tab;
+  document.querySelectorAll('.dsc-tab').forEach(t => t.classList.toggle('is-active', t.textContent.trim().toLowerCase() === tab));
+  const seasonWrap = document.getElementById('dscSeasonWrap');
+  if (seasonWrap) seasonWrap.style.visibility = tab === 'episodes' ? 'visible' : 'hidden';
+  renderDetailContent();
+}
+
+function selectSeason(n) {
+  const screen = document.getElementById('detailScreen');
+  screen._season = n;
+  const label = document.getElementById('dscSeasonLabel');
+  if (label) label.textContent = 'Season ' + n;
+  document.querySelectorAll('.dsc-season-opt').forEach((o, i) => o.classList.toggle('is-active', i === n - 1));
+  const menu = document.getElementById('dscSeasonMenu');
+  if (menu) menu.classList.remove('open');
+  renderDetailContent();
+}
+
+function toggleSeasonMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('dscSeasonMenu');
+  if (menu) menu.classList.toggle('open');
+}
+
+// Close the season menu when clicking elsewhere
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('dscSeasonWrap');
+  const menu = document.getElementById('dscSeasonMenu');
+  if (menu && wrap && !wrap.contains(e.target)) menu.classList.remove('open');
+});
 
 function closeDetail() {
   const screen = document.getElementById('detailScreen');
