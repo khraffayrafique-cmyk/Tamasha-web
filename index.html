@@ -1312,6 +1312,50 @@
     .acct-status.ok { background: rgba(34,197,94,.16); color: #4ade80; }
     .acct-status.fail { background: rgba(239,68,68,.16); color: #f87171; }
 
+    /* Subscription / cancel / delete journey */
+    .acct-steps { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; font-size: 13px; color: var(--text-dim); flex-wrap: wrap; }
+    .acct-step { display: inline-flex; align-items: center; gap: 8px; }
+    .acct-step-n { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-hover); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+    .acct-step.is-active { color: #fff; font-weight: 700; }
+    .acct-step.is-active .acct-step-n { background: var(--accent-from); color: #fff; }
+    .acct-step-sep { opacity: .35; }
+
+    .acct-perks { display: flex; flex-direction: column; gap: 14px; margin: 18px 0 26px; }
+    .acct-perk { display: flex; align-items: center; gap: 13px; font-size: 15px; color: rgba(255,255,255,.8); }
+    .acct-perk .material-icons { font-size: 21px; color: var(--text-dim); }
+    .acct-locked { display: flex; gap: 12px; overflow: hidden; margin: 8px 0 28px; }
+    .acct-locked-item { position: relative; width: 132px; height: 198px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: var(--surface); }
+    .acct-locked-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.45); }
+    .acct-locked-item .material-icons { position: absolute; inset: 0; margin: auto; width: 34px; height: 34px; font-size: 34px; color: #fff; }
+
+    /* Slide-to-confirm */
+    .slide-confirm { position: relative; height: 62px; border-radius: 12px; background: var(--surface-hover); border: 1px solid var(--border-subtle); overflow: hidden; user-select: none; max-width: 520px; }
+    .slide-confirm.danger { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.35); }
+    .slide-fill { position: absolute; inset: 0; width: 62px; background: #c62828; transition: width .18s ease; }
+    .slide-confirm.dragging .slide-fill { transition: none; }
+    .slide-label { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; font-weight: 700; color: rgba(255,255,255,.85); pointer-events: none; }
+    .slide-knob { position: absolute; top: 0; left: 0; width: 62px; height: 100%; display: grid; place-items: center; cursor: grab; touch-action: none; }
+    .slide-knob:active { cursor: grabbing; }
+    .slide-knob .material-icons { color: #fff; font-size: 22px; }
+    .slide-confirm.done .slide-label { opacity: 0; }
+
+    /* OTP */
+    .otp-wrap { max-width: 420px; }
+    .otp-inputs { display: flex; gap: 12px; margin: 14px 0 10px; }
+    .otp-inputs input { width: 58px; height: 62px; text-align: center; font-family: var(--heading-font); font-size: 24px; font-weight: 800; color: #fff; background: var(--surface); border: 2px solid var(--border-subtle); border-radius: 10px; outline: none; }
+    .otp-inputs input:focus { border-color: var(--accent-from); }
+    .otp-hint { font-size: 13px; color: var(--text-dim); margin-bottom: 22px; }
+
+    /* Success */
+    .acct-success { max-width: 520px; }
+    .acct-success-mark { width: 92px; height: 92px; border-radius: 50%; background: var(--accent-grad); display: grid; place-items: center; margin: 10px 0 24px; }
+    .acct-success-mark svg { width: 44px; height: 44px; }
+    .acct-receipt { background: var(--surface); border: 1px solid rgba(36,114,252,.4); border-radius: 14px; padding: 22px 24px; margin: 8px 0 26px; }
+    .acct-receipt-k { font-size: 11px; letter-spacing: .1em; color: var(--text-dim); text-transform: uppercase; }
+    .acct-receipt-v { font-size: 24px; font-weight: 800; color: #7fb0ff; margin-bottom: 16px; }
+    .acct-receipt hr { border: none; border-top: 1px dashed var(--border-subtle); margin: 16px 0; }
+    .acct-receipt-row { font-size: 15px; font-weight: 700; color: #fff; }
+
     @media (max-width: 900px) {
       .acct-wrap { grid-template-columns: 1fr; gap: 24px; padding: 26px 20px 70px; }
       .acct-side { position: static; }
@@ -1328,6 +1372,79 @@
       .acct-plan-side { padding: 16px 18px; }
       .acct-plan-desc { padding: 14px 18px 0; }
       .acct-plan-price { padding: 12px 18px 18px; font-size: 18px; }
+    }
+
+    /* ─── TAMASHA PRO SUBSCRIBE SCREEN ───────────────────────────── */
+    .pro-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 170; background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
+    .pro-screen.open { display: block; }
+    .pro-screen.visible { opacity: 1; }
+    .pro-hero { position: relative; height: 340px; overflow: hidden; }
+    .pro-hero-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: 150px; gap: 8px; opacity: .5; }
+    .pro-hero-grid img { width: 100%; height: 100%; object-fit: cover; }
+    .pro-hero-veil { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(10,10,14,.55) 0%, rgba(10,10,14,.9) 60%, var(--bg) 100%); }
+    .pro-hero-logo { position: absolute; inset: 0; display: grid; place-items: center; }
+    .pro-hero-logo img { height: 54px; }
+    .pro-hero-logo span { font-family: var(--heading-font); font-size: 38px; font-weight: 800; color: #fff; }
+    .pro-body { max-width: 1180px; margin: 0 auto; padding: 34px 40px 80px; }
+    .pro-back { display: inline-flex; align-items: center; gap: 8px; background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer; font-family: var(--body-font); font-size: 14px; font-weight: 600; position: absolute; top: 18px; left: 24px; z-index: 3; backdrop-filter: blur(10px); }
+    .pro-back:hover { background: rgba(255,255,255,.16); }
+
+    .pro-toggle { display: flex; gap: 4px; background: var(--surface); border-radius: 999px; padding: 5px; width: fit-content; margin: 0 auto 26px; }
+    .pro-toggle button { background: none; border: none; color: var(--text-dim); font-family: var(--body-font); font-size: 15px; font-weight: 600; padding: 9px 26px; border-radius: 999px; cursor: pointer; transition: background .15s, color .15s; }
+    .pro-toggle button.is-active { background: var(--accent-from); color: #fff; font-weight: 700; }
+    .pro-h { font-family: var(--heading-font); font-size: 26px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 22px; }
+
+    .pro-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 26px; }
+    .pro-plan { position: relative; text-align: left; background: rgba(255,255,255,.04); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 26px 24px; cursor: pointer; transition: border-color .15s, background .15s; font-family: var(--body-font); color: var(--text); }
+    .pro-plan:hover { border-color: rgba(255,255,255,.28); }
+    .pro-plan.is-active { border-color: var(--accent-from); background: rgba(36,114,252,.10); }
+    .pro-plan-top { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+    .pro-plan-name { font-size: 21px; font-weight: 800; color: #fff; }
+    .pro-plan-price { font-size: 19px; font-weight: 800; color: #fff; white-space: nowrap; }
+    .pro-plan-desc { font-size: 14px; color: rgba(255,255,255,.62); margin-bottom: 16px; }
+    .pro-plan-perk { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: rgba(255,255,255,.9); padding: 5px 0; }
+    .pro-plan-perk svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .pro-plan-tick { position: absolute; top: 0; right: 0; width: 30px; height: 30px; background: var(--accent-from); border-radius: 0 11px 0 11px; display: none; place-items: center; }
+    .pro-plan.is-active .pro-plan-tick { display: grid; }
+
+    .pro-col { max-width: 520px; margin: 0 auto; }
+    .pro-label { font-family: var(--heading-font); font-size: 20px; font-weight: 700; color: #fff; margin: 0 0 12px; }
+    .pro-selected { background: rgba(255,255,255,.05); border: 2px solid var(--accent-from); border-radius: 12px; padding: 18px 20px; position: relative; margin-bottom: 26px; }
+    .pro-methods { display: flex; gap: 16px; margin-bottom: 22px; }
+    .pro-method { width: 104px; background: none; border: none; cursor: pointer; text-align: center; }
+    .pro-method-tile { height: 78px; border-radius: 12px; background: var(--surface-hover); border: 2px solid transparent; display: grid; place-items: center; font-size: 30px; transition: border-color .15s, background .15s; }
+    .pro-method.is-active .pro-method-tile { border-color: var(--accent-from); background: rgba(36,114,252,.12); }
+    .pro-method-name { font-size: 14px; font-weight: 600; color: var(--text-dim); margin-top: 9px; }
+    .pro-method.is-active .pro-method-name { color: #fff; font-weight: 700; }
+    .pro-field { margin-bottom: 8px; }
+    .pro-field label { display: block; font-family: var(--heading-font); font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .pro-input { width: 100%; background: var(--surface-hover); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px 18px; color: #fff; font-family: var(--body-font); font-size: 16px; outline: none; }
+    .pro-input:focus { border-color: var(--accent-from); }
+    .pro-input::placeholder { color: rgba(255,255,255,.35); }
+    .pro-support { font-size: 12.5px; color: var(--text-dim); margin: 6px 0 20px; }
+    .pro-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pro-terms { display: flex; align-items: flex-start; gap: 12px; margin: 20px 0 22px; font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.5; }
+    .pro-terms input { width: 22px; height: 22px; accent-color: var(--accent-from); flex-shrink: 0; margin-top: 1px; }
+    .pro-terms a { color: #fff; }
+    .pro-cta { width: 100%; padding: 17px; border-radius: 10px; border: none; background: linear-gradient(90deg,#1565d8,#1e88e5); color: #fff; font-family: var(--body-font); font-size: 17px; font-weight: 700; cursor: pointer; }
+    .pro-cta:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* Payment failed / success modal */
+    .pro-modal { position: fixed; inset: 0; z-index: 420; background: rgba(0,0,0,.72); display: none; place-items: center; padding: 20px; }
+    .pro-modal.open { display: grid; }
+    .pro-modal-card { background: #1b1b28; border: 1px solid var(--border-subtle); border-radius: 16px; padding: 40px 44px; text-align: center; max-width: 480px; width: 100%; }
+    .pro-modal-icon { width: 82px; height: 82px; border-radius: 14px; background: rgba(255,255,255,.06); display: grid; place-items: center; margin: 0 auto 22px; font-size: 40px; }
+    .pro-modal-title { font-family: var(--heading-font); font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .pro-modal-text { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.7); margin-bottom: 26px; }
+    .pro-modal-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    @media (max-width: 600px) {
+      .pro-screen { top: 96px; }
+      .pro-hero { height: 210px; }
+      .pro-hero-logo span { font-size: 26px; }
+      .pro-body { padding: 24px 16px 60px; }
+      .pro-plans { grid-template-columns: 1fr; }
+      .pro-modal-card { padding: 30px 24px; }
     }
 
     /* ─── LIVE TV SCREEN ─────────────────────────────────────────── */
@@ -1909,6 +2026,10 @@
 <!-- ════════════════ ACCOUNT / PROFILE SCREEN ══════════ -->
 <div class="account-screen" id="accountScreen"></div>
 
+<!-- ════════════════ TAMASHA PRO SUBSCRIBE ═════════════ -->
+<div class="pro-screen" id="proScreen"></div>
+<div class="pro-modal" id="proModal"></div>
+
 <!-- ════════════════ LIVE TV SCREEN ════════════════════ -->
 <div class="livetv-screen" id="liveTVScreen"></div>
 
@@ -2236,7 +2357,7 @@ const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentC
 
 // True while any full-screen overlay covers the homepage — hero media must stay silent
 function overlayActive() {
-  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen','accountScreen']
+  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen','accountScreen','proScreen']
     .some(id => { const el = document.getElementById(id); return el && el.classList.contains('open'); });
 }
 
@@ -3148,9 +3269,11 @@ function attachCardClick(el, item, kind) {
     }
     if (e.target.closest('.play-btn, .highlight-play, .continue-play-overlay')) {
       e.stopPropagation();
+      if (requiresPro(item)) { gatePro(item, () => openPlayer(pickVimeo(titleOf(item)), titleOf(item), '')); return; }
       openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
       return;
     }
+    if (requiresPro(item)) { gatePro(item, () => openDetail(item, kind === 'show' ? 'show' : 'movie')); return; }
     if (kind === 'live') { openLiveTV(liveChannels.indexOf(item)); return; }
     if (kind === 'show' || kind === 'movie') openDetail(item, kind);
     else openPlayer(pickVimeo(titleOf(item)), titleOf(item), '');
@@ -3173,10 +3296,12 @@ const PAY_METHODS = [
 ];
 function payMethod() { return PAY_METHODS.find(p => p.id === ACCOUNT.payMethod) || PAY_METHODS[0]; }
 function payBadge(m) { return `<span class="acct-pay-brand ${m.cls}">${m.badge}</span>`; }
+const PRO_PERKS = ['AD - Free Streaming', 'Ultra HD Viewing', 'Unlimited Content Access'];
 const PLANS = [
-  { id:'daily',   name:'Daily',   price:'Rs 15',  per:'/day',   desc:'Ad-free streaming for 24 hours. Watch on 1 device in Full HD.' },
-  { id:'weekly',  name:'Weekly',  price:'Rs 100', per:'/week',  desc:'Ad-free streaming all week. Watch on 2 devices in Full HD.' },
-  { id:'monthly', name:'Monthly', price:'Rs 360', per:'/month', desc:'25 GB data · Ad-free experience without interruption · Free streaming data for Jazz users.' },
+  { id:'daily',   name:'Pro Daily',   price:'PKR 10',  per:'/day',   tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
+  { id:'weekly',  name:'Pro Weekly',  price:'PKR 120', per:'/week',  tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
+  { id:'monthly', name:'Pro Monthly', price:'PKR 360', per:'/month', tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
+  { id:'season',  name:'Season Pass', price:'PKR 899', per:'/season',tab:'season',   desc:'Full season access to premium sports and originals' },
 ];
 const BILLING = [
   { plan:'Monthly Offer', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:20 PM', renewal:'Mar 19, 2026', status:'ok' },
@@ -3206,7 +3331,11 @@ function closeAccount() {
   screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 260);
   setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 280);
 }
-function acctGo(section) { _acctSection = section; renderAccount(); document.getElementById('accountScreen').scrollTop = 0; }
+function acctGo(section) {
+  if (section === 'plans') { openProSubscribe(); return; }   // subscribe journey has its own screen
+  _acctSection = section; renderAccount();
+  document.getElementById('accountScreen').scrollTop = 0;
+}
 
 const ACCT_NAV = [
   { id:'overview',   icon:'home',        label:'Overview' },
@@ -3279,32 +3408,8 @@ function renderAccount() {
         ${acctRow('', 'View payment history', '', "acctGo('billing')")}
       </div>
       ${ACCOUNT.subscribed ? `<div class="acct-card" style="margin-top:22px">
-        <button class="acct-row acct-danger" onclick="acctCancel()">Cancel Membership</button>
+        <button class="acct-row acct-danger" onclick="acctGo('cancelConfirm')">Cancel Membership</button>
       </div>` : ''}`,
-
-    plans: () => `
-      <h1 class="acct-title">${ACCOUNT.subscribed ? 'Change Streaming Plan' : 'Choose your plan'}</h1>
-      <div class="acct-sub">Get access to all the premium features. Cancel anytime.</div>
-      <div class="acct-plans">
-        ${PLANS.map(p => `
-          <button class="acct-plan${ACCOUNT.planId === p.id ? ' is-current' : ''}" onclick="acctPickPlan('${p.id}')">
-            <span class="acct-plan-side">
-              <span class="acct-plan-check">${_TICK}</span>
-              <span>
-                ${ACCOUNT.planId === p.id ? `<span class="acct-plan-label">Current plan:</span>` : ''}
-                <span class="acct-plan-tier">${p.name}</span>
-              </span>
-            </span>
-            <span class="acct-plan-desc">${p.desc}</span>
-            <span class="acct-plan-price">${p.price}<small>${p.per}</small></span>
-          </button>`).join('')}
-      </div>
-      <div class="acct-label">Pay with</div>
-      <div class="acct-card">${payOptionsHTML()}</div>
-      <div class="acct-actions">
-        <button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button>
-        <button class="btn btn--primary btn--lg" onclick="acctConfirmPlan()">${ACCOUNT.subscribed ? 'Confirm change' : 'Subscribe Now'}</button>
-      </div>`,
 
     payment: () => `
       <h1 class="acct-title">Payment Method</h1>
@@ -3314,6 +3419,60 @@ function renderAccount() {
         <button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button>
         <button class="btn btn--primary btn--lg" onclick="acctSavePay()">Save</button>
       </div>`,
+
+    otp: () => `
+      <h1 class="acct-title">Verify your account</h1>
+      <div class="acct-sub">We sent a 4-digit code to ${ACCOUNT.phone}.</div>
+      <div class="otp-wrap">
+        <div class="acct-label" style="margin-top:0">Verify OTP</div>
+        <div class="otp-inputs" id="otpInputs">
+          ${[0,1,2,3].map(i => `<input type="text" inputmode="numeric" maxlength="1" data-i="${i}">`).join('')}
+        </div>
+        <div class="otp-hint" id="otpHint">Request code in 56s</div>
+        <div class="acct-actions" style="margin:0">
+          <button class="btn btn--ghost btn--lg" onclick="acctGo('deleteConfirm')">Back</button>
+          <button class="btn btn--primary btn--lg" onclick="acctVerifyOtp()">Verify OTP</button>
+        </div>
+      </div>`,
+
+    cancelConfirm: () => `
+      <h1 class="acct-title">Cancel your membership</h1>
+      <div class="acct-sub">You will continue to watch ad-free till <strong>${ACCOUNT.nextPayment}</strong>.</div>
+      <div class="acct-label">You will lose access to all these perks</div>
+      <div class="acct-perks">${PERKS.map(p => `<div class="acct-perk"><span class="material-icons">${p.icon}</span>${p.label}</div>`).join('')}</div>
+      ${lockedStripHTML()}
+      ${slideHTML('Slide to Unsubscribe', 'acctDoCancel()')}
+      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Keep my membership</button></div>`,
+
+    cancelDone: () => `
+      <h1 class="acct-title">We are sad to see you go.</h1>
+      <div class="acct-sub" style="max-width:60ch;line-height:1.7">
+        You've cancelled your Tamasha PRO subscription which will end on <strong>${ACCOUNT.nextPayment}</strong>.<br><br>
+        Once your subscription expires, your access to Tamasha's premium features will be revoked.<br><br>
+        Hope to see you back soon!
+      </div>
+      <div class="acct-actions"><button class="btn btn--primary btn--lg" onclick="acctGo('overview')">Done</button></div>`,
+
+    deleteConfirm: () => `
+      <h1 class="acct-title">Delete your account</h1>
+      <div class="acct-sub" style="max-width:62ch;line-height:1.7">
+        Proceeding will delete your Tamasha account and you will lose access to all your data.
+        <strong>This action is irreversible.</strong>
+        ${ACCOUNT.subscribed ? `<br><br>Your Tamasha PRO membership will continue until it expires. You can watch ad-free till <strong>${ACCOUNT.nextPayment}</strong>.` : ''}
+      </div>
+      <div class="acct-label">You will lose access to all these perks</div>
+      <div class="acct-perks">${DELETE_PERKS.map(p => `<div class="acct-perk"><span class="material-icons">${p.icon}</span>${p.label}</div>`).join('')}</div>
+      ${lockedStripHTML()}
+      ${slideHTML('Slide to Delete', 'acctToDeleteOtp()')}
+      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctGo('profile')">Keep my account</button></div>`,
+
+    deleteDone: () => `
+      <h1 class="acct-title">We are sad to see you go.</h1>
+      <div class="acct-sub" style="max-width:62ch;line-height:1.7">
+        You have deleted your Tamasha Account. You will be redirected to the home screen shortly.<br><br>
+        To create a new account you can go to the <strong>login section</strong> from your Home page.
+      </div>
+      <div class="acct-actions"><button class="btn btn--primary btn--lg" id="delDone" onclick="acctFinishDelete()">Done… 5</button></div>`,
 
     billing: () => `
       <h1 class="acct-title">Billing Details</h1>
@@ -3382,6 +3541,9 @@ function renderAccount() {
       </div>
       <div class="acct-card" style="margin-top:22px">
         <button class="acct-row acct-danger" onclick="acctStub('Logout')">Logout</button>
+      </div>
+      <div class="acct-card" style="margin-top:14px">
+        <button class="acct-row acct-danger" onclick="acctGo('deleteConfirm')">Delete your account</button>
       </div>`,
   };
 
@@ -3399,10 +3561,128 @@ function renderAccount() {
       </aside>
       <main class="acct-main">${(body[_acctSection] || body.overview)()}</main>
     </div>`;
+  initSlides(screen);
+  initOtp(screen);
 }
 
 // Placeholder for flows that need a real backend (payments, auth, etc.)
 function acctStub(what) { flashToast(what + ' — coming soon'); }
+
+// ── Perks + locked-poster strip used by the cancel / delete screens ──
+const PERKS = [
+  { icon:'block',       label:'Ad-free experience without interruption' },
+  { icon:'workspace_premium', label:'Access to all premium content' },
+  { icon:'hd',          label:'Access to Ultra HD content resolutions' },
+];
+const DELETE_PERKS = [
+  { icon:'history',     label:'Watch history' },
+  { icon:'download',    label:'Downloads' },
+  { icon:'playlist_add_check', label:'Saved lists' },
+  ...PERKS,
+];
+function lockedStripHTML() {
+  const items = topMoviesData.slice(0, 5);
+  return `<div class="acct-locked">${items.map(m => `
+    <div class="acct-locked-item">
+      <img src="${bp(m.folder, m.thumb)}" alt="" loading="lazy">
+      <span class="material-icons">lock</span>
+    </div>`).join('')}</div>`;
+}
+
+// ── Slide-to-confirm control ──
+function slideHTML(label, onDone) {
+  return `<div class="slide-confirm danger" data-done="${onDone}">
+    <div class="slide-fill"></div>
+    <div class="slide-label">${label}</div>
+    <div class="slide-knob"><span class="material-icons">lock</span></div>
+  </div>`;
+}
+function initSlides(root) {
+  root.querySelectorAll('.slide-confirm').forEach(el => {
+    if (el._init) return; el._init = true;
+    const knob = el.querySelector('.slide-knob');
+    const fill = el.querySelector('.slide-fill');
+    let dragging = false, startX = 0, max = 0;
+    const KNOB = 62;
+    const move = x => {
+      const d = Math.max(0, Math.min(max, x - startX));
+      knob.style.transform = `translateX(${d}px)`;
+      fill.style.width = (KNOB + d) + 'px';
+      return d;
+    };
+    const down = e => {
+      dragging = true; el.classList.add('dragging');
+      startX = (e.touches ? e.touches[0].clientX : e.clientX);
+      max = el.clientWidth - KNOB;
+      e.preventDefault();
+    };
+    const drag = e => { if (dragging) move(e.touches ? e.touches[0].clientX : e.clientX); };
+    const up = e => {
+      if (!dragging) return;
+      dragging = false; el.classList.remove('dragging');
+      const d = move(e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+      if (d >= max - 4) {            // completed the slide
+        el.classList.add('done');
+        setTimeout(() => { try { eval(el.dataset.done); } catch (err) {} }, 180);
+      } else {                        // snap back
+        knob.style.transform = ''; fill.style.width = '';
+      }
+    };
+    knob.addEventListener('mousedown', down); knob.addEventListener('touchstart', down, { passive:false });
+    window.addEventListener('mousemove', drag); window.addEventListener('touchmove', drag, { passive:false });
+    window.addEventListener('mouseup', up);     window.addEventListener('touchend', up);
+  });
+}
+
+// ── OTP inputs ──
+function initOtp(root) {
+  const wrap = root.querySelector('#otpInputs'); if (!wrap) return;
+  const boxes = [...wrap.querySelectorAll('input')];
+  boxes.forEach((b, i) => {
+    b.addEventListener('input', () => {
+      b.value = b.value.replace(/\D/g, '').slice(0, 1);
+      if (b.value && i < boxes.length - 1) boxes[i + 1].focus();
+    });
+    b.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !b.value && i > 0) boxes[i - 1].focus();
+    });
+  });
+  setTimeout(() => boxes[0] && boxes[0].focus(), 80);
+  let s = 56;
+  const hint = root.querySelector('#otpHint');
+  clearInterval(root._otpTimer);
+  root._otpTimer = setInterval(() => {
+    s--; if (!hint) return clearInterval(root._otpTimer);
+    hint.textContent = s > 0 ? `Request code in ${s}s` : 'Request a new code';
+    if (s <= 0) clearInterval(root._otpTimer);
+  }, 1000);
+}
+function otpValue() {
+  return [...document.querySelectorAll('#otpInputs input')].map(b => b.value).join('');
+}
+
+// ── Cancel membership ──
+function acctDoCancel() {
+  ACCOUNT.subscribed = false; ACCOUNT.planId = null; _acctPending = null;
+  acctGo('cancelDone');
+}
+// ── Delete account ──
+function acctToDeleteOtp() { acctGo('otp'); }
+function acctVerifyOtp() {
+  if (otpValue().length < 4) { flashToast('Enter the 4-digit code'); return; }
+  acctGo('deleteDone');
+  let n = 5;
+  const btn = document.getElementById('delDone');
+  const t = setInterval(() => {
+    n--; if (btn) btn.textContent = `Done… ${n}`;
+    if (n <= 0) { clearInterval(t); acctFinishDelete(); }
+  }, 1000);
+}
+function acctFinishDelete() {
+  ACCOUNT.subscribed = false; ACCOUNT.planId = null;
+  closeAccount();
+  flashToast('Account deleted');
+}
 
 // Payment method chooser (selection only — no card/account details are entered here)
 function payOptionsHTML() {
@@ -3424,22 +3704,256 @@ function acctPickPay(id) {
 function acctSavePay() { flashToast(payMethod().name + ' set as payment method'); acctGo('membership'); }
 
 let _acctPending = ACCOUNT.planId;
-function acctPickPlan(id) {
-  _acctPending = id;
-  document.querySelectorAll('.acct-plan').forEach((el, i) =>
-    el.classList.toggle('is-current', PLANS[i].id === id));
+
+// ─── TAMASHA PRO SUBSCRIBE JOURNEY ───────────────────────────────
+// Demo/prototype only: nothing is submitted or stored anywhere. Before real
+// users, card entry must go through a PCI-compliant processor (e.g. Stripe
+// Elements) so raw card data never touches these fields or your servers.
+let _proStep = 'plans', _proTab = 'standard', _proPlan = 'daily', _proPay = 'jazzcash', _proGate = '';
+const PRO_METHODS = [
+  { id:'jazzcash',  name:'Jazzcash',  icon:'📲', field:'Jazzcash Number',  ph:'03XX XXXXXXX' },
+  { id:'easypaisa', name:'Easypaisa', icon:'💚', field:'Easypaisa Number', ph:'03XX XXXXXXX' },
+  { id:'card',      name:'Card',      icon:'💳', field:'Card Details',     ph:'' },
+];
+const proMethod = () => PRO_METHODS.find(m => m.id === _proPay) || PRO_METHODS[0];
+const proPlan   = () => PLANS.find(p => p.id === _proPlan) || PLANS[0];
+
+function openProSubscribe(gateTitle) {
+  closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true); closeAccount();
+  _proGate = gateTitle || ''; _proStep = 'plans';
+  const s = document.getElementById('proScreen');
+  clearTimeout(s._closeTimer);
+  s.classList.add('open');
+  renderPro();
+  requestAnimationFrame(() => requestAnimationFrame(() => s.classList.add('visible')));
+  stopHeroTimer(); pauseHeroMedia(); setTimeout(pauseHeroMedia, 400);
 }
-function acctConfirmPlan() {
-  if (!_acctPending) { flashToast('Pick a plan first'); return; }
-  ACCOUNT.planId = _acctPending;
+function closePro() {
+  const s = document.getElementById('proScreen');
+  if (!s.classList.contains('open')) return;
+  s.classList.remove('visible');
+  clearTimeout(s._closeTimer);
+  s._closeTimer = setTimeout(() => { s.classList.remove('open'); s.innerHTML = ''; }, 260);
+  setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 280);
+}
+function proGo(step) { _proStep = step; renderPro(); document.getElementById('proScreen').scrollTop = 0; }
+
+function proHeroHTML() {
+  const art = [...topMoviesData, ...moviesData, ...tvShowsData].slice(0, 16);
+  return `<div class="pro-hero">
+    <div class="pro-hero-grid">${art.map(m => `<img src="${bp(m.folder, m.thumb)}" alt="" loading="lazy">`).join('')}</div>
+    <div class="pro-hero-veil"></div>
+    <div class="pro-hero-logo"><span>Tamasha Pro</span></div>
+    <button class="pro-back" onclick="closePro()">${_CHEVL}<span>Back</span></button>
+  </div>`;
+}
+
+function renderPro() {
+  const s = document.getElementById('proScreen');
+  const p = proPlan(), m = proMethod();
+
+  const plansStep = () => `
+    <div class="pro-toggle">
+      <button class="${_proTab === 'standard' ? 'is-active' : ''}" onclick="proTab('standard')">Standard</button>
+      <button class="${_proTab === 'season' ? 'is-active' : ''}" onclick="proTab('season')">Season Pass</button>
+    </div>
+    <h2 class="pro-h">${_proGate ? `Subscribe to watch ${_proGate}` : 'Choose your Plan'}</h2>
+    <div class="pro-plans">
+      ${PLANS.filter(x => x.tab === _proTab).map(x => `
+        <button class="pro-plan${x.id === _proPlan ? ' is-active' : ''}" onclick="proPick('${x.id}')">
+          <span class="pro-plan-tick">${_TICK}</span>
+          <span class="pro-plan-top"><span class="pro-plan-name">${x.name}</span><span class="pro-plan-price">${x.price}${x.per}</span></span>
+          <div class="pro-plan-desc">${x.desc}</div>
+          ${PRO_PERKS.map(k => `<div class="pro-plan-perk">${_TICK_SM}${k}</div>`).join('')}
+        </button>`).join('')}
+    </div>
+    ${termsHTML()}
+    <div class="pro-col"><button class="pro-cta" id="proCta" onclick="proGo('pay')" disabled>Continue</button></div>`;
+
+  const payStep = () => `
+    <div class="pro-col">
+      <h3 class="pro-label">Your Selected Plan</h3>
+      <div class="pro-selected">
+        <span class="pro-plan-tick" style="display:grid">${_TICK}</span>
+        <div class="pro-plan-top"><span class="pro-plan-name">${p.name}</span><span class="pro-plan-price">${p.price}${p.per}</span></div>
+        <div class="pro-plan-desc" style="margin:0">${p.desc}</div>
+      </div>
+
+      <h3 class="pro-label">Select your Payment Method</h3>
+      <div class="pro-methods">
+        ${PRO_METHODS.map(x => `
+          <button class="pro-method${x.id === _proPay ? ' is-active' : ''}" onclick="proPay('${x.id}')">
+            <div class="pro-method-tile">${x.icon}</div>
+            <div class="pro-method-name">${x.name}</div>
+          </button>`).join('')}
+      </div>
+
+      ${_proPay === 'card' ? `
+        <div class="pro-field">
+          <label>Card Number</label>
+          <input class="pro-input" id="cardNum" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000" maxlength="23">
+        </div>
+        <div class="pro-support">Demo only — this form is not connected to a payment processor.</div>
+        <div class="pro-row2">
+          <div class="pro-field">
+            <label>Expiry</label>
+            <input class="pro-input" id="cardExp" inputmode="numeric" autocomplete="off" placeholder="MM/YY" maxlength="5">
+          </div>
+          <div class="pro-field">
+            <label>CVV</label>
+            <input class="pro-input" id="cardCvv" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4">
+          </div>
+        </div>
+        <div class="pro-field" style="margin-top:14px">
+          <label>Name on Card</label>
+          <input class="pro-input" id="cardName" autocomplete="off" placeholder="John Doe">
+        </div>
+        <div class="pro-support">Supporting text</div>
+      ` : `
+        <div class="pro-field">
+          <label>Enter your ${m.field}</label>
+          <input class="pro-input" id="payNum" inputmode="numeric" autocomplete="off" placeholder="${m.ph}" maxlength="13">
+        </div>
+        <div class="pro-support">Supporting text</div>
+      `}
+
+      ${_proOtpOpen ? `
+        <h3 class="pro-label" style="margin-top:24px">Verify OTP</h3>
+        <div class="otp-inputs" id="otpInputs">
+          ${[0,1,2,3].map(i => `<input type="text" inputmode="numeric" maxlength="1" data-i="${i}">`).join('')}
+        </div>
+        <div class="otp-hint" id="otpHint">Request code again in 56s</div>` : ''}
+
+      ${termsHTML()}
+      <button class="pro-cta" id="proCta" onclick="proSubmit()" disabled>Continue</button>
+    </div>`;
+
+  const doneStep = () => `
+    <div class="pro-col">
+      <div class="acct-success-mark">${_TICK_BIG}</div>
+      <h2 class="pro-label" style="font-size:26px">You have restored your account and your Tamasha Pro Subscription!</h2>
+      <div class="pro-support" style="font-size:14px;margin-bottom:22px">Your offer is now active.</div>
+      <div class="acct-receipt">
+        <div class="acct-receipt-k">Plan</div>
+        <div class="acct-receipt-v">${p.name}</div>
+        <hr>
+        <div class="acct-receipt-k">Payment method</div>
+        <div class="acct-receipt-row">${m.name}</div>
+        <hr>
+        <div class="acct-receipt-k">Phone number</div>
+        <div class="acct-receipt-row">${ACCOUNT.phone}</div>
+      </div>
+      <button class="pro-cta" onclick="proStartWatching()">Start Watching</button>
+    </div>`;
+
+  s.innerHTML = proHeroHTML() + `<div class="pro-body">
+    ${_proStep === 'plans' ? plansStep() : _proStep === 'pay' ? payStep() : doneStep()}
+  </div>`;
+
+  if (_proStep === 'pay') { initOtp(s); initCardMasks(s); }
+  proSyncCta();
+}
+
+const _TICK_SM  = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const _TICK_BIG = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+let _proOtpOpen = false, _proTerms = false;
+
+function termsHTML() {
+  return `<div class="pro-col pro-terms">
+    <input type="checkbox" id="proTerms" ${_proTerms ? 'checked' : ''} onchange="proTermsChange(this.checked)">
+    <label for="proTerms">By continuing, you agree to the <a href="#" onclick="event.preventDefault()">Terms of Use</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy.</a></label>
+  </div>`;
+}
+function proTermsChange(v) { _proTerms = v; proSyncCta(); }
+function proSyncCta() {
+  const cta = document.getElementById('proCta');
+  if (cta) cta.disabled = !_proTerms;
+}
+function proTab(t) {
+  _proTab = t;
+  const first = PLANS.find(p => p.tab === t);
+  if (first) _proPlan = first.id;
+  renderPro();
+}
+function proPick(id) { _proPlan = id; renderPro(); }
+function proPay(id) { _proPay = id; _proOtpOpen = false; renderPro(); }
+
+// Light input masks (display only — nothing is stored or sent)
+function initCardMasks(root) {
+  const num = root.querySelector('#cardNum');
+  if (num) num.addEventListener('input', () => {
+    num.value = num.value.replace(/\D/g, '').slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
+  });
+  const exp = root.querySelector('#cardExp');
+  if (exp) exp.addEventListener('input', () => {
+    let v = exp.value.replace(/\D/g, '').slice(0, 4);
+    exp.value = v.length > 2 ? v.slice(0, 2) + '/' + v.slice(2) : v;
+  });
+  const cvv = root.querySelector('#cardCvv');
+  if (cvv) cvv.addEventListener('input', () => { cvv.value = cvv.value.replace(/\D/g, '').slice(0, 4); });
+  const pn = root.querySelector('#payNum');
+  if (pn) pn.addEventListener('input', () => { pn.value = pn.value.replace(/\D/g, '').slice(0, 11); });
+}
+
+function proSubmit() {
+  // Step 1 of pay: reveal the OTP box. Step 2: verify and finish.
+  if (!_proOtpOpen) {
+    if (_proPay === 'card') {
+      const n = (document.getElementById('cardNum') || {}).value || '';
+      if (n.replace(/\s/g, '').length < 12) { flashToast('Enter a card number'); return; }
+    } else {
+      const n = (document.getElementById('payNum') || {}).value || '';
+      if (n.length < 10) { flashToast('Enter your mobile number'); return; }
+    }
+    _proOtpOpen = true; renderPro();
+    flashToast('OTP sent to ' + ACCOUNT.phone);
+    return;
+  }
+  if (otpValue().length < 4) { flashToast('Enter the 4-digit code'); return; }
+
+  // Demo gateway: a code ending in 0 simulates a failed payment
+  if (otpValue().endsWith('0')) { showPayFailed(); return; }
+
   ACCOUNT.subscribed = true;
-  flashToast((PLANS.find(p => p.id === _acctPending) || {}).name + ' plan · paid with ' + payMethod().name);
-  acctGo('membership');
+  ACCOUNT.planId = _proPlan;
+  ACCOUNT.payMethod = _proPay === 'card' ? 'card' : _proPay;
+  _proOtpOpen = false;
+  proGo('done');
 }
-function acctCancel() {
-  ACCOUNT.subscribed = false; ACCOUNT.planId = null; _acctPending = null;
-  flashToast('Membership cancelled');
-  acctGo('membership');
+
+function showPayFailed() {
+  const mod = document.getElementById('proModal');
+  mod.innerHTML = `<div class="pro-modal-card">
+    <div class="pro-modal-icon" style="color:#ef4444">✕</div>
+    <div class="pro-modal-title">Payment Failed</div>
+    <div class="pro-modal-text">Your payment could not be processed. Please try again or return to the homepage.</div>
+    <div class="pro-modal-btns">
+      <button class="btn btn--primary btn--lg" onclick="proRetry()">Try Again</button>
+      <button class="btn btn--ghost btn--lg" onclick="proGoHome()">Go to Homepage</button>
+    </div>
+  </div>`;
+  mod.classList.add('open');
+}
+function proRetry() {
+  document.getElementById('proModal').classList.remove('open');
+  _proOtpOpen = false; renderPro();
+}
+function proGoHome() {
+  document.getElementById('proModal').classList.remove('open');
+  closePro();
+}
+function proStartWatching() {
+  closePro();
+  flashToast('Tamasha PRO is active — enjoy!');
+  if (_proGatePlay) { const f = _proGatePlay; _proGatePlay = null; setTimeout(f, 350); }
+}
+
+// ── PRO gating: locked content routes into the subscribe journey ──
+let _proGatePlay = null;
+function requiresPro(item) { return !!(item && item.pro) && !ACCOUNT.subscribed; }
+function gatePro(item, resume) {
+  _proGatePlay = resume || null;
+  openProSubscribe(titleOf(item));
 }
 
 // ─── LIVE TV ─────────────────────────────────────────────────────
@@ -3697,7 +4211,7 @@ function showCatToast(filter, label) {
 
 function selectCategory(a) {
   const filter = a.dataset.filter;
-  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true); closeAccount();   // return home from any open overlay
+  closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true); closeAccount(); closePro();   // return home from any open overlay
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
@@ -3879,6 +4393,7 @@ document.addEventListener('keydown', e => {
   if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
   else if (document.getElementById('detailScreen').classList.contains('open')) closeDetail();
   else if (document.getElementById('browseScreen').classList.contains('open')) closeBrowse();
+  else if (document.getElementById('proScreen').classList.contains('open')) closePro();
   else if (document.getElementById('accountScreen').classList.contains('open')) closeAccount();
   else closeSearch();
 });
