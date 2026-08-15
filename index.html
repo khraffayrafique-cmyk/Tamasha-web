@@ -1456,6 +1456,26 @@
     .pro-cta { width: 100%; padding: 17px; border-radius: 10px; border: none; background: linear-gradient(90deg,#1565d8,#1e88e5); color: #fff; font-family: var(--body-font); font-size: 17px; font-weight: 700; cursor: pointer; }
     .pro-cta:disabled { opacity: .45; cursor: not-allowed; }
 
+    /* Netflix-style step counter, pay rows, summary, validation */
+    .pro-step { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--text-dim); margin-bottom: 10px; }
+    .pro-sub-c { text-align: center; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); margin-bottom: 16px; }
+    .pro-encrypted { text-align: right; font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+    .pay-rows { display: flex; flex-direction: column; gap: 12px; }
+    .pay-row { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--surface); border: 2px solid var(--border-subtle); border-radius: 10px; padding: 20px 18px; cursor: pointer; color: #fff; font-family: var(--body-font); transition: border-color .15s, background .15s; }
+    .pay-row:hover { border-color: rgba(255,255,255,.3); }
+    .pay-row.is-active { border-color: var(--accent-from); background: rgba(36,114,252,.10); }
+    .pay-row-name { flex: 1; font-size: 16px; font-weight: 600; }
+    .pay-row-icon { font-size: 13px; color: var(--text-dim); font-weight: 700; }
+    .pro-brands { font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--text-dim); margin-bottom: 12px; }
+    .pro-input.is-err { border-color: #ef4444; }
+    .pro-err { color: #f87171; font-size: 12.5px; margin-top: 6px; min-height: 1px; }
+    .pro-field { margin-bottom: 14px; }
+    .pro-summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--surface-hover); border-radius: 10px; padding: 16px 18px; margin: 8px 0 16px; font-size: 16px; color: #fff; }
+    .pro-summary-sub { font-size: 13px; color: var(--text-dim); font-weight: 500; margin-top: 2px; }
+    .pro-legal { font-size: 12.5px; line-height: 1.6; color: var(--text-dim); margin-bottom: 20px; }
+    .pro-actions2 { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
+    .pro-cta--ghost { background: var(--surface-hover); border: 1px solid var(--border-subtle); }
+
     /* Payment failed / success modal */
     .pro-modal { position: fixed; inset: 0; z-index: 420; background: rgba(0,0,0,.72); display: none; place-items: center; padding: 20px; }
     .pro-modal.open { display: grid; }
@@ -3819,11 +3839,11 @@ let _acctPending = ACCOUNT.planId;
 // Demo/prototype only: nothing is submitted or stored anywhere. Before real
 // users, card entry must go through a PCI-compliant processor (e.g. Stripe
 // Elements) so raw card data never touches these fields or your servers.
-let _proStep = 'plans', _proTab = 'standard', _proPlan = 'daily', _proPay = 'jazzcash', _proGate = '';
+let _proStep = 'plans', _proTab = 'standard', _proPlan = 'daily', _proPay = 'card', _proGate = '';
 const PRO_METHODS = [
-  { id:'jazzcash',  name:'Jazzcash',  icon:'📲', field:'Jazzcash Number',  ph:'03XX XXXXXXX' },
-  { id:'easypaisa', name:'Easypaisa', icon:'💚', field:'Easypaisa Number', ph:'03XX XXXXXXX' },
-  { id:'card',      name:'Card',      icon:'💳', field:'Card Details',     ph:'' },
+  { id:'card',      name:'Card',      label:'Credit or Debit Card', icon:'VISA · MC', field:'Card Details',     ph:'Card number' },
+  { id:'jazzcash',  name:'JazzCash',  label:'JazzCash',             icon:'📲',        field:'JazzCash Number',  ph:'03XX XXXXXXX' },
+  { id:'easypaisa', name:'Easypaisa', label:'Easypaisa',            icon:'💚',        field:'Easypaisa Number', ph:'03XX XXXXXXX' },
 ];
 const proMethod = () => PRO_METHODS.find(m => m.id === _proPay) || PRO_METHODS[0];
 const proPlan   = () => PLANS.find(p => p.id === _proPlan) || PLANS[0];
@@ -3863,6 +3883,7 @@ function renderPro() {
   const p = proPlan(), m = proMethod();
 
   const plansStep = () => `
+    <div class="pro-step">STEP 1 OF 3</div>
     <div class="pro-toggle">
       <button class="${_proTab === 'standard' ? 'is-active' : ''}" onclick="proTab('standard')">Standard</button>
       <button class="${_proTab === 'season' ? 'is-active' : ''}" onclick="proTab('season')">Season Pass</button>
@@ -3878,64 +3899,69 @@ function renderPro() {
         </button>`).join('')}
     </div>
     ${termsHTML()}
-    <div class="pro-col"><button class="pro-cta" id="proCta" onclick="proGo('pay')" disabled>Continue</button></div>`;
+    <div class="pro-col"><button class="pro-cta" id="proCta" onclick="proGo('method')" disabled>Next</button></div>`;
 
-  const payStep = () => `
+  // STEP 2 — payment method as a row list (Netflix "Choose how to pay")
+  const methodStep = () => `
     <div class="pro-col">
-      <h3 class="pro-label">Your Selected Plan</h3>
-      <div class="pro-selected">
-        <span class="pro-plan-tick" style="display:grid">${_TICK}</span>
-        <div class="pro-plan-top"><span class="pro-plan-name">${p.name}</span><span class="pro-plan-price">${p.price}${p.per}</span></div>
-        <div class="pro-plan-desc" style="margin:0">${p.desc}</div>
-      </div>
-
-      <h3 class="pro-label">Select your Payment Method</h3>
-      <div class="pro-methods">
+      <div class="pro-step">STEP 2 OF 3</div>
+      <h2 class="pro-h" style="margin-bottom:8px">Choose how to pay</h2>
+      <div class="pro-sub-c">Your payment is encrypted and you can change how you pay anytime.<br><strong>Secure for peace of mind. Cancel easily online.</strong></div>
+      <div class="pro-encrypted">End-to-end encrypted 🔒</div>
+      <div class="pay-rows">
         ${PRO_METHODS.map(x => `
-          <button class="pro-method${x.id === _proPay ? ' is-active' : ''}" onclick="proPay('${x.id}')">
-            <div class="pro-method-tile">${x.icon}</div>
-            <div class="pro-method-name">${x.name}</div>
+          <button class="pay-row${x.id === _proPay ? ' is-active' : ''}" onclick="proPay('${x.id}')">
+            <span class="pay-row-name">${x.label}</span>
+            <span class="pay-row-icon">${x.icon}</span>
+            ${_CHEV_R}
           </button>`).join('')}
       </div>
+      <div class="pro-actions2">
+        <button class="pro-cta pro-cta--ghost" onclick="proGo('plans')">Back</button>
+        <button class="pro-cta" onclick="proGo('details')">Next</button>
+      </div>
+    </div>`;
+
+  // STEP 3 — details for the chosen method (card form, or mobile + OTP)
+  const detailsStep = () => `
+    <div class="pro-col">
+      <div class="pro-step">STEP 3 OF 3</div>
+      <h2 class="pro-h" style="text-align:left;margin-bottom:18px">${_proPay === 'card' ? 'Set up your credit or debit card' : `Set up ${m.name}`}</h2>
 
       ${_proPay === 'card' ? `
-        <div class="pro-field">
-          <label>Card Number</label>
-          <input class="pro-input" id="cardNum" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000" maxlength="23">
-        </div>
-        <div class="pro-support">Demo only — this form is not connected to a payment processor.</div>
+        <div class="pro-brands">VISA · Mastercard · UnionPay</div>
+        <div class="pro-field"><input class="pro-input" id="cardNum" inputmode="numeric" autocomplete="off" placeholder="Card number" maxlength="23"><div class="pro-err" id="err-cardNum"></div></div>
         <div class="pro-row2">
-          <div class="pro-field">
-            <label>Expiry</label>
-            <input class="pro-input" id="cardExp" inputmode="numeric" autocomplete="off" placeholder="MM/YY" maxlength="5">
-          </div>
-          <div class="pro-field">
-            <label>CVV</label>
-            <input class="pro-input" id="cardCvv" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4">
-          </div>
+          <div class="pro-field"><input class="pro-input" id="cardExp" inputmode="numeric" autocomplete="off" placeholder="Expiration date" maxlength="5"><div class="pro-err" id="err-cardExp"></div></div>
+          <div class="pro-field"><input class="pro-input" id="cardCvv" inputmode="numeric" autocomplete="off" placeholder="CVV" maxlength="4"><div class="pro-err" id="err-cardCvv"></div></div>
         </div>
-        <div class="pro-field" style="margin-top:14px">
-          <label>Name on Card</label>
-          <input class="pro-input" id="cardName" autocomplete="off" placeholder="John Doe">
-        </div>
-        <div class="pro-support">Supporting text</div>
+        <div class="pro-field"><input class="pro-input" id="cardName" autocomplete="off" placeholder="Name on card"><div class="pro-err" id="err-cardName"></div></div>
+        <div class="pro-field"><input class="pro-input" id="cardZip" inputmode="numeric" autocomplete="off" placeholder="Postal code" maxlength="6"><div class="pro-err" id="err-cardZip"></div></div>
+        <div class="pro-support">Demo only — this form is not connected to a payment processor.</div>
       ` : `
-        <div class="pro-field">
-          <label>Enter your ${m.field}</label>
-          <input class="pro-input" id="payNum" inputmode="numeric" autocomplete="off" placeholder="${m.ph}" maxlength="13">
-        </div>
-        <div class="pro-support">Supporting text</div>
+        <div class="pro-field"><input class="pro-input" id="payNum" inputmode="numeric" autocomplete="off" placeholder="${m.ph}" maxlength="11"><div class="pro-err" id="err-payNum"></div></div>
+        <div class="pro-support">Enter the mobile number registered with ${m.name}.</div>
+        ${_proOtpOpen ? `
+          <h3 class="pro-label" style="margin-top:20px">Verify OTP</h3>
+          <div class="otp-inputs" id="otpInputs">${[0,1,2,3].map(i => `<input type="text" inputmode="numeric" maxlength="1" data-i="${i}">`).join('')}</div>
+          <div class="otp-hint" id="otpHint">Request code again in 56s</div>` : ''}
       `}
 
-      ${_proOtpOpen ? `
-        <h3 class="pro-label" style="margin-top:24px">Verify OTP</h3>
-        <div class="otp-inputs" id="otpInputs">
-          ${[0,1,2,3].map(i => `<input type="text" inputmode="numeric" maxlength="1" data-i="${i}">`).join('')}
-        </div>
-        <div class="otp-hint" id="otpHint">Request code again in 56s</div>` : ''}
+      <div class="pro-summary">
+        <div><strong>${p.price}${p.per}</strong><div class="pro-summary-sub">${p.name}</div></div>
+        <a class="cx-link" href="#" onclick="event.preventDefault();proGo('plans')">Change</a>
+      </div>
 
-      ${termsHTML()}
-      <button class="pro-cta" id="proCta" onclick="proSubmit()" disabled>Continue</button>
+      <div class="pro-legal">
+        By clicking the "${_proPay === 'card' ? 'Start Membership' : 'Continue'}" button below, you agree to our <a class="cx-link" href="#" onclick="event.preventDefault()">Terms of Use</a>,
+        <a class="cx-link" href="#" onclick="event.preventDefault()">Privacy Statement</a>, that you are over 18, and that Tamasha will automatically continue your
+        membership and charge the fee (currently ${p.price}${p.per}) to your payment method until you cancel. You may cancel at any time to avoid future charges.
+      </div>
+
+      <div class="pro-actions2">
+        <button class="pro-cta pro-cta--ghost" onclick="proGo('method')">Back</button>
+        <button class="pro-cta" onclick="proSubmit()">${_proPay === 'card' ? 'Start Membership' : (_proOtpOpen ? 'Verify &amp; Subscribe' : 'Continue')}</button>
+      </div>
     </div>`;
 
   const doneStep = () => `
@@ -3957,10 +3983,11 @@ function renderPro() {
     </div>`;
 
   s.innerHTML = proHeroHTML() + `<div class="pro-body">
-    ${_proStep === 'plans' ? plansStep() : _proStep === 'pay' ? payStep() : doneStep()}
+    ${_proStep === 'plans' ? plansStep() : _proStep === 'method' ? methodStep()
+      : _proStep === 'details' ? detailsStep() : doneStep()}
   </div>`;
 
-  if (_proStep === 'pay') { initOtp(s); initCardMasks(s); }
+  if (_proStep === 'details') { initOtp(s); initCardMasks(s); }
   proSyncCta();
 }
 
@@ -3987,6 +4014,12 @@ function proTab(t) {
 }
 function proPick(id) { _proPlan = id; renderPro(); }
 function proPay(id) { _proPay = id; _proOtpOpen = false; renderPro(); }
+function proErr(id, msg) {
+  const el = document.getElementById('err-' + id), inp = document.getElementById(id);
+  if (el) el.textContent = msg || '';
+  if (inp) inp.classList.toggle('is-err', !!msg);
+  return !msg;
+}
 
 // Light input masks (display only — nothing is stored or sent)
 function initCardMasks(root) {
@@ -4006,20 +4039,26 @@ function initCardMasks(root) {
 }
 
 function proSubmit() {
-  // Step 1 of pay: reveal the OTP box. Step 2: verify and finish.
-  if (!_proOtpOpen) {
-    if (_proPay === 'card') {
-      const n = (document.getElementById('cardNum') || {}).value || '';
-      if (n.replace(/\s/g, '').length < 12) { flashToast('Enter a card number'); return; }
-    } else {
-      const n = (document.getElementById('payNum') || {}).value || '';
-      if (n.length < 10) { flashToast('Enter your mobile number'); return; }
+  const val = id => ((document.getElementById(id) || {}).value || '').trim();
+
+  if (_proPay === 'card') {
+    let ok = true;
+    ok = proErr('cardNum',  val('cardNum').replace(/\s/g, '').length >= 12 ? '' : 'Please enter a valid card number.') && ok;
+    ok = proErr('cardExp',  /^\d{2}\/\d{2}$/.test(val('cardExp'))        ? '' : 'Please enter an expiration date.') && ok;
+    ok = proErr('cardCvv',  val('cardCvv').length >= 3                     ? '' : 'Please enter a CVV.') && ok;
+    ok = proErr('cardName', val('cardName').length >= 2                    ? '' : 'Name is required.') && ok;
+    ok = proErr('cardZip',  val('cardZip').length >= 4                     ? '' : 'Please enter a postal code.') && ok;
+    if (!ok) return;
+  } else {
+    if (!_proOtpOpen) {
+      if (!proErr('payNum', val('payNum').length >= 10 ? '' : 'Please enter a valid mobile number.')) return;
+      _proOtpOpen = true; renderPro();
+      flashToast('OTP sent to ' + ACCOUNT.phone);
+      return;
     }
-    _proOtpOpen = true; renderPro();
-    flashToast('OTP sent to ' + ACCOUNT.phone);
-    return;
+    if (otpValue().length < 4) { flashToast('Enter the 4-digit code'); return; }
+    if (otpValue().endsWith('0')) { showPayFailed(); return; }
   }
-  if (otpValue().length < 4) { flashToast('Enter the 4-digit code'); return; }
 
   // Demo gateway: a code ending in 0 simulates a failed payment
   if (otpValue().endsWith('0')) { showPayFailed(); return; }
