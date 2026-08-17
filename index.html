@@ -749,9 +749,9 @@
     .pro-banner {
       margin: 0 60px;
       position: relative; overflow: hidden;
-      background: linear-gradient(135deg, var(--accent-from) 0%, #4700AB 50%, #2A00A2 100%);
+      background: linear-gradient(135deg, #2472FC 0%, #1B4FB8 55%, #0E2C6B 100%);
       border-radius: 20px; padding: 28px 36px;
-      border: 1px solid rgba(169,150,255,0.25);
+      border: 1px solid rgba(158,197,255,0.28);
     }
     .pro-banner-inner {
       display: grid; grid-template-columns: auto 1fr auto;
@@ -759,12 +759,12 @@
     }
     .pro-banner-glyph {
       width: 60px; height: 60px; border-radius: 14px;
-      background: linear-gradient(135deg, #FFD66B, #FF9A3C);
-      display: grid; place-items: center; color: #3D1A00;
-      box-shadow: 0 10px 28px rgba(255,154,60,0.4); flex-shrink: 0;
+      background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28);
+      display: grid; place-items: center; color: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.25); flex-shrink: 0;
     }
     .pro-banner-eyebrow {
-      font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #FFD66B;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #9EC5FF;
       margin-bottom: 5px; display: flex; align-items: center; gap: 5px;
     }
     .pro-banner-title {
@@ -782,8 +782,8 @@
     .pro-banner-price-per { font-size: 13px; color: rgba(255,255,255,0.7); }
     .pro-banner-terms { font-size: 11px; color: rgba(255,255,255,0.55); }
     .pro-banner-blob { position: absolute; border-radius: 50%; filter: blur(40px); z-index: 1; pointer-events: none; }
-    .pro-banner-blob-1 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(169,150,255,0.5), transparent 70%); top: -70px; right: -30px; }
-    .pro-banner-blob-2 { width: 160px; height: 160px; background: radial-gradient(circle, rgba(255,154,60,0.32), transparent 70%); bottom: -50px; left: 60px; }
+    .pro-banner-blob-1 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(120,170,255,0.45), transparent 70%); top: -70px; right: -30px; }
+    .pro-banner-blob-2 { width: 160px; height: 160px; background: radial-gradient(circle, rgba(36,114,252,0.35), transparent 70%); bottom: -50px; left: 60px; }
 
     /* ─── FOOTER ───────────────────────────────────────────────── */
     .site-footer {
@@ -1311,6 +1311,9 @@
     .acct-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
     .acct-status.ok { background: rgba(34,197,94,.16); color: #4ade80; }
     .acct-status.fail { background: rgba(239,68,68,.16); color: #f87171; }
+    .acct-bill-type { font-size: 12.5px; color: var(--text-dim); margin-top: 3px; }
+    .acct-bill-amt s { color: var(--text-dim); font-weight: 500; margin-right: 4px; }
+    .acct-coupon { display: inline-flex; align-items: center; gap: 6px; background: rgba(36,114,252,.18); color: #9EC5FF; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 6px; }
 
     /* Subscription / cancel / delete journey */
     .acct-steps { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; font-size: 13px; color: var(--text-dim); flex-wrap: wrap; }
@@ -1374,6 +1377,9 @@
       .acct-plan-price { padding: 12px 18px 18px; font-size: 18px; }
     }
 
+    /* Subscribed users see no PRO badges or locks on tiles */
+    body.is-pro .card-badge, body.is-pro .pro-lock-overlay, body.is-pro .hero-pro-pill { display: none !important; }
+
     /* ─── CANCEL / DELETE FLOWS ──────────────────────────────────── */
     .cx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; margin-top: 24px; }
     .cx-btn { width: 100%; padding: 14px 18px; border-radius: 8px; border: none; background: #fff; color: #111; font-family: var(--body-font); font-size: 15px; font-weight: 700; cursor: pointer; }
@@ -1390,7 +1396,7 @@
     .cx-check { display: flex; align-items: center; gap: 11px; font-size: 14px; color: rgba(255,255,255,.85); line-height: 1.5; margin-top: 12px; cursor: pointer; }
     .cx-check input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--accent-from); flex-shrink: 0; }
     .cx-survey-h { font-family: var(--heading-font); font-size: 16px; font-weight: 800; color: #fff; margin: 14px 0 4px; }
-    .cx-watch-h { font-family: var(--heading-font); font-size: 17px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 16px; }
+    .cx-watch-sub { font-size: 13.5px; color: var(--text-dim); text-align: center; margin: 12px 0 16px; }
     .cx-watch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
     .cx-watch img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; }
     .cx-list { margin: 4px 0 6px; padding-left: 20px; color: rgba(255,255,255,.8); font-size: 14.5px; line-height: 1.9; }
@@ -1505,14 +1511,11 @@
     .ltv-top { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); }
     .ltv-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
     .ltv-close:hover { background: rgba(255,255,255,.18); }
-    .ltv-back { display: inline-flex; align-items: center; gap: 7px; background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer; font-family: var(--body-font); font-size: 14px; font-weight: 600; backdrop-filter: blur(10px); flex-shrink: 0; transition: background .15s, border-color .15s; }
-    .ltv-back:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.36); }
-    .ltv-back svg { width: 15px; height: 15px; }
     .ltv-now { display: flex; align-items: center; gap: 11px; font-family: var(--heading-font); font-size: 18px; font-weight: 800; color: #fff; }
     .ltv-now-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 7px; background: rgba(255,255,255,.08); padding: 3px; flex-shrink: 0; }
     .ltv-live-tag { display: inline-flex; align-items: center; gap: 6px; background: #ED2B1F; color: #fff; font-family: var(--body-font); font-size: 11px; font-weight: 800; letter-spacing: .05em; padding: 4px 10px 4px 8px; border-radius: 5px; }
     .ltv-live-tag .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: livePulse 1.6s infinite; }
-    .ltv-menu-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 9px 16px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); }
+    .ltv-menu-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 9px 16px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); }
     .ltv-menu-btn:hover { background: rgba(255,255,255,.24); }
 
     /* Slide-in channel guide */
@@ -1836,7 +1839,7 @@
     <div class="avatar" onclick="openAccount('overview')" title="Account">JD</div>
     <div style="display:flex;flex-direction:column;gap:3px;cursor:pointer" onclick="openAccount('overview')">
       <span class="user-name">John Doe</span>
-      <div class="pro-badge">
+      <div class="pro-badge" id="navProBadge" style="display:none">
         <svg style="width:14px;height:10px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         PRO
       </div>
@@ -1953,11 +1956,11 @@
     <div class="pro-banner-blob pro-banner-blob-2"></div>
     <div class="pro-banner-inner">
       <div class="pro-banner-glyph">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#3D1A00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6"/></svg>
       </div>
       <div>
         <div class="pro-banner-eyebrow">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD66B"><polygon points="12 2 15.1 8.5 22 9.3 17 14.1 18.4 21 12 17.5 5.6 21 7 14.1 2 9.3 8.9 8.5"/></svg>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9EC5FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6"/></svg>
           UPGRADE TO PRO
         </div>
         <h3 class="pro-banner-title">Unlock the Full Tamasha Experience</h3>
@@ -1969,7 +1972,7 @@
           <span class="pro-banner-price-now">Rs 299</span>
           <span class="pro-banner-price-per">/mo</span>
         </div>
-        <button class="btn btn--primary btn--sm" style="background:linear-gradient(135deg,#FFD66B,#FF9A3C);color:#3D1A00;border:none;font-weight:800;box-shadow:0 6px 20px rgba(255,154,60,0.4)">Get Pro Now</button>
+        <button class="btn btn--primary btn--sm" style="background:#fff;color:#0E2C6B;border:none;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,0.28)">Get Tamasha Pro</button>
         <span class="pro-banner-terms">50% off · First 3 months</span>
       </div>
     </div>
@@ -3351,8 +3354,14 @@ const PLANS = [
   { id:'season',  name:'Season Pass', price:'PKR 899', per:'/season',tab:'season',   desc:'Full season access to premium sports and originals' },
 ];
 const BILLING = [
-  { plan:'Monthly Offer', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:20 PM', renewal:'Mar 19, 2026', status:'ok' },
-  { plan:'Monthly Offer', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:11 PM', renewal:'Mar 19, 2026', status:'fail' },
+  { plan:'Tamasha Pro Monthly', type:'Subscription', amount:'PKR 360.00/monthly', date:'Feb 17, 2026 - 12:20 PM',
+    renewal:'Mar 19, 2026', method:'JazzCash', status:'ok' },
+  { plan:'Tamasha Pro Monthly', type:'Subscription · Promo applied', amount:'PKR 260.00/monthly', was:'PKR 360.00',
+    coupon:'SH38H3 (25% off)', date:'Jan 17, 2026 - 11:02 AM', renewal:'Feb 17, 2026', method:'Coupon + JazzCash', status:'ok' },
+  { plan:'Tamasha Pro Weekly', type:'Subscription', amount:'PKR 120.00/weekly', date:'Jan 10, 2026 - 9:41 PM',
+    renewal:'Jan 17, 2026', method:'Easypaisa', status:'fail' },
+  { plan:'Season Pass · PSL 2026', type:'One-off purchase', amount:'PKR 1,200.00', date:'Dec 28, 2025 - 4:15 PM',
+    renewal:'—', method:'Card •••• 0687', status:'ok' },
 ];
 let _acctSection = 'overview';
 
@@ -3386,7 +3395,7 @@ function acctGo(section) {
 
 const ACCT_NAV = [
   { id:'overview',   icon:'home',        label:'Overview' },
-  { id:'membership', icon:'credit_card', label:'Membership' },
+  { id:'membership', icon:'credit_card', label:'Membership', proOnly:true },
   { id:'security',   icon:'verified_user', label:'Security' },
   { id:'devices',    icon:'devices',     label:'Devices' },
   { id:'profile',    icon:'person',      label:'Profile' },
@@ -3425,16 +3434,14 @@ function renderAccount() {
                <div class="acct-pay">${payBadge(payMethod())}${payMethod().sub}</div>`
             : `<div class="acct-meta">You have not subscribed to any package.</div>`}
         </div>
-        ${acctRow('', 'Manage membership', '', "acctGo('membership')")}
+        ${ACCOUNT.subscribed ? acctRow('', 'Manage membership', '', "acctGo('membership')") : ''}
       </div>
       <div class="acct-label">Quick Links</div>
       <div class="acct-card">
         ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "acctGo('plans')")}
-        ${acctRow('credit_card', 'Manage payment method', payMethod().name, "acctGo('payment')")}
+        ${ACCOUNT.subscribed ? acctRow('credit_card', 'Manage payment method', payMethod().name, "acctGo('payment')") : ''}
         ${acctRow('devices', 'Manage access and devices', '', "acctGo('devices')")}
-        ${acctRow('lock', 'Update password', '', "acctStub('Update password')")}
-        ${acctRow('receipt_long', 'View payment history', '', "acctGo('billing')")}
-        ${acctRow('shield', 'Adjust parental controls', '', "acctStub('Parental controls')")}
+        ${ACCOUNT.subscribed ? acctRow('receipt_long', 'View payment history', '', "acctGo('billing')") : ''}
       </div>`,
 
     membership: () => `
@@ -3498,12 +3505,12 @@ function renderAccount() {
         <div>
           <div class="acct-card" style="padding:20px 22px">
             <div class="acct-pill">Member since ${ACCOUNT.memberSince}</div>
-            <button class="cx-btn" onclick="acctDoCancel()">Finish Cancellation</button>
+            <button class="cx-btn cx-btn--alt" onclick="acctDoCancel()">Finish Cancellation</button>
             <div class="cx-note">Cancelling your membership means losing access to personalised recommendations.</div>
             <label class="cx-check"><input type="checkbox"> Yes, please email me about newly added TV shows &amp; movies and Tamasha special offers.</label>
           </div>
           <div class="acct-card" style="padding:20px 22px;margin-top:16px">
-            <button class="cx-btn" onclick="acctPause()">Pause for 1 Month</button>
+            <button class="cx-btn cx-btn--alt" onclick="acctPause()">Pause for 1 Month</button>
             <div class="cx-note">Instead of cancelling, take a break for 1 month. You can still browse and unpause anytime.</div>
           </div>
           ${(() => { const cheaper = PLANS.filter(p => p.tab === 'standard' && p.id !== ACCOUNT.planId)[0];
@@ -3520,7 +3527,8 @@ function renderAccount() {
           </div>
         </div>
         <div class="acct-card" style="padding:22px">
-          <div class="cx-watch-h">What to watch before you leave</div>
+          <button class="cx-btn" onclick="closeAccount()">What to watch before you leave</button>
+          <div class="cx-watch-sub">Plenty still to explore before your membership ends.</div>
           <div class="cx-watch">
             ${[...topMoviesData, ...tvShowsData].slice(0, 9).map(m =>
               `<img src="${bp(m.folder, m.thumb)}" alt="" loading="lazy">`).join('')}
@@ -3601,11 +3609,13 @@ function renderAccount() {
       ${BILLING.map(b => `
         <div class="acct-bill">
           <div class="acct-bill-head">
-            <div class="acct-bill-title">${b.plan}</div>
-            <div class="acct-bill-amt">${b.amount}</div>
+            <div><div class="acct-bill-title">${b.plan}</div><div class="acct-bill-type">${b.type}</div></div>
+            <div class="acct-bill-amt">${b.was ? `<s>${b.was}</s> ` : ''}${b.amount}</div>
           </div>
           <div class="acct-meta" style="margin:0 0 10px">${b.date}</div>
           <div class="acct-bill-line"><span>Mobile #</span><span>${ACCOUNT.phone}</span></div>
+          <div class="acct-bill-line"><span>Payment method</span><span>${b.method}</span></div>
+          ${b.coupon ? `<div class="acct-bill-line"><span>Coupon applied</span><span class="acct-coupon">${b.coupon}</span></div>` : ''}
           <div class="acct-bill-line"><span>Renewal Date</span><span>${b.renewal}</span></div>
           <div class="acct-bill-line"><span>Status</span>
             <span class="acct-status ${b.status}">${b.status === 'ok' ? 'Successful' : 'Failed'}</span></div>
@@ -3616,7 +3626,6 @@ function renderAccount() {
       <h1 class="acct-title">Security</h1>
       <div class="acct-label">Account Details</div>
       <div class="acct-card">
-        ${acctRow('lock', 'Password', '', "acctStub('Update password')")}
         ${acctRow('mail', 'Email', ACCOUNT.email, "acctStub('Change email')")}
         ${acctRow('smartphone', 'Mobile phone', ACCOUNT.phone, "acctStub('Change phone number')")}
       </div>
@@ -3655,13 +3664,27 @@ function renderAccount() {
       <div class="acct-actions" style="margin-bottom:8px">
         <button class="btn btn--primary" onclick="acctStub('Edit profile and photo')">Edit Profile and Photo</button>
       </div>
-      <div class="acct-label">Preferences</div>
+      <div class="acct-label">Playback &amp; Language</div>
       <div class="acct-card">
         ${acctRow('translate', 'Languages', 'English, اردو', "acctStub('Language preferences')")}
-        ${acctRow('error_outline', 'Viewing restrictions', 'Edit maturity rating and title restrictions', "acctStub('Viewing restrictions')")}
-        ${acctRow('subtitles', 'Subtitle appearance', 'Customize the way subtitles appear', "acctStub('Subtitle appearance')")}
+        ${acctRow('subtitles', 'Subtitle appearance', 'Customise the way subtitles appear', "acctStub('Subtitle appearance')")}
         ${acctRow('play_circle_outline', 'Playback settings', 'Set autoplay and audio, video quality', "acctStub('Playback settings')")}
+      </div>
+      <div class="acct-label">Notifications</div>
+      <div class="acct-card">
         ${acctRow('notifications_none', 'Notification settings', 'Manage notifications for email, text, push', "acctStub('Notification settings')")}
+        ${acctRow('local_offer', 'Offers and promotions', 'Hear about Tamasha deals and new releases', "acctStub('Offers and promotions')")}
+      </div>
+      <div class="acct-label">Viewing</div>
+      <div class="acct-card">
+        ${acctRow('history', 'Watch history', 'See everything you have watched', "acctStub('Watch history')")}
+        ${acctRow('download', 'Downloads', 'Manage your offline downloads', "acctStub('Downloads')")}
+        ${acctRow('playlist_add_check', 'My List', 'Titles you saved for later', "acctStub('My List')")}
+      </div>
+      <div class="acct-label">Account</div>
+      <div class="acct-card">
+        ${ACCOUNT.subscribed ? acctRow('credit_card', 'Subscription and payments', payMethod().name, "acctGo('membership')") : acctRow('workspace_premium', 'Get Tamasha Pro', 'Subscribe for ad-free Ultra HD', "acctGo('plans')")}
+        ${acctRow('description', 'Terms and Conditions', '', "acctStub('Terms and Conditions')")}
       </div>
       <div class="acct-card" style="margin-top:22px">
         <button class="acct-row acct-danger" onclick="acctStub('Logout')">Logout</button>
@@ -3679,7 +3702,7 @@ function renderAccount() {
       <aside class="acct-side">
         <button class="acct-back" onclick="closeAccount()">${_CHEVL}<span>Back to Tamasha</span></button>
         <nav class="acct-nav">
-          ${ACCT_NAV.map(n => `<button class="acct-nav-item${n.id === navActive ? ' is-active' : ''}" onclick="acctGo('${n.id}')">
+          ${ACCT_NAV.filter(n => !n.proOnly || ACCOUNT.subscribed).map(n => `<button class="acct-nav-item${n.id === navActive ? ' is-active' : ''}" onclick="acctGo('${n.id}')">
             <span class="material-icons">${n.icon}</span><span>${n.label}</span></button>`).join('')}
         </nav>
       </aside>
@@ -3691,6 +3714,14 @@ function renderAccount() {
 
 // Placeholder for flows that need a real backend (payments, auth, etc.)
 function acctStub(what) { flashToast(what + ' — coming soon'); }
+
+// Reflect PRO state across the app: navbar badge + tile badges/locks
+function syncProState() {
+  const on = !!ACCOUNT.subscribed;
+  document.body.classList.toggle('is-pro', on);
+  const b = document.getElementById('navProBadge');
+  if (b) b.style.display = on ? 'flex' : 'none';
+}
 
 // ── Perks + locked-poster strip used by the cancel / delete screens ──
 const PERKS = [
@@ -3810,6 +3841,7 @@ function acctVerifyOtp() {
 }
 function acctFinishDelete() {
   ACCOUNT.subscribed = false; ACCOUNT.planId = null; ACCOUNT.pendingCancel = false;
+  syncProState();
   closeAccount();
   flashToast('Account scheduled for deletion');
 }
@@ -4067,6 +4099,7 @@ function proSubmit() {
   ACCOUNT.planId = _proPlan;
   ACCOUNT.payMethod = _proPay === 'card' ? 'card' : _proPay;
   _proOtpOpen = false;
+  syncProState();
   proGo('done');
 }
 
@@ -4118,9 +4151,8 @@ function openLiveTV(startIdx) {
   screen.innerHTML = `
     <div class="ltv-stage" id="ltvStage"></div>
     <div class="ltv-top">
-      <button class="ltv-back" onclick="closeLiveTV()">${_CHEVL}<span>Back</span></button>
-      <div class="ltv-now" id="ltvNow"></div>
       <button class="ltv-menu-btn" onclick="toggleLiveGuide()">${_EPISODES_ICON}<span>Channels</span></button>
+      <div class="ltv-now" id="ltvNow"></div>
     </div>
     <div class="ltv-guide" id="ltvGuide">
       <div class="ltv-guide-head">
@@ -4171,7 +4203,7 @@ function closeLiveTV(skipHome) {
     document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
     const homeLink = document.querySelector('.nav-links a[data-filter="home"]');
     if (homeLink) homeLink.classList.add('active');
-    renderContinue('home');
+    renderContinue('home'); syncProState();
     const show = filterMap.home || [];
     document.getElementById('heroSection').style.display = '';
     document.querySelectorAll('.section[data-category]').forEach(s =>
