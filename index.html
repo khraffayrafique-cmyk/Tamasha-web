@@ -1416,24 +1416,24 @@
     .pro-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 170; background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
     .pro-screen.open { display: block; }
     .pro-screen.visible { opacity: 1; }
-    .pro-hero { position: relative; height: 340px; overflow: hidden; }
-    .pro-hero-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: 150px; gap: 8px; opacity: .5; }
+    .pro-hero { position: relative; height: 168px; overflow: hidden; }
+    .pro-hero-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); grid-auto-rows: 96px; gap: 6px; opacity: .45; }
     .pro-hero-grid img { width: 100%; height: 100%; object-fit: cover; }
     .pro-hero-veil { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(10,10,14,.55) 0%, rgba(10,10,14,.9) 60%, var(--bg) 100%); }
     .pro-hero-logo { position: absolute; inset: 0; display: grid; place-items: center; }
-    .pro-hero-logo img { height: 54px; }
-    .pro-hero-logo span { font-family: var(--heading-font); font-size: 38px; font-weight: 800; color: #fff; }
-    .pro-body { max-width: 1180px; margin: 0 auto; padding: 34px 40px 80px; }
-    .pro-back { display: inline-flex; align-items: center; gap: 8px; background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer; font-family: var(--body-font); font-size: 14px; font-weight: 600; position: absolute; top: 18px; left: 24px; z-index: 3; backdrop-filter: blur(10px); }
+    .pro-hero-logo img { height: 34px; }
+    .pro-hero-logo span { font-family: var(--heading-font); font-size: 27px; font-weight: 800; color: #fff; }
+    .pro-body { max-width: 1180px; margin: 0 auto; padding: 22px 40px 56px; }
+    .pro-back { display: inline-flex; align-items: center; gap: 8px; background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 8px 16px 8px 12px; border-radius: 999px; cursor: pointer; font-family: var(--body-font); font-size: 13.5px; font-weight: 600; position: absolute; top: 14px; left: 20px; z-index: 3; backdrop-filter: blur(10px); }
     .pro-back:hover { background: rgba(255,255,255,.16); }
 
-    .pro-toggle { display: flex; gap: 4px; background: var(--surface); border-radius: 999px; padding: 5px; width: fit-content; margin: 0 auto 26px; }
+    .pro-toggle { display: flex; gap: 4px; background: var(--surface); border-radius: 999px; padding: 5px; width: fit-content; margin: 0 auto 16px; }
     .pro-toggle button { background: none; border: none; color: var(--text-dim); font-family: var(--body-font); font-size: 15px; font-weight: 600; padding: 9px 26px; border-radius: 999px; cursor: pointer; transition: background .15s, color .15s; }
     .pro-toggle button.is-active { background: var(--accent-from); color: #fff; font-weight: 700; }
-    .pro-h { font-family: var(--heading-font); font-size: 26px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 22px; }
+    .pro-h { font-family: var(--heading-font); font-size: 24px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 18px; }
 
     .pro-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 26px; }
-    .pro-plan { position: relative; text-align: left; background: rgba(255,255,255,.04); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 26px 24px; cursor: pointer; transition: border-color .15s, background .15s; font-family: var(--body-font); color: var(--text); }
+    .pro-plan { position: relative; text-align: left; background: rgba(255,255,255,.04); border: 2px solid var(--border-subtle); border-radius: 14px; padding: 20px 22px; cursor: pointer; transition: border-color .15s, background .15s; font-family: var(--body-font); color: var(--text); }
     .pro-plan:hover { border-color: rgba(255,255,255,.28); }
     .pro-plan.is-active { border-color: var(--accent-from); background: rgba(36,114,252,.10); }
     .pro-plan-top { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
@@ -1498,9 +1498,9 @@
 
     @media (max-width: 600px) {
       .pro-screen { top: 96px; }
-      .pro-hero { height: 210px; }
-      .pro-hero-logo span { font-size: 26px; }
-      .pro-body { padding: 24px 16px 60px; }
+      .pro-hero { height: 118px; }
+      .pro-hero-logo span { font-size: 20px; }
+      .pro-body { padding: 18px 16px 48px; }
       .pro-plans { grid-template-columns: 1fr; }
       .pro-modal-card { padding: 30px 24px; }
     }
@@ -3079,21 +3079,14 @@ function closePlayer() {
     modal.classList.remove('open');
     modal.innerHTML = '';
   }, 260);
-  const back = _playerReturn; _playerReturn = null;
-  if (back === 'browse' && _lastBrowse) {
-    setTimeout(() => openBrowse(_lastBrowse.title, _lastBrowse.data, _lastBrowse.fn, _lastBrowse.kind), 60);
-    return;
-  }
-  if (back === 'search') { setTimeout(openSearch, 60); return; }
-  if (!document.getElementById('detailScreen').classList.contains('open') && _heroInView) {
+  if (!document.getElementById('detailScreen').classList.contains('open') && _heroInView && !_navRestoring) {
     try { goToSlide(heroIdx); } catch (e) {}
   }
 }
 
 // Open the show / movie detail screen
 function openDetail(item, kind) {
-  const isOpen = id => document.getElementById(id).classList.contains('open');
-  _detailReturn = isOpen('browseScreen') ? 'browse' : isOpen('searchScreen') ? 'search' : null;
+  navPush();
   closeSearch(); closeBrowse();
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
@@ -3123,7 +3116,7 @@ function openDetail(item, kind) {
   screen.innerHTML = `
     <div class="dsc-anim">
     <div class="dsc-hero">
-      <button class="dsc-back" onclick="closeDetail()">${_CHEVL}<span>Back</span></button>
+      <button class="dsc-back" onclick="closeDetail();navBack()">${_CHEVL}<span>Back</span></button>
       <div class="dsc-hero-bg">${poster ? `<img src="${poster}" alt="">` : ''}</div>
       <div class="dsc-hero-veil"></div>
       <div class="dsc-hero-inner${poster ? '' : ' no-poster'}">
@@ -3168,7 +3161,7 @@ function openDetail(item, kind) {
     </div>
     </div>`;
 
-  screen._item = item;
+  screen._item = item; screen._kind = kind;
 
   const watchBtn = screen.querySelector('.dsc-watch');
   watchBtn.addEventListener('click', () => {
@@ -3290,14 +3283,8 @@ function closeDetail() {
     screen.innerHTML = '';
     screen._item = null;
   }, 340);
-  const back = _detailReturn; _detailReturn = null;
-  if (back === 'browse' && _lastBrowse) {
-    setTimeout(() => openBrowse(_lastBrowse.title, _lastBrowse.data, _lastBrowse.fn, _lastBrowse.kind), 60);
-    return;
-  }
-  if (back === 'search') { setTimeout(openSearch, 60); return; }
   if (window.scrollY < 40) document.querySelector('.navbar').classList.remove('scrolled');
-  if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+  if (_heroInView && !_navRestoring) { try { goToSlide(heroIdx); } catch (e) {} }
 }
 
 // Make a card open the right destination: show/movie → detail, else → player
@@ -3392,6 +3379,7 @@ const _CHEV_R = `<svg class="acct-row-chev" width="16" height="16" viewBox="0 0 
 const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function openAccount(section) {
+  navPush();
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true);
   _acctSection = section || 'overview';
   _acctHistory = [];
@@ -3421,8 +3409,8 @@ function acctGo(section, noPush) {
 // Back = wherever the user actually came from; leaves the screen when there's no history
 function acctBack() {
   const prev = _acctHistory.pop();
-  if (prev) acctGo(prev, true);
-  else closeAccount();
+  if (prev) { acctGo(prev, true); return; }
+  closeAccount(); navBack();
 }
 
 const ACCT_NAV = [
@@ -3749,7 +3737,7 @@ function renderAccount() {
   screen.innerHTML = `
     <div class="acct-wrap">
       <aside class="acct-side">
-        <button class="acct-back" onclick="closeAccount()">${_CHEVL}<span>Back to Tamasha</span></button>
+        <button class="acct-back" onclick="acctBack()">${_CHEVL}<span>Back</span></button>
         <nav class="acct-nav">
           ${ACCT_NAV.filter(n => !n.proOnly || ACCOUNT.subscribed).map(n => `<button class="acct-nav-item${n.id === navActive ? ' is-active' : ''}" onclick="acctGo('${n.id}')">
             <span class="material-icons">${n.icon}</span><span>${n.label}</span></button>`).join('')}
@@ -3930,6 +3918,7 @@ const proMethod = () => PRO_METHODS.find(m => m.id === _proPay) || PRO_METHODS[0
 const proPlan   = () => PLANS.find(p => p.id === _proPlan) || PLANS[0];
 
 function openProSubscribe(gateTitle) {
+  navPush();
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true); closeAccount();
   _proGate = gateTitle || ''; _proStep = 'plans'; _proHistory = [];
   const s = document.getElementById('proScreen');
@@ -3955,8 +3944,8 @@ function proGo(step, noPush) {
 }
 function proBack() {
   const prev = _proHistory.pop();
-  if (prev) proGo(prev, true);
-  else closePro();
+  if (prev) { proGo(prev, true); return; }
+  closePro(); navBack();
 }
 
 function proHeroHTML() {
@@ -4203,6 +4192,7 @@ function gatePro(item, resume) {
 let _ltvIdx = 0, _ltvCat = 'All', _ltvHideTimer = null, _ltvHovering = false;
 
 function openLiveTV(startIdx) {
+  navPush();
   closeSearch(); closeBrowse(); closeDetail(); closePlayer();
   _ltvIdx = typeof startIdx === 'number' ? startIdx : 0;
   const screen = document.getElementById('liveTVScreen');
@@ -4452,6 +4442,7 @@ function showCatToast(filter, label) {
 function selectCategory(a) {
   const filter = a.dataset.filter;
   closePlayer(); closeDetail(); closeBrowse(); closeSearch(); closeLiveTV(true); closeAccount(); closePro();   // return home from any open overlay
+  _nav = []; _acctHistory = []; _proHistory = [];
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   a.classList.add('active');
   showCatToast(filter, a.textContent.trim());
@@ -4488,6 +4479,7 @@ document.getElementById('navLinks').addEventListener('click', e => {
   if (a.dataset.filter === 'live-tv') {
     document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
     a.classList.add('active');
+    _nav = [];
     openLiveTV(0);
     return;
   }
@@ -4509,13 +4501,46 @@ const ROW_CONFIG = {
 };
 
 let _lastBrowse = null, _detailReturn = null, _playerReturn = null;
+
+// ─── NAVIGATION STACK ────────────────────────────────────────────
+// Snapshots the visible screen so Back always returns to the real previous one.
+let _nav = [], _navRestoring = false;
+function _isOpen(id) { const e = document.getElementById(id); return !!e && e.classList.contains('open'); }
+function navSnapshot() {
+  if (_isOpen('detailScreen')) {
+    const d = document.getElementById('detailScreen');
+    return d._item ? { t:'detail', item: d._item, kind: d._kind } : null;
+  }
+  if (_isOpen('browseScreen') && _lastBrowse) return { t:'browse', ..._lastBrowse };
+  if (_isOpen('searchScreen'))  return { t:'search', q: (document.getElementById('searchInput') || {}).value || '' };
+  if (_isOpen('accountScreen')) return { t:'account', section: _acctSection };
+  if (_isOpen('proScreen'))     return { t:'pro', step: _proStep };
+  if (_isOpen('liveTVScreen'))  return { t:'livetv', idx: _ltvIdx };
+  return null;   // homepage
+}
+function navPush() { if (!_navRestoring) _nav.push(navSnapshot()); }
+function navRestore(e) {
+  _navRestoring = true;
+  try {
+    if (!e)                     { /* homepage — everything already closed */ }
+    else if (e.t === 'detail')  openDetail(e.item, e.kind);
+    else if (e.t === 'browse')  openBrowse(e.title, e.data, e.fn, e.kind);
+    else if (e.t === 'search')  { openSearch(); const i = document.getElementById('searchInput'); if (i && e.q) { i.value = e.q; renderResults(e.q); } }
+    else if (e.t === 'account') openAccount(e.section);
+    else if (e.t === 'pro')     { openProSubscribe(); proGo(e.step, true); }
+    else if (e.t === 'livetv')  openLiveTV(e.idx);
+  } finally { _navRestoring = false; }
+}
+// Single Back entry point used by every screen
+function navBack() { navRestore(_nav.pop()); }
 function openBrowse(title, data, fn, kind) {
+  navPush();
   _lastBrowse = { title, data, fn, kind };
   const screen = document.getElementById('browseScreen');
   clearTimeout(screen._closeTimer);
   const shape = kind === 'live' ? 'brs-landscape' : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
   screen.innerHTML = `
-    <button class="dsc-back" onclick="closeBrowse()">${_CHEVL}<span>Back</span></button>
+    <button class="dsc-back" onclick="closeBrowse();navBack()">${_CHEVL}<span>Back</span></button>
     <div class="dsc-anim">
       <div class="brs-head"><h1 class="brs-title">${title}</h1></div>
       <div class="brs-grid ${shape}" id="brsGrid"></div>
@@ -4632,12 +4657,12 @@ document.addEventListener('keydown', e => {
     else closeLiveTV();
     return;
   }
-  if (document.getElementById('playerModal').classList.contains('open')) closePlayer();
-  else if (document.getElementById('detailScreen').classList.contains('open')) closeDetail();
-  else if (document.getElementById('browseScreen').classList.contains('open')) closeBrowse();
-  else if (document.getElementById('proScreen').classList.contains('open')) closePro();
-  else if (document.getElementById('accountScreen').classList.contains('open')) closeAccount();
-  else closeSearch();
+  if (_isOpen('playerModal')) { closePlayer(); return; }
+  if (_isOpen('detailScreen'))      { closeDetail(); navBack(); return; }
+  if (_isOpen('browseScreen'))      { closeBrowse(); navBack(); return; }
+  if (_isOpen('proScreen'))         { proBack(); return; }
+  if (_isOpen('accountScreen'))     { acctBack(); return; }
+  closeSearch();
 });
 
 // ─── SCROLL ENTRANCE OBSERVER ────────────────────────────────────
