@@ -1273,6 +1273,9 @@
     .acct-row-main { flex: 1; min-width: 0; }
     .acct-row-sub { font-size: 13px; font-weight: 500; color: var(--text-dim); margin-top: 3px; }
     .acct-row-chev { color: var(--text-dim); flex-shrink: 0; }
+    .acct-soon { font-size: 12px; font-weight: 600; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+    .acct-row.is-soon { cursor: default; }
+    .acct-row.is-soon:hover { background: none; }
     .acct-row-tag { font-size: 11px; font-weight: 700; background: rgba(36,114,252,.2); color: #7fb0ff; padding: 3px 9px; border-radius: 5px; }
     .acct-danger { color: #f87171; justify-content: center; font-weight: 700; }
 
@@ -1378,7 +1381,8 @@
     }
 
     /* Subscribed users see no PRO badges or locks on tiles */
-    body.is-pro .card-badge, body.is-pro .pro-lock-overlay, body.is-pro .hero-pro-pill { display: none !important; }
+    body.is-pro .card-badge, body.is-pro .pro-lock-overlay, body.is-pro .hero-pro-pill,
+    body.is-pro .ltv-pro-pill, body.is-pro .ltv-tile-pro { display: none !important; }
 
     /* ─── CANCEL / DELETE FLOWS ──────────────────────────────────── */
     .cx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; margin-top: 24px; }
@@ -1396,6 +1400,7 @@
     .cx-check { display: flex; align-items: center; gap: 11px; font-size: 14px; color: rgba(255,255,255,.85); line-height: 1.5; margin-top: 12px; cursor: pointer; }
     .cx-check input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--accent-from); flex-shrink: 0; }
     .cx-survey-h { font-family: var(--heading-font); font-size: 16px; font-weight: 800; color: #fff; margin: 14px 0 4px; }
+    .cx-watch-h { font-family: var(--heading-font); font-size: 19px; font-weight: 800; color: #fff; text-align: center; }
     .cx-watch-sub { font-size: 13.5px; color: var(--text-dim); text-align: center; margin: 12px 0 16px; }
     .cx-watch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
     .cx-watch img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; }
@@ -3014,6 +3019,10 @@ function makeEpisodes(item, season) {
 // ctx (optional) = { item, season, title, episodes:[...], playingEp } enables the in-player episode switcher.
 let _playerCtx = null;
 function openPlayer(vimeoId, title, sub, ctx) {
+  const isOpen = id => document.getElementById(id).classList.contains('open');
+  if (!isOpen('playerModal')) {
+    _playerReturn = isOpen('browseScreen') ? 'browse' : isOpen('searchScreen') ? 'search' : null;
+  }
   closeSearch();
   _playerCtx = ctx || null;
   const modal = document.getElementById('playerModal');
@@ -3070,6 +3079,12 @@ function closePlayer() {
     modal.classList.remove('open');
     modal.innerHTML = '';
   }, 260);
+  const back = _playerReturn; _playerReturn = null;
+  if (back === 'browse' && _lastBrowse) {
+    setTimeout(() => openBrowse(_lastBrowse.title, _lastBrowse.data, _lastBrowse.fn, _lastBrowse.kind), 60);
+    return;
+  }
+  if (back === 'search') { setTimeout(openSearch, 60); return; }
   if (!document.getElementById('detailScreen').classList.contains('open') && _heroInView) {
     try { goToSlide(heroIdx); } catch (e) {}
   }
@@ -3077,6 +3092,8 @@ function closePlayer() {
 
 // Open the show / movie detail screen
 function openDetail(item, kind) {
+  const isOpen = id => document.getElementById(id).classList.contains('open');
+  _detailReturn = isOpen('browseScreen') ? 'browse' : isOpen('searchScreen') ? 'search' : null;
   closeSearch(); closeBrowse();
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
@@ -3273,6 +3290,12 @@ function closeDetail() {
     screen.innerHTML = '';
     screen._item = null;
   }, 340);
+  const back = _detailReturn; _detailReturn = null;
+  if (back === 'browse' && _lastBrowse) {
+    setTimeout(() => openBrowse(_lastBrowse.title, _lastBrowse.data, _lastBrowse.fn, _lastBrowse.kind), 60);
+    return;
+  }
+  if (back === 'search') { setTimeout(openSearch, 60); return; }
   if (window.scrollY < 40) document.querySelector('.navbar').classList.remove('scrolled');
   if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
 }
@@ -3371,6 +3394,7 @@ const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" strok
 function openAccount(section) {
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true);
   _acctSection = section || 'overview';
+  _acctHistory = [];
   const screen = document.getElementById('accountScreen');
   clearTimeout(screen._closeTimer);
   screen.classList.add('open');
@@ -3387,10 +3411,18 @@ function closeAccount() {
   screen._closeTimer = setTimeout(() => { screen.classList.remove('open'); screen.innerHTML = ''; }, 260);
   setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 280);
 }
-function acctGo(section) {
+let _acctHistory = [];
+function acctGo(section, noPush) {
   if (section === 'plans') { openProSubscribe(); return; }   // subscribe journey has its own screen
+  if (!noPush && _acctSection && _acctSection !== section) _acctHistory.push(_acctSection);
   _acctSection = section; renderAccount();
   document.getElementById('accountScreen').scrollTop = 0;
+}
+// Back = wherever the user actually came from; leaves the screen when there's no history
+function acctBack() {
+  const prev = _acctHistory.pop();
+  if (prev) acctGo(prev, true);
+  else closeAccount();
 }
 
 const ACCT_NAV = [
@@ -3402,10 +3434,12 @@ const ACCT_NAV = [
 ];
 
 function acctRow(icon, title, sub, onclick, extra) {
-  return `<button class="acct-row" ${onclick ? `onclick="${onclick}"` : ''}>
+  // Stubbed features show a "Coming soon" tag instead of a chevron
+  const soon = !!onclick && onclick.indexOf('acctStub') === 0;
+  return `<button class="acct-row${soon ? ' is-soon' : ''}" ${onclick ? `onclick="${onclick}"` : ''}>
     ${icon ? `<span class="material-icons">${icon}</span>` : ''}
     <span class="acct-row-main">${title}${sub ? `<div class="acct-row-sub">${sub}</div>` : ''}</span>
-    ${extra || ''}${_CHEV_R}
+    ${extra || ''}${soon ? '<span class="acct-soon">Coming soon</span>' : _CHEV_R}
   </button>`;
 }
 
@@ -3436,12 +3470,27 @@ function renderAccount() {
         </div>
         ${ACCOUNT.subscribed ? acctRow('', 'Manage membership', '', "acctGo('membership')") : ''}
       </div>
-      <div class="acct-label">Quick Links</div>
+      <div class="acct-label">Subscription</div>
       <div class="acct-card">
-        ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "acctGo('plans')")}
+        ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', ACCOUNT.subscribed ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).name : 'Ad-free, Ultra HD, unlimited access', "acctGo('plans')")}
         ${ACCOUNT.subscribed ? acctRow('credit_card', 'Manage payment method', payMethod().name, "acctGo('payment')") : ''}
-        ${acctRow('devices', 'Manage access and devices', '', "acctGo('devices')")}
-        ${ACCOUNT.subscribed ? acctRow('receipt_long', 'View payment history', '', "acctGo('billing')") : ''}
+      </div>
+      ${ACCOUNT.subscribed ? `
+      <div class="acct-label">Billing</div>
+      <div class="acct-card">
+        ${acctRow('receipt_long', 'View payment history', 'Invoices, coupons and refunds', "acctGo('billing')")}
+        ${acctRow('redeem', 'Redeem gift or promo code', '', "acctStub('Redeem promo code')")}
+      </div>` : ''}
+      <div class="acct-label">Devices &amp; Access</div>
+      <div class="acct-card">
+        ${acctRow('devices', 'Manage access and devices', 'Manage signed-in devices', "acctGo('devices')")}
+        ${acctRow('download', 'Mobile download devices', 'Using 0 of 2 download devices', "acctStub('Download devices')")}
+      </div>
+      <div class="acct-label">Security &amp; Privacy</div>
+      <div class="acct-card">
+        ${acctRow('mail', 'Email', ACCOUNT.email, "acctGo('security')")}
+        ${acctRow('smartphone', 'Mobile phone', ACCOUNT.phone, "acctGo('security')")}
+        ${acctRow('verified_user', 'Security settings', 'Access, privacy and account data', "acctGo('security')")}
       </div>`,
 
     membership: () => `
@@ -3476,7 +3525,7 @@ function renderAccount() {
       <div class="acct-sub">Choose how you'd like to pay for Tamasha.</div>
       <div class="acct-card">${payOptionsHTML()}</div>
       <div class="acct-actions">
-        <button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button>
+        <button class="btn btn--ghost btn--lg" onclick="acctBack()">Back</button>
         <button class="btn btn--primary btn--lg" onclick="acctSavePay()">Save</button>
       </div>`,
 
@@ -3490,13 +3539,13 @@ function renderAccount() {
         </div>
         <div class="otp-hint" id="otpHint">Request code in 56s</div>
         <div class="acct-actions" style="margin:0">
-          <button class="btn btn--ghost btn--lg" onclick="acctGo('deleteConfirm')">Back</button>
+          <button class="btn btn--ghost btn--lg" onclick="acctBack()">Back</button>
           <button class="btn btn--primary btn--lg" onclick="acctVerifyOtp()">Verify OTP</button>
         </div>
       </div>`,
 
     cancelConfirm: () => `
-      <button class="acct-back" style="padding:0 0 18px" onclick="acctGo('membership')">${_CHEVL}<span>Back to Account</span></button>
+      <button class="acct-back" style="padding:0 0 18px" onclick="acctBack()">${_CHEVL}<span>Back</span></button>
       <h1 class="acct-title" style="text-align:center">Cancel or change your membership</h1>
       <div class="acct-sub" style="text-align:center;max-width:none">
         Whatever you choose, it'll take effect on <strong>${ACCOUNT.nextPayment}</strong>. You'll still be able to watch until then.
@@ -3523,11 +3572,11 @@ function renderAccount() {
           <div class="acct-card" style="padding:20px 22px;margin-top:16px;text-align:center">
             <div class="cx-stay">Want to stick around?</div>
             <div class="cx-note" style="text-align:center">Your plan will remain the same.</div>
-            <button class="cx-btn cx-btn--alt" style="margin-top:12px" onclick="closeAccount()">Return to Watching</button>
+            <button class="cx-btn" style="margin-top:12px" onclick="closeAccount()">Return to Watching</button>
           </div>
         </div>
         <div class="acct-card" style="padding:22px">
-          <button class="cx-btn" onclick="closeAccount()">What to watch before you leave</button>
+          <div class="cx-watch-h">What to watch before you leave</div>
           <div class="cx-watch-sub">Plenty still to explore before your membership ends.</div>
           <div class="cx-watch">
             ${[...topMoviesData, ...tvShowsData].slice(0, 9).map(m =>
@@ -3577,7 +3626,7 @@ function renderAccount() {
                placeholder="${_proPayIsCard() ? 'Debit or Credit Card Number' : 'Mobile number on file'}">
         <div class="cx-note" style="text-align:center;margin:8px 0 0">Demo only — not connected to a payment processor.</div>
         <button class="cx-btn" style="margin-top:18px" onclick="acctGo('deleteConfirm')">Continue</button>
-        <div style="text-align:center;margin-top:14px"><a class="cx-link" href="#" onclick="event.preventDefault();acctGo('deleteIdentity')">Try Another Way</a></div>
+        <div style="text-align:center;margin-top:14px"><a class="cx-link" href="#" onclick="event.preventDefault();acctBack()">Try Another Way</a></div>
       </div>`,
 
     deleteConfirm: () => `
@@ -3598,7 +3647,7 @@ function renderAccount() {
         </label>
         <div class="cx-two">
           <button class="cx-btn cx-btn--danger" id="delGo" disabled onclick="acctFinishDelete()">Permanently Delete</button>
-          <button class="cx-btn cx-btn--alt" onclick="acctGo('profile')">Never Mind</button>
+          <button class="cx-btn cx-btn--alt" onclick="acctBack()">Never Mind</button>
         </div>
       </div>`,
 
@@ -3620,7 +3669,7 @@ function renderAccount() {
           <div class="acct-bill-line"><span>Status</span>
             <span class="acct-status ${b.status}">${b.status === 'ok' ? 'Successful' : 'Failed'}</span></div>
         </div>`).join('')}
-      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctGo('membership')">Back</button></div>`,
+      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctBack()">Back</button></div>`,
 
     security: () => `
       <h1 class="acct-title">Security</h1>
@@ -3882,7 +3931,7 @@ const proPlan   = () => PLANS.find(p => p.id === _proPlan) || PLANS[0];
 
 function openProSubscribe(gateTitle) {
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true); closeAccount();
-  _proGate = gateTitle || ''; _proStep = 'plans';
+  _proGate = gateTitle || ''; _proStep = 'plans'; _proHistory = [];
   const s = document.getElementById('proScreen');
   clearTimeout(s._closeTimer);
   s.classList.add('open');
@@ -3898,7 +3947,17 @@ function closePro() {
   s._closeTimer = setTimeout(() => { s.classList.remove('open'); s.innerHTML = ''; }, 260);
   setTimeout(() => { if (_heroInView) { try { goToSlide(heroIdx); } catch (e) {} } }, 280);
 }
-function proGo(step) { _proStep = step; renderPro(); document.getElementById('proScreen').scrollTop = 0; }
+let _proHistory = [];
+function proGo(step, noPush) {
+  if (!noPush && _proStep && _proStep !== step) _proHistory.push(_proStep);
+  _proStep = step; renderPro();
+  document.getElementById('proScreen').scrollTop = 0;
+}
+function proBack() {
+  const prev = _proHistory.pop();
+  if (prev) proGo(prev, true);
+  else closePro();
+}
 
 function proHeroHTML() {
   const art = [...topMoviesData, ...moviesData, ...tvShowsData].slice(0, 16);
@@ -3949,7 +4008,7 @@ function renderPro() {
           </button>`).join('')}
       </div>
       <div class="pro-actions2">
-        <button class="pro-cta pro-cta--ghost" onclick="proGo('plans')">Back</button>
+        <button class="pro-cta pro-cta--ghost" onclick="proBack()">Back</button>
         <button class="pro-cta" onclick="proGo('details')">Next</button>
       </div>
     </div>`;
@@ -3991,7 +4050,7 @@ function renderPro() {
       </div>
 
       <div class="pro-actions2">
-        <button class="pro-cta pro-cta--ghost" onclick="proGo('method')">Back</button>
+        <button class="pro-cta pro-cta--ghost" onclick="proBack()">Back</button>
         <button class="pro-cta" onclick="proSubmit()">${_proPay === 'card' ? 'Start Membership' : (_proOtpOpen ? 'Verify &amp; Subscribe' : 'Continue')}</button>
       </div>
     </div>`;
@@ -4449,7 +4508,9 @@ const ROW_CONFIG = {
   highlightsRow: { data: () => highlightsData, fn: makeHighlightCard, kind: 'clip' },
 };
 
+let _lastBrowse = null, _detailReturn = null, _playerReturn = null;
 function openBrowse(title, data, fn, kind) {
+  _lastBrowse = { title, data, fn, kind };
   const screen = document.getElementById('browseScreen');
   clearTimeout(screen._closeTimer);
   const shape = kind === 'live' ? 'brs-landscape' : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
