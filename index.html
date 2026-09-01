@@ -2787,11 +2787,13 @@ function buildHeroV2() {
 
   // Featured movies + live sports matches share the hero carousel.
   // Always feature the PAK vs IND match, plus a couple of other live games.
-  const pakInd = liveSportsData.find(s => /PAK.*IND|IND.*PAK/i.test(s.sub || s.label || ''));
-  const heroSportsExclude = /AFG\s*vs\s*SA|County\s*Championship/i;   // artwork doesn't crop well in the hero
-  const sportItems = [pakInd, ...liveSportsData.filter(s =>
-      s.live && s !== pakInd && !heroSportsExclude.test(s.label || ''))
-    .slice(0, 2)]
+  // Only these two matches get hero slides — the rest stay in the Live Sports row
+  const heroSportsAllow = [
+    s => /PAK.*IND|IND.*PAK/i.test((s.sub || '') + ' ' + (s.label || '')),
+    s => /Super\s*League|PSL/i.test((s.label || '') + ' ' + (s.sub || '')),
+  ];
+  const sportItems = heroSportsAllow
+    .map(match => liveSportsData.find(match))
     .filter(Boolean)
     .map(s => ({ _sport: true, ...s }));
   const heroItems = heroMovies.concat(sportItems);
