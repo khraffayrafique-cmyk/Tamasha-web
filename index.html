@@ -493,7 +493,8 @@
       position: absolute; inset: 0;
       width: 100% !important; height: 100% !important;
       max-width: none; max-height: none;
-      object-fit: cover;
+      object-fit: contain;          /* artwork already has its own backdrop */
+      background: #d9d9de;
     }
     .live-pill {
       position: absolute; top: 10px; right: 10px;
@@ -1562,7 +1563,7 @@
     .ltv-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
     .ltv-close:hover { background: rgba(255,255,255,.18); }
     .ltv-now { display: flex; align-items: center; gap: 11px; font-family: var(--heading-font); font-size: 18px; font-weight: 800; color: #fff; }
-    .ltv-now-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 7px; background: rgba(255,255,255,.08); padding: 3px; flex-shrink: 0; }
+    .ltv-now-logo { width: 64px; height: 36px; object-fit: contain; border-radius: 6px; background: #d9d9de; flex-shrink: 0; }
     .ltv-live-tag { display: inline-flex; align-items: center; gap: 6px; background: #ED2B1F; color: #fff; font-family: var(--body-font); font-size: 11px; font-weight: 800; letter-spacing: .05em; padding: 4px 10px 4px 8px; border-radius: 5px; }
     .ltv-live-tag .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: livePulse 1.6s infinite; }
     .ltv-menu-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 8px; padding: 9px 16px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(6px); }
@@ -1585,7 +1586,7 @@
     .ltv-item { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 16px; width: 100%; text-align: left; background: none; border: none; color: #fff; cursor: pointer; padding: 12px 16px; border-radius: 12px; transition: background .12s; }
     .ltv-item:hover { background: rgba(255,255,255,.08); }
     .ltv-item.is-playing { background: rgba(255,255,255,.10); }
-    .ltv-logo { width: 72px; height: 44px; object-fit: contain; flex-shrink: 0; }
+    .ltv-logo { width: 72px; height: 44px; object-fit: contain; flex-shrink: 0; border-radius: 5px; background: #d9d9de; }
     .ltv-meta { min-width: 0; border-left: 2px solid rgba(255,255,255,.14); padding-left: 16px; }
     .ltv-watching { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: #fff; margin-bottom: 5px; }
     .ltv-watching .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ED2B1F; }
@@ -2174,7 +2175,7 @@
 <script>
 // ─── PATHS ───────────────────────────────────────────────────────
 const B = "Tamasha%20Baneers%202/";
-const C = "Live%20Channel%20logos/";
+const C = "Live%20Channels%20New/";
 const S = "Sports/";
 const T = "TV%20Show%20Trailers/";
 function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
@@ -2381,38 +2382,97 @@ const moviesData = [
   { folder:"ZOMBIELAND (2009)",     thumb:"thumbnail.jpg", title:"Zombieland",          meta:"2009 · Horror",     pro:false },
 ];
 const liveChannels = [
-  { file:"ary-digital-live-logo.webp",      name:"ARY Digital",      tag:"Jeeto Pakistan",        cat:"Entertainment", left:"51m left",     pro:false },
-  { file:"geo-entertainment-live.webp",     name:"Geo Entertainment",tag:"Khaie",                 cat:"Entertainment", left:"22m left",     pro:false },
-  { file:"HUM-Sitaray-Channel-logo.webp",   name:"HUM Sitaray",      tag:"Dastaan",               cat:"Drama",         left:"14m left",     pro:true  },
-  { file:"dawn-news-live.webp",             name:"Dawn News",        tag:"News Update",           cat:"News",          left:"12h 39m left", pro:false },
-  { file:"samaa-tv-live.webp",              name:"Samaa TV",         tag:"Capital Talk",          cat:"News",          left:"38m left",     pro:false },
-  { file:"express-entertainment-live.webp", name:"Express Ent.",     tag:"Mohabbat Tujhe",        cat:"Drama",         left:"27m left",     pro:true  },
-  { file:"geo-news-live.webp",              name:"Geo News",         tag:"Aaj Shahzeb Khanzada",  cat:"News",          left:"18m left",     pro:false },
-  { file:"HUM-News-Channel-logo.webp",      name:"HUM News",         tag:"Breaking Now",          cat:"News",          left:"9m left",      pro:false },
-  { file:"champion-tv-live.webp",           name:"Champion TV",      tag:"PAK vs IND · Live",     cat:"Sports",        left:"2h 10m left",  pro:true  },
-  { file:"gtv-new-logo.webp",               name:"GTV Sports",       tag:"PSL Qualifier",         cat:"Sports",        left:"3h 05m left",  pro:true  },
-  { file:"cartoon-network-live.webp",       name:"Cartoon Network",  tag:"Ben 10",                cat:"Kids",          left:"16m left",     pro:false },
-  { file:"baby-tv-live.webp",               name:"Baby TV",          tag:"Playtime",              cat:"Kids",          left:"24m left",     pro:false },
-  { file:"cnn-news-live.webp",              name:"CNN",              tag:"World News Tonight",    cat:"International", left:"31m left",     pro:true  },
-  { file:"DW-english-live.webp",            name:"DW English",       tag:"DW News",               cat:"International", left:"20m left",     pro:false },
-  { file:"bol-entertainment-live.webp",     name:"BOL Entertainment",tag:"Game Show Aisay Chalay",cat:"Entertainment", left:"45m left",     pro:false },
-  { file:"aaj-news-live.webp",              name:"Aaj News",         tag:"Aaj Rana Azeem Ke Sath",cat:"News",          left:"07m left",     pro:false },
-  { file:"abb-takk-news-live.webp",         name:"Abb Takk News",    tag:"Table Talk",            cat:"News",          left:"33m left",     pro:false },
-  { file:"express-news-live.webp",          name:"Express News",     tag:"Kal Tak",               cat:"News",          left:"41m left",     pro:false },
-  { file:"neo-tv-live.webp",                name:"Neo TV",           tag:"Neo Special",           cat:"News",          left:"15m left",     pro:false },
-  { file:"public-news-live.webp",           name:"Public News",      tag:"Public Ki Awaz",        cat:"News",          left:"29m left",     pro:false },
-  { file:"such-tv-live.webp",               name:"Such TV",          tag:"Such Baat",             cat:"News",          left:"11m left",     pro:false },
-  { file:"tv-one-live.webp",                name:"TV One",           tag:"Zara Hat Kay",          cat:"Entertainment", left:"26m left",     pro:false },
-  { file:"a-plus-live.webp",                name:"A Plus",           tag:"Meri Kahani",           cat:"Drama",         left:"19m left",     pro:false },
-  { file:"ary-zindagi-live-logo.webp",      name:"ARY Zindagi",      tag:"Zindagi Gulzar Hai",    cat:"Drama",         left:"36m left",     pro:true  },
-  { file:"filmax-live.webp",                name:"Filmax",           tag:"Blockbuster Movie",     cat:"Movies",        left:"1h 22m left",  pro:true  },
-  { file:"movie-one-live.webp",             name:"Movie One",        tag:"Action Night",          cat:"Movies",        left:"58m left",     pro:true  },
-  { file:"madani-channel-live.webp",        name:"Madani Channel",   tag:"Dars-e-Quran",          cat:"Religious",     left:"48m left",     pro:false },
-  { file:"saudi-quran-makkah-tv-hd-live.webp", name:"Makkah TV",     tag:"Live from Makkah",      cat:"Religious",     left:"Live",         pro:false },
-  { file:"8xm-live.webp",                   name:"8XM",              tag:"Top 20 Countdown",      cat:"Music",         left:"13m left",     pro:false },
-  { file:"jalwa-tv-live.webp",              name:"Jalwa TV",         tag:"Hit Music",             cat:"Music",         left:"21m left",     pro:false },
-  { file:"discover-pakistan-live-logo.webp",name:"Discover Pakistan",tag:"Land of Wonders",       cat:"Entertainment", left:"34m left",     pro:false },
-  { file:"ktn-entertainment-live.webp",     name:"KTN Entertainment",tag:"Sindhi Hits",           cat:"Entertainment", left:"17m left",     pro:false },
+  { file:"Frame 1086833.png", name:"ARY Digital",           cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086856.png", name:"Geo Entertainment",     cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086841.png", name:"HUM Sitaray",           cat:"Drama",          pro:true,  },
+  { file:"Frame 1086891.png", name:"Dawn News",             cat:"News",           pro:false, },
+  { file:"Frame 1086890.png", name:"Samaa TV",              cat:"News",           pro:false, },
+  { file:"Frame 1086909.png", name:"Express Entertainment", cat:"Drama",          pro:true,  },
+  { file:"Frame 1086836.png", name:"Geo News",              cat:"News",           pro:false, },
+  { file:"Frame 1086838.png", name:"HUM News",              cat:"News",           pro:false, },
+  { file:"Frame 1086831.png", name:"ARY News",              cat:"News",           pro:false, },
+  { file:"Frame 1086892.png", name:"ARY Zindagi",           cat:"Drama",          pro:true,  },
+  { file:"Frame 1086834.png", name:"PTV Sports HD",         cat:"Sports",         pro:true,  },
+  { file:"Frame 1086858.png", name:"GTV News HD",           cat:"Sports",         pro:true,  },
+  { file:"Frame 1086876.png", name:"Cartoon Network",       cat:"Kids",           pro:false, },
+  { file:"Frame 1086844.png", name:"Baby TV",               cat:"Kids",           pro:false, },
+  { file:"Frame 1086893.png", name:"Mini Max",              cat:"Kids",           pro:false, },
+  { file:"Frame 1086840.png", name:"CNN",                   cat:"International",  pro:true,  },
+  { file:"Frame 1086902.png", name:"DW English",            cat:"International",  pro:false, },
+  { file:"Frame 1086839.png", name:"Al Jazeera",            cat:"International",  pro:false, },
+  { file:"Frame 1086837.png", name:"CGTN Documentary",      cat:"International",  pro:false, },
+  { file:"Frame 1086888.png", name:"CGTN",                  cat:"International",  pro:false, },
+  { file:"Frame 1086871.png", name:"Eurosport",             cat:"Sports",         pro:true,  },
+  { file:"Frame 1086872.png", name:"Animal Planet",         cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086855.png", name:"Discovery",             cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086857.png", name:"BOL Entertainment",     cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086907.png", name:"BOL News",              cat:"News",           pro:false, },
+  { file:"Frame 1086903.png", name:"Abb Takk News",         cat:"News",           pro:false, },
+  { file:"Frame 1086910.png", name:"Express News",          cat:"News",           pro:false, },
+  { file:"Frame 1086865.png", name:"Public News",           cat:"News",           pro:false, },
+  { file:"Frame 1086914.png", name:"Such TV",               cat:"News",           pro:false, },
+  { file:"Frame 1086877.png", name:"TV One",                cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086913.png", name:"A Plus",                cat:"Drama",          pro:false, },
+  { file:"Frame 1086843.png", name:"Filmax",                cat:"Movies",         pro:true,  },
+  { file:"Frame 1086879.png", name:"Movie One",             cat:"Movies",         pro:true,  },
+  { file:"Frame 1086901.png", name:"Madani Channel",        cat:"Religious",      pro:false, },
+  { file:"Frame 1086868.png", name:"Al Quran Al Kareem",    cat:"Religious",      pro:false, },
+  { file:"Frame 1086894.png", name:"Madina TV",             cat:"Religious",      pro:false, },
+  { file:"Frame 1086851.png", name:"8XM",                   cat:"Music",          pro:false, },
+  { file:"Frame 1086920.png", name:"Jalwa TV",              cat:"Music",          pro:false, },
+  { file:"Frame 1086881.png", name:"Discover Pakistan",     cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086880.png", name:"KTN News",              cat:"News",           pro:false, },
+  { file:"Frame 1086869.png", name:"KTN Entertainment",     cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086845.png", name:"Sindh TV",              cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086900.png", name:"Sindh TV News",         cat:"News",           pro:false, },
+  { file:"Frame 1086846.png", name:"Roze News",             cat:"News",           pro:false, },
+  { file:"Frame 1086847.png", name:"Mehran TV",             cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086848.png", name:"Channel 5 News HD",     cat:"News",           pro:false, },
+  { file:"Frame 1086849.png", name:"Rohi TV",               cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086850.png", name:"City 41",               cat:"News",           pro:false, },
+  { file:"Frame 1086866.png", name:"City 42",               cat:"News",           pro:false, },
+  { file:"Frame 1086912.png", name:"City 21",               cat:"News",           pro:false, },
+  { file:"Frame 1086852.png", name:"See TV",                cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086853.png", name:"Sun News",              cat:"News",           pro:false, },
+  { file:"Frame 1086832.png", name:"Home HD",               cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086860.png", name:"ABN News",              cat:"News",           pro:false, },
+  { file:"Frame 1086861.png", name:"Kashish TV",            cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086862.png", name:"365 News",              cat:"News",           pro:false, },
+  { file:"Frame 1086863.png", name:"LTN Family HD",         cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086864.png", name:"Aruj TV",               cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086867.png", name:"Khyber HD",             cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086874.png", name:"PTV National",          cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086878.png", name:"PTV Bolan",             cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086875.png", name:"Aan TV HD",             cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086882.png", name:"A1 TV",                 cat:"News",           pro:false, },
+  { file:"Frame 1086883.png", name:"Metro 1 News",          cat:"News",           pro:false, },
+  { file:"Frame 1086884.png", name:"K21 News HD",           cat:"News",           pro:false, },
+  { file:"Frame 1086885.png", name:"Mashriq TV",            cat:"News",           pro:false, },
+  { file:"Frame 1086886.png", name:"Apna Channel",          cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086887.png", name:"Kay2 HD",               cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086889.png", name:"Set Entertainment HD",  cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086895.png", name:"Aik News",              cat:"News",           pro:false, },
+  { file:"Frame 1086896.png", name:"Aur Life HD",           cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086897.png", name:"24 News HD",            cat:"News",           pro:false, },
+  { file:"Frame 1086898.png", name:"Lahore Rang HD",        cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086904.png", name:"Hum Pashto 1",          cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086905.png", name:"PTV World",             cat:"News",           pro:false, },
+  { file:"Frame 1086906.png", name:"Green Entertainment",   cat:"Drama",          pro:true,  },
+  { file:"Frame 1086908.png", name:"Suno News",             cat:"News",           pro:false, },
+  { file:"Frame 1086911.png", name:"Neo TV",                cat:"News",           pro:false, },
+  { file:"Frame 1086915.png", name:"News One",              cat:"News",           pro:false, },
+  { file:"Frame 1086917.png", name:"Time News HD",          cat:"News",           pro:false, },
+  { file:"Frame 1086918.png", name:"Waseb TV",              cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086919.png", name:"KN Kohenoor",           cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086921.png", name:"Aik News HD",           cat:"News",           pro:false, },
+  { file:"Frame 1086859.png", name:"Hum Masala",            cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086870.png", name:"Champion TV",           cat:"Sports",         pro:true,  },
+  { file:"Frame 1086873.png", name:"InPlus Pakistan",       cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086916.png", name:"News One HD",           cat:"News",           pro:false, },
+  { file:"Frame 1086899.png", name:"Lahore Rang",           cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086835.png", name:"Tamasha News",          cat:"News",           pro:false, },
+  { file:"Frame 1086842.png", name:"SAB TV",                cat:"Entertainment",  pro:false, },
+  { file:"Frame 1086854.png", name:"Home HD 2",             cat:"Entertainment",  pro:false, },
 ];
 // Only keep channels whose logo actually exists (some entries are aspirational)
 const LIVE_CATS = ['All','News','Sports','Entertainment','Drama','Movies','Kids','Music','Religious','International'];
@@ -2447,7 +2507,7 @@ const topTVData = [
 const liveSportsData = [
   { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
   { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Starts 8:00 PM PKT', channel:'A Sports',        live:false, pro:false },
-  { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true,
+  { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'',               live:true,  pro:true,
     board:{ a:{ name:'Pakistan', flag:'🇵🇰', score:'142/3', overs:'14.4 ov' }, b:{ name:'India', flag:'🇮🇳', score:'96/2', overs:'11.2 ov' } } },
   { file:'CP 2.png',                                                  label:'County Championship',  sub:'Day 3 · Session 2',            score:'286/7 d · 142/4',   channel:'Tamasha Sports',  live:true,  pro:false },
   { file:'CP(300 x 450 px).png',                                      label:'Premier League',       sub:"Liverpool vs Arsenal",         score:"Live · 67′",         channel:'A Sports',        live:true,  pro:true  },
@@ -2860,7 +2920,7 @@ function buildHeroV2() {
         <div class="hero__live-row" style="margin-bottom:12px">
           ${m.live ? `<span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>`
                    : `<span class="hero-soon-pill">UPCOMING</span>`}
-          <span class="hero__live-channel">${m.channel}</span>
+          ${m.channel ? `<span class="hero__live-channel">${m.channel}</span>` : ''}
           ${m.pro ? `<span class="hero-pro-pill">${WAVE}Watch on PRO</span>` : ''}
         </div>
         <div class="hero-title">${m.label}</div>
@@ -3008,7 +3068,6 @@ function makeLandscapeCard(ch) {
   w.style.height = 'auto';
   w.innerHTML = `
     <div class="card-inner" style="height:144px">
-      <div class="ch-bg"></div>
       <img class="ch-logo" src="${cp(ch.file)}" alt="${ch.name}" loading="lazy"/>
       <div class="live-badge"><span class="live-dot"></span>LIVE</div>
       ${HOVER}
