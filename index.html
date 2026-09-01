@@ -811,7 +811,8 @@
       gap: 48px; margin-bottom: 32px;
     }
     .footer-col { display: flex; flex-direction: column; gap: 8px; }
-    .footer-logo { height: 26px; width: auto; }
+    /* align-self stops the flex column stretching (and distorting) the logo */
+    .footer-logo { height: 42px; width: auto; max-width: 180px; align-self: flex-start; object-fit: contain; }
     .footer-tagline { font-size: 13px; line-height: 1.6; color: var(--text-dim); margin-top: 8px; max-width: 34ch; }
     .footer-col-h {
       font-size: 10px; font-weight: 700; letter-spacing: 2px;
