@@ -1856,29 +1856,47 @@
       border-radius: 0;
     }
     .card-wrap.top10 .t10-rank {
+      --t10-size: 300px;
+      --t10-track: -.08em;
       flex: 0 0 auto;
+      /* Box the numeral to the poster's height and clip the font's empty
+         leading — otherwise the oversized glyph's line box spills past the
+         row and .cards-row (overflow-x:auto) grows a vertical scrollbar. */
+      height: 270px; overflow: hidden;
+      display: flex; align-items: center;
       font-family: var(--heading-font);
-      font-size: 300px; line-height: .72; font-weight: 900;
-      letter-spacing: -.08em;
+      font-size: var(--t10-size); line-height: 1; font-weight: 900;
+      letter-spacing: var(--t10-track);
       color: var(--bg);
       -webkit-text-stroke: 4px #565b6b;
-      padding-left: 6px; margin-right: -18px;
+      padding-left: 6px;
+      /* negative tracking also shortens the box after the last digit — put it
+         back as padding so the clip never eats the glyph, then take it off
+         again as margin to keep the poster's overlap unchanged */
+      padding-right: calc(-1 * var(--t10-track));
+      margin-right: calc(-18px + var(--t10-track));
       user-select: none; pointer-events: none;
       -webkit-user-select: none;
     }
     /* "10" is twice as wide — tighten it so the card stays close to the others */
-    .card-wrap.top10 .t10-rank.t10-two { font-size: 262px; letter-spacing: -.14em; }
+    .card-wrap.top10 .t10-rank.t10-two { --t10-size: 262px; --t10-track: -.14em; }
     .card-wrap.top10 .card-inner {
       flex: 0 0 180px; width: 180px;
       z-index: 1; border-radius: 6px;
       box-shadow: -6px 0 22px rgba(0,0,0,.55);
     }
     @media (max-width: 900px) {
-      .card-wrap.top10 .t10-rank { font-size: 230px; -webkit-text-stroke-width: 3px; margin-right: -14px; }
+      .card-wrap.top10 .t10-rank {
+        --t10-size: 230px;
+        height: 207px; -webkit-text-stroke-width: 3px;
+        margin-right: calc(-14px + var(--t10-track));
+      }
+      .card-wrap.top10 .t10-rank.t10-two { --t10-size: 202px; }
       .card-wrap.top10 .card-inner { flex-basis: 138px; width: 138px; height: 207px !important; }
     }
     @media (max-width: 380px) {
-      .card-wrap.top10 .t10-rank { font-size: 206px; }
+      .card-wrap.top10 .t10-rank { --t10-size: 206px; height: 186px; }
+      .card-wrap.top10 .t10-rank.t10-two { --t10-size: 180px; }
       .card-wrap.top10 .card-inner { flex-basis: 124px; width: 124px; height: 186px !important; }
     }
 
