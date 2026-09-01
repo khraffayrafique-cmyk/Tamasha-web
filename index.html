@@ -1848,6 +1848,92 @@
     .brs-grid .card-wrap.landscape .card-inner { height: auto !important; aspect-ratio: 16 / 9; }
     .brs-grid .card-wrap.wide      .card-inner { height: auto !important; aspect-ratio: 3 / 2; }
 
+    /* ─── TOP 10 ROW (Netflix-style oversized rank + poster) ──────── */
+    .card-wrap.top10 {
+      width: auto; height: auto;
+      /* .card-wrap defaults to a column (poster over card-body) — Top 10 is a row */
+      display: flex; flex-direction: row; align-items: center;
+      border-radius: 0;
+    }
+    .card-wrap.top10 .t10-rank {
+      flex: 0 0 auto;
+      font-family: var(--heading-font);
+      font-size: 300px; line-height: .72; font-weight: 900;
+      letter-spacing: -.08em;
+      color: var(--bg);
+      -webkit-text-stroke: 4px #565b6b;
+      padding-left: 6px; margin-right: -18px;
+      user-select: none; pointer-events: none;
+      -webkit-user-select: none;
+    }
+    /* "10" is twice as wide — tighten it so the card stays close to the others */
+    .card-wrap.top10 .t10-rank.t10-two { font-size: 262px; letter-spacing: -.14em; }
+    .card-wrap.top10 .card-inner {
+      flex: 0 0 180px; width: 180px;
+      z-index: 1; border-radius: 6px;
+      box-shadow: -6px 0 22px rgba(0,0,0,.55);
+    }
+    @media (max-width: 900px) {
+      .card-wrap.top10 .t10-rank { font-size: 230px; -webkit-text-stroke-width: 3px; margin-right: -14px; }
+      .card-wrap.top10 .card-inner { flex-basis: 138px; width: 138px; height: 207px !important; }
+    }
+    @media (max-width: 380px) {
+      .card-wrap.top10 .t10-rank { font-size: 206px; }
+      .card-wrap.top10 .card-inner { flex-basis: 124px; width: 124px; height: 186px !important; }
+    }
+
+    /* ─── TAMASHA GAMES ──────────────────────────────────────────── */
+    .card-wrap.game { width: 168px; height: auto; }
+    .card-wrap.game .card-inner { height: 168px; border-radius: 14px; }
+    .card-wrap.game .card-inner img { object-position: center center; }
+    .card-wrap.game .card-body { padding-top: 9px; }
+    .game-cta {
+      position: absolute; left: 50%; bottom: 10px;
+      transform: translate(-50%, 6px);
+      background: rgba(0,0,0,.72); backdrop-filter: blur(6px);
+      color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .06em;
+      padding: 5px 14px; border-radius: 999px; z-index: 3;
+      opacity: 0; transition: opacity .18s ease, transform .18s ease;
+      pointer-events: none;
+    }
+    .card-wrap.game:hover .game-cta { opacity: 1; transform: translate(-50%, 0); }
+    @media (max-width: 900px) {
+      .card-wrap.game { width: 130px; }
+      .card-wrap.game .card-inner { height: 130px !important; }
+      .game-cta { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* ─── TAMASHA SHOP (vouchers) ────────────────────────────────── */
+    .card-wrap.voucher { width: 256px; height: auto; }
+    .card-wrap.voucher .card-inner {
+      height: 144px; border-radius: 10px;
+      background: #101319;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .card-wrap.voucher .card-inner img {
+      object-fit: contain;          /* voucher art carries its own text — never crop it */
+      object-position: center center;
+    }
+    .shop-redeem {
+      position: absolute; right: 10px; bottom: 10px;
+      background: #fff; color: #0E2C6B;
+      font-size: 11px; font-weight: 800; letter-spacing: .04em;
+      padding: 5px 13px; border-radius: 999px; z-index: 3;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity .18s ease, transform .18s ease;
+      pointer-events: none;
+    }
+    .card-wrap.voucher:hover .shop-redeem { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+      .card-wrap.voucher { width: 210px; }
+      .card-wrap.voucher .card-inner { height: 118px !important; }
+      .shop-redeem { opacity: 1; transform: translateY(0); }
+    }
+
+    .brs-grid.brs-square .card-wrap.game .card-inner { height: auto !important; aspect-ratio: 1 / 1; }
+    .brs-grid .card-wrap.voucher .card-inner { height: auto !important; aspect-ratio: 16 / 9; }
+    .brs-grid.brs-square { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+
     /* ─── SEARCH SCREEN ──────────────────────────────────────────── */
     .search-screen {
       position: fixed; left: 0; right: 0; top: 70px; bottom: 0; z-index: 180;
@@ -2024,8 +2110,8 @@
 <section class="section" data-category="movies" id="sec-top-movies">
   <div class="section-header">
     <div>
-      <div class="section-eyebrow">TOP 10 THIS WEEK</div>
-      <h2 class="section-title">Top Rated Movies</h2>
+      <div class="section-eyebrow">TODAY'S TOP 10</div>
+      <h2 class="section-title">Top 10 Movies in Pakistan Today</h2>
     </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
@@ -2078,12 +2164,24 @@
 <section class="section" data-category="tv-shows" id="sec-top-tvshows">
   <div class="section-header">
     <div>
-      <div class="section-eyebrow">TOP RATED</div>
-      <h2 class="section-title">Top Rated TV Shows</h2>
+      <div class="section-eyebrow">TODAY'S TOP 10</div>
+      <h2 class="section-title">Top 10 TV Shows in Pakistan Today</h2>
     </div>
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="topTVRow"></div>
+</section>
+
+<!-- ══════════════ TAMASHA GAMES ══════════════ -->
+<section class="section" data-category="games" id="sec-games">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">PLAY NOW</div>
+      <h2 class="section-title">Tamasha Games</h2>
+    </div>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="gamesRow"></div>
 </section>
 
 <!-- ══════════════ LIVE SPORTS ══════════════ -->
@@ -2108,6 +2206,18 @@
     <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
   </div>
   <div class="cards-row" id="highlightsRow"></div>
+</section>
+
+<!-- ══════════════ TAMASHA SHOP ══════════════ -->
+<section class="section" data-category="shop" id="sec-shop">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">REWARDS &amp; VOUCHERS</div>
+      <h2 class="section-title">Tamasha Shop</h2>
+    </div>
+    <a href="#" class="view-more">View more <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+  <div class="cards-row" id="shopRow"></div>
 </section>
 
 <footer class="site-footer">
@@ -2177,10 +2287,14 @@
 const B = "Tamasha%20Baneers%202/";
 const C = "Live%20Channels%20New/";
 const S = "Sports/";
+const G  = "Tamasha%20Games/";
+const SH = "Tamasha%20Shop/";
 const T = "TV%20Show%20Trailers/";
 function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
 function cp(file)         { return C + encodeURIComponent(file); }
 function sp(file)         { return S + encodeURIComponent(file); }
+function gp(file)         { return G + encodeURIComponent(file); }
+function shp(file)        { return SH + encodeURIComponent(file); }
 function tp(file)         { return T + encodeURIComponent(file); }
 
 // ─── WAVE SVG ────────────────────────────────────────────────────
@@ -2484,6 +2598,9 @@ const topMoviesData = [
   { folder:"HANNA (2011)",                     thumb:"Thumbnail.jpg", title:"Hanna",                   meta:"2011 · Action",   pro:true  },
   { folder:"BLADE RUNNER 2049",                thumb:"Thumbnail.jpg", title:"Blade Runner 2049",       meta:"2017 · Sci-Fi",   pro:false },
   { folder:"GLADIATOR (1992)",                 thumb:"Thumbnail.jpg", title:"Gladiator",               meta:"1992 · Drama",    pro:true  },
+  { folder:"BABY DRIVER",                      thumb:"Thumbnail.jpg", title:"Baby Driver",             meta:"2017 · Thriller", pro:false },
+  { folder:"ZOMBIELAND (2009)",                thumb:"thumbnail.jpg", title:"Zombieland",              meta:"2009 · Horror",   pro:true  },
+  { folder:"EQUALIZER, THE (FEATURE)",         thumb:"thumbnail.jpg", title:"The Equalizer",           meta:"2014 · Action",   pro:false },
 ];
 const tvShowsData = [
   { folder:"SPIDER-MAN_ FAR FROM HOME",  thumb:"thumnail.jpg",  title:"Spider-Man: Far From Home", meta:"Marvel · 5 Seasons",   pro:true  },
@@ -2502,7 +2619,26 @@ const topTVData = [
   { folder:"GHOSTBUSTERS (2016)",               thumb:"Thumbnail.jpg",  title:"Ghostbusters",        meta:"Comedy · 1 Season",   pro:true  },
   { folder:"BAD BOYS (1995)",                   thumb:"thumbnail.jpg",  title:"Bad Boys",            meta:"Action · 2 Seasons",  pro:false },
   { folder:"CAPTAIN PHILLIPS",                  thumb:"thumbnail.jpg",  title:"Captain Phillips",    meta:"Thriller · 1 Season", pro:true  },
+  { folder:"SPIDER-MAN_ HOMECOMING",            thumb:"thumnail.jpg",   title:"Spider-Man: Homecoming", meta:"Marvel · 3 Seasons", pro:false },
+  { folder:"HOTEL TRANSYLVANIA 2",              thumb:"thumbnail.jpg",  title:"Hotel Transylvania 2",meta:"Animation · 4 Seasons",pro:true  },
+  { folder:"UNDERWORLD EVOLUTION",              thumb:"thumbnail.jpg",  title:"Underworld Evolution",meta:"Fantasy · 3 Seasons", pro:false },
 ];
+
+// ─── TAMASHA GAMES / TAMASHA SHOP ────────────────────────────────
+// Art comes from `Tamasha Games/` and `Tamasha Shop/`; no real game or
+// redemption backend exists yet, so both rows are presentational.
+const gamesData = [
+  { file:'Tv logo.png',   title:'Cricket Clash', meta:'Sports · Multiplayer' },
+  { file:'Tv logo-1.png', title:'Ludo Stars',    meta:'Board · 2–4 Players'  },
+  { file:'Tv logo-2.png', title:'Carrom Board',  meta:'Board · Classic'      },
+  { file:'Tv logo-3.png', title:'Snooker Pro',   meta:'Sports · 8-Ball'      },
+];
+// Only two voucher designs shipped — repeat them to fill the row
+const SHOP_VOUCHERS = [
+  { file:'Frame 1087007.png', title:'3 Free Rides', brand:'Careem'    },
+  { file:'Frame 1087008.png', title:'Rs 500 Off',   brand:'Foodpanda' },
+];
+const shopData = Array.from({ length: 8 }, (_, i) => SHOP_VOUCHERS[i % SHOP_VOUCHERS.length]);
 
 const liveSportsData = [
   { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
@@ -3036,6 +3172,59 @@ function makeTopMovieCard(item) {
   return makePortraitCard(item);
 }
 
+/* Top 10 card: oversized outlined rank sitting behind the poster (Netflix style) */
+function makeTop10Card(item, i) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap top10';
+  const title = titleOf(item);
+  const rank = (i | 0) + 1;
+  w.innerHTML = `
+    <div class="t10-rank${rank > 9 ? ' t10-two' : ''}">${rank}</div>
+    <div class="card-inner" style="height:270px">
+      <img src="${bp(item.folder,item.thumb)}" alt="${escapeXml(title)}" loading="lazy"/>
+      ${item.pro ? LOCK : ''}
+      ${item.pro ? BADGE : ''}
+      ${HOVER}
+      <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
+      <div class="card-hover-actions">
+        <button class="card-action-btn" title="Add to My List">${_PLUS}</button>
+      </div>
+    </div>`;
+  return w;
+}
+
+/* Tamasha Games: square app-icon tile with the game name underneath */
+function makeGameCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap game';
+  w.style.height = 'auto';
+  w.innerHTML = `
+    <div class="card-inner" style="height:168px">
+      <img src="${gp(item.file)}" alt="${escapeXml(item.title)}" loading="lazy"/>
+      ${HOVER}
+      <div class="game-cta">PLAY</div>
+    </div>
+    <div class="card-body">
+      <div class="card-body-title">${escapeXml(item.title)}</div>
+      <div class="card-body-sub">${escapeXml(item.meta)}</div>
+    </div>`;
+  return w;
+}
+
+/* Tamasha Shop: voucher tile — artwork already carries the offer copy */
+function makeShopCard(item) {
+  const w = document.createElement('div');
+  w.className = 'card-wrap voucher';
+  w.style.height = 'auto';
+  w.innerHTML = `
+    <div class="card-inner" style="height:144px">
+      <img src="${shp(item.file)}" alt="${escapeXml(item.brand + ' — ' + item.title)}" loading="lazy"/>
+      ${HOVER}
+      <div class="shop-redeem">Redeem</div>
+    </div>`;
+  return w;
+}
+
 /* Wide (landscape) card: continue watching with progress bar and play overlay */
 function makeWideCard(item) {
   const w = document.createElement('div');
@@ -3546,6 +3735,15 @@ function subscribeNow() { openPlansPortal(); }
 
 function attachCardClick(el, item, kind) {
   el.style.cursor = 'pointer';
+  // Games and Shop have no backend yet — acknowledge the tap and stop there
+  if (kind === 'game' || kind === 'shop') {
+    el.addEventListener('click', () => {
+      flashToast(kind === 'game'
+        ? `${item.title} — coming soon on Tamasha Games`
+        : `${item.brand} · ${item.title} — redemption coming soon`);
+    });
+    return;
+  }
   // reflect existing My List state on the "+" button
   const addBtn = el.querySelector('.card-action-btn:not(.play-btn)');
   if (addBtn && inWatchlist(titleOf(item))) { addBtn.innerHTML = _CHECK; addBtn.classList.add('in-list'); }
@@ -4739,14 +4937,16 @@ function closeAllChannels() {
 // ─── RENDER ──────────────────────────────────────────────────────
 [['moviesRow',moviesData,makePortraitCard,'movie'],
  ['liveTVRow',liveChannels,makeLandscapeCard,'live'],
- ['topMoviesRow',topMoviesData,makeTopMovieCard,'movie'],
+ ['topMoviesRow',topMoviesData,makeTop10Card,'movie'],
  ['tvShowsRow',tvShowsData,makePortraitCard,'show'],
- ['topTVRow',topTVData,makePortraitCard,'show'],
+ ['topTVRow',topTVData,makeTop10Card,'show'],
+ ['gamesRow',gamesData,makeGameCard,'game'],
  ['liveSportsRow',liveSportsData,makeSportsCard,'sport'],
  ['highlightsRow',highlightsData,makeHighlightCard,'clip'],
+ ['shopRow',shopData,makeShopCard,'shop'],
 ].forEach(([id,data,fn,kind]) => {
   const row = document.getElementById(id);
-  data.forEach(item => { const el = fn(item); attachCardClick(el, item, kind); row.appendChild(el); });
+  data.forEach((item, i) => { const el = fn(item, i); attachCardClick(el, item, kind); row.appendChild(el); });
 });
 
 // Continue Watching is category-aware — rebuilt whenever the nav filter changes
@@ -4789,7 +4989,7 @@ renderContinue('home');
 
 // ─── NAV FILTER ──────────────────────────────────────────────────
 const filterMap = {
-  home:       ['continue','movies','live-tv','tv-shows','sports','promo'],
+  home:       ['continue','movies','live-tv','tv-shows','sports','promo','games','shop'],
   movies:     ['continue','movies','promo'],
   'tv-shows': ['continue','tv-shows'],
   'live-tv':  ['live-tv'],
@@ -4867,6 +5067,8 @@ const ROW_CONFIG = {
   topTVRow:      { data: () => topTVData,      fn: makePortraitCard,  kind: 'show' },
   liveSportsRow: { data: () => liveSportsData, fn: makeSportsCard,    kind: 'sport' },
   highlightsRow: { data: () => highlightsData, fn: makeHighlightCard, kind: 'clip' },
+  gamesRow:      { data: () => gamesData,      fn: makeGameCard,      kind: 'game' },
+  shopRow:       { data: () => shopData,       fn: makeShopCard,      kind: 'shop' },
 };
 
 let _lastBrowse = null, _detailReturn = null, _playerReturn = null;
@@ -4916,7 +5118,10 @@ function openBrowse(title, data, fn, kind) {
   _lastBrowse = { title, data, fn, kind };
   const screen = document.getElementById('browseScreen');
   clearTimeout(screen._closeTimer);
-  const shape = kind === 'live' ? 'brs-landscape' : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
+  const shape = kind === 'live' ? 'brs-landscape'
+              : kind === 'shop' ? 'brs-landscape'
+              : kind === 'game' ? 'brs-square'
+              : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
   screen.innerHTML = `
     <button class="dsc-back" onclick="navBack()">${_CHEVL}<span>Back</span></button>
     <div class="dsc-anim">
