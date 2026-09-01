@@ -97,10 +97,13 @@
     .coins-pill .material-icons { font-size: 18px; color: #facc15; }
     .coins-pill .coin-count { font-size: 13px; font-weight: 600; color: #facc15; }
 
-    .login-btn { background: var(--accent-from); color: #fff; border: none; border-radius: 8px;
-      padding: 9px 22px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer;
-      transition: background .15s; }
-    .login-btn:hover { background: #1b5fd9; }
+    .login-btn { display: inline-flex; align-items: center; gap: 10px; background: none; border: none;
+      color: var(--text); font-family: var(--body-font); font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: opacity .15s; }
+    .login-btn:hover { opacity: .8; }
+    .login-avatar { width: 38px; height: 38px; border-radius: 50%; background: #d9d9de;
+      display: grid; place-items: center; flex-shrink: 0; }
+    .login-avatar svg { width: 22px; height: 22px; }
 
     /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
     .login-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 200;
@@ -741,16 +744,6 @@
     .card-action-btn.play-btn { background: var(--accent-from); border-color: transparent; }
     .card-action-btn.play-btn:hover { background: #6d28d9; }
 
-    /* ─── CONTINUE WATCHING: play overlay ─────────────────────── */
-    .continue-play-overlay {
-      position: absolute; left: 12px; bottom: 18px;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(7,6,15,0.68); border: 1.5px solid rgba(255,255,255,0.55);
-      color: #fff; display: grid; place-items: center;
-      opacity: 0; transition: opacity .2s, transform .2s;
-      backdrop-filter: blur(6px);
-    }
-    .card-wrap:hover .continue-play-overlay { opacity: 1; transform: scale(1.05); }
 
     /* ─── HIGHLIGHT: duration + play overlay ──────────────────── */
     .highlight-duration {
@@ -759,16 +752,6 @@
       padding: 2px 6px; background: rgba(7,6,15,0.78);
       border-radius: 4px; backdrop-filter: blur(4px);
     }
-    .highlight-play {
-      position: absolute; left: 50%; top: 50%;
-      transform: translate(-50%,-50%);
-      width: 42px; height: 42px; border-radius: 50%;
-      background: rgba(7,6,15,0.55); border: 1.5px solid rgba(255,255,255,0.4);
-      color: #fff; display: grid; place-items: center;
-      opacity: 0; transition: opacity .2s, transform .2s;
-      backdrop-filter: blur(8px);
-    }
-    .card-wrap:hover .highlight-play { opacity: 1; transform: translate(-50%,-50%) scale(1.05); }
 
     /* ─── BELL NOTIFICATION DOT ────────────────────────────────── */
     .bell-wrap { position: relative; }
@@ -1681,10 +1664,13 @@
       .nav-right { order: 1; margin-left: auto; gap: 12px; }
       /* Trim clutter: keep palette, search & avatar */
       .coins-pill, .bell-wrap, .nav-right > div:last-child { display: none; }
-      .login-btn { background: var(--accent-from); color: #fff; border: none; border-radius: 8px;
-      padding: 9px 22px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer;
-      transition: background .15s; }
-    .login-btn:hover { background: #1b5fd9; }
+      .login-btn { display: inline-flex; align-items: center; gap: 10px; background: none; border: none;
+      color: var(--text); font-family: var(--body-font); font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: opacity .15s; }
+    .login-btn:hover { opacity: .8; }
+    .login-avatar { width: 38px; height: 38px; border-radius: 50%; background: #d9d9de;
+      display: grid; place-items: center; flex-shrink: 0; }
+    .login-avatar svg { width: 22px; height: 22px; }
 
     /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
     .login-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 200;
@@ -1893,7 +1879,14 @@
     </div>
 
     <!-- Login (logged out) -->
-    <button class="login-btn" id="navLoginBtn" onclick="openLogin()">Login</button>
+    <div class="login-btn" id="navLoginBtn" onclick="openLogin()">
+      <span class="login-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/>
+        </svg>
+      </span>
+      <span>Login</span>
+    </div>
 
     <!-- Avatar + PRO (logged in) -->
     <div class="avatar" id="navAvatar" onclick="openAccount('overview')" title="Account" style="display:none">JD</div>
@@ -2961,7 +2954,7 @@ function makeWideCard(item) {
       <div class="card-overlay"></div>
       ${HOVER}
       <div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div>
-      <div class="continue-play-overlay">${_PLAY_W}</div>
+      <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
     </div>
     <div class="card-body">
       <div class="card-body-title">${title}</div>
@@ -3013,7 +3006,7 @@ function makeHighlightCard(item) {
       <div class="card-overlay"></div>
       ${item.pro ? BADGE : ''}
       ${HOVER}
-      <div class="highlight-play">${_PLAY_W}</div>
+      <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
       ${item.duration ? `<div class="highlight-duration">${item.duration}</div>` : ''}
     </div>
     <div class="card-body">
@@ -3544,9 +3537,16 @@ function renderAccount() {
       <div class="acct-card">
         ${acctRow('receipt_long', 'View payment history', 'Invoices, coupons and refunds', "acctGo('billing')")}
       </div>` : ''}
+      <div class="acct-label">Viewing</div>
+      <div class="acct-card">
+        ${acctRow('playlist_add_check', 'My List', `${watchlistItems().length} saved`, "acctGo('mylist')")}
+      </div>
       <div class="acct-label">Security &amp; Privacy</div>
       <div class="acct-card">
         ${acctRow('verified_user', 'Security settings', 'Email, phone and account data', "acctGo('security')")}
+      </div>
+      <div class="acct-card" style="margin-top:22px">
+        <button class="acct-row acct-danger" onclick="doLogout()">Logout</button>
       </div>`,
 
     membership: () => `
