@@ -1119,6 +1119,12 @@
 
     /* ─── HERO: LIVE FIRST ──────────────────────────────────────── */
     .hero__live-row { display: flex; align-items: center; gap: 12px; }
+    .hero-soon-pill {
+      display: inline-flex; align-items: center;
+      padding: 4px 12px; font-size: 11px; font-weight: 800; letter-spacing: 1px;
+      color: rgba(255,255,255,.9); background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.24); border-radius: 5px;
+    }
     .hero-live-pill {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 4px 10px 4px 8px; font-size: 10px; font-weight: 700;
@@ -1170,8 +1176,8 @@
     .section.cat-out { opacity: 0; transform: translateY(16px); }
 
     .cat-toast {
-      position: fixed; top: 88px; left: 50%;
-      transform: translateX(-50%) translateY(-14px) scale(.96);
+      position: fixed; bottom: 40px; left: 50%;
+      transform: translateX(-50%) translateY(16px) scale(.96);
       z-index: 300; padding: 9px 20px; border-radius: 999px;
       background: var(--accent-grad); color: #fff;
       font-family: var(--heading-font); font-weight: 700; font-size: 14px;
@@ -1183,7 +1189,7 @@
     }
     .cat-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
     .cat-toast .material-icons { font-size: 18px; }
-    @media (max-width: 600px) { .cat-toast { top: 92px; font-size: 13px; padding: 8px 16px; } }
+    @media (max-width: 600px) { .cat-toast { bottom: 24px; font-size: 13px; padding: 8px 16px; } }
 
     /* ─── DETAIL SCREEN (show / movie page) ──────────────────────── */
     .detail-screen { position: fixed; inset: 0; z-index: 150; background: var(--bg); overflow-y: auto; overflow-x: hidden; display: none; opacity: 0; transition: opacity .3s ease; }
@@ -2440,7 +2446,7 @@ const topTVData = [
 
 const liveSportsData = [
   { file:'AFG-VS-SA(300x450).jpg.jpeg',                              label:'AFG vs SA',           sub:'T20I · 2nd Innings · 14.4 ov', score:'142/3 · 96/2',      channel:'PTV Sports',      live:true,  pro:false },
-  { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Live · 8:00 PM PKT', channel:'A Sports',        live:true,  pro:false },
+  { file:'WhatsApp Image 2026-04-27 at 3.57.04 PM.jpeg',            label:'Pakistan Super League',sub:'KAR vs LAH · Qualifier',       score:'Starts 8:00 PM PKT', channel:'A Sports',        live:false, pro:false },
   { file:'IND-VS-PAK-CT.jpg',                                        label:'Champions Trophy',     sub:'PAK vs IND · Group Stage',     score:'Live · Innings Break',channel:'PTV Sports',     live:true,  pro:true,
     board:{ a:{ name:'Pakistan', flag:'🇵🇰', score:'142/3', overs:'14.4 ov' }, b:{ name:'India', flag:'🇮🇳', score:'96/2', overs:'11.2 ov' } } },
   { file:'CP 2.png',                                                  label:'County Championship',  sub:'Day 3 · Session 2',            score:'286/7 d · 142/4',   channel:'Tamasha Sports',  live:true,  pro:false },
@@ -2852,7 +2858,8 @@ function buildHeroV2() {
       <div class="hero-gradient-b"></div>
       <div class="hero-content">
         <div class="hero__live-row" style="margin-bottom:12px">
-          <span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>
+          ${m.live ? `<span class="hero-live-pill"><span class="live-dot-inline"></span>LIVE</span>`
+                   : `<span class="hero-soon-pill">UPCOMING</span>`}
           <span class="hero__live-channel">${m.channel}</span>
           ${m.pro ? `<span class="hero-pro-pill">${WAVE}Watch on PRO</span>` : ''}
         </div>
