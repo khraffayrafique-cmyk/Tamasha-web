@@ -2788,7 +2788,10 @@ function buildHeroV2() {
   // Featured movies + live sports matches share the hero carousel.
   // Always feature the PAK vs IND match, plus a couple of other live games.
   const pakInd = liveSportsData.find(s => /PAK.*IND|IND.*PAK/i.test(s.sub || s.label || ''));
-  const sportItems = [pakInd, ...liveSportsData.filter(s => s.live && s !== pakInd).slice(0, 2)]
+  const heroSportsExclude = /AFG\s*vs\s*SA/i;          // artwork doesn't crop well in the hero
+  const sportItems = [pakInd, ...liveSportsData.filter(s =>
+      s.live && s !== pakInd && !heroSportsExclude.test(s.label || ''))
+    .slice(0, 2)]
     .filter(Boolean)
     .map(s => ({ _sport: true, ...s }));
   const heroItems = heroMovies.concat(sportItems);
@@ -3036,6 +3039,28 @@ function titleOf(item) {
   return item.title || item.label || item.name ||
     (item.folder ? item.folder.replace(/_/g,' ').replace(/\([\d]+\)/,'').trim() : 'Untitled');
 }
+function escapeXml(t) {
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+// Dummy 2:3 poster used when a title ships without artwork
+function placeholderPoster(title) {
+  const raw = String(title || 'Tamasha');
+  const t = escapeXml(raw.length > 26 ? raw.slice(0, 25) + '…' : raw);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1d3f77"/><stop offset="0.55" stop-color="#13233f"/><stop offset="1" stop-color="#0a0f1c"/>
+      </linearGradient>
+    </defs>
+    <rect width="400" height="600" fill="url(#g)"/>
+    <g stroke="#2472FC" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.95">
+      <path d="M150 232l33 50 41-33-17 84H143l-17-84 41 33z"/>
+    </g>
+    <text x="200" y="410" fill="#ffffff" font-family="Manrope, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle">${t}</text>
+    <text x="200" y="446" fill="#8ea9d6" font-family="Arial, sans-serif" font-size="15" letter-spacing="3" text-anchor="middle">TAMASHA</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
 function posterOf(item) {
   if (item.folder) return bp(item.folder, item.thumb);
   if (item.file && item.name) return cp(item.file);   // live channel
@@ -3137,7 +3162,7 @@ function openDetail(item, kind) {
   closeSearch(); closeBrowse();
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
-  const poster  = posterOf(item);
+  const poster  = posterOf(item) || placeholderPoster(titleOf(item));
   const seasons = kind === 'show' ? Math.max(3, seasonCount(item)) : 1;
   const cast    = CAST_POOL.slice(0, 5).join(', ');
   const metaBits = item.meta
