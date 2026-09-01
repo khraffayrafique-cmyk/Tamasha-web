@@ -294,10 +294,12 @@
     }
     .hero-mute-btn:hover { background: rgba(255,255,255,.18); }
     .hero-genre-badge {
-      display: inline-block;
-      background: linear-gradient(90deg,#f97316,#eab308);
-      font-size: 11px; font-weight: 700;
-      padding: 3px 10px; border-radius: 4px; margin-bottom: 14px;
+      display: inline-flex; align-items: center;
+      background: rgba(12,12,18,.72); border: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.92);
+      font-size: 13px; font-weight: 700; letter-spacing: .03em;
+      padding: 6px 14px; border-radius: 999px; margin-bottom: 14px;
+      backdrop-filter: blur(8px);
     }
     .hero-title {
       font-family: var(--heading-font);
@@ -832,7 +834,7 @@
     }
     .footer-col { display: flex; flex-direction: column; gap: 8px; }
     /* align-self stops the flex column stretching (and distorting) the logo */
-    .footer-logo { height: 100%; width: auto; align-self: flex-start; object-fit: contain; }
+    .footer-logo { height: 40px; width: auto; align-self: flex-start; object-fit: contain; }
     .footer-tagline { font-size: 13px; line-height: 1.6; color: var(--text-dim); margin-top: 8px; max-width: 34ch; }
     .footer-col-h {
       font-size: 10px; font-weight: 700; letter-spacing: 2px;
@@ -2858,8 +2860,7 @@ function buildHeroV2() {
         <div class="hero-meta"><span>${m.sub}</span></div>
         ${m.board ? scoreboardHTML(m.board) : `<p style="font-size:15px;font-weight:600;line-height:1.5;color:#fff;margin:0 0 24px">${m.score}</p>`}
         <div class="hero-buttons">
-          <button class="btn-play">${_PLAY_B}Watch Live</button>
-          <button class="btn-info">More Info</button>
+          <button class="btn-play">${_PLAY_B}${m.live ? 'Watch Live' : 'Watch Promo'}</button>
         </div>
       </div>
     </div>`;
