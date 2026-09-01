@@ -717,6 +717,26 @@
       opacity: 0; transition: opacity .18s;
       z-index: 5;
     }
+    /* Three-dot menu on Continue Watching tiles */
+    .card-menu { position: absolute; top: 8px; right: 8px; z-index: 6; }
+    .card-menu-btn { width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(7,6,15,.72); border: 1px solid rgba(255,255,255,.2); color: #fff;
+      display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(6px);
+      opacity: 0; transition: opacity .18s, background .12s; }
+    .card-wrap:hover .card-menu-btn, .card-menu.open .card-menu-btn { opacity: 1; }
+    .card-menu-btn:hover { background: rgba(7,6,15,.95); }
+    .card-menu-pop { position: absolute; top: 36px; right: 0; min-width: 168px;
+      background: #1b1b28; border: 1px solid var(--border-subtle); border-radius: 10px;
+      padding: 5px; box-shadow: 0 16px 40px rgba(0,0,0,.6);
+      opacity: 0; visibility: hidden; transform: translateY(-6px);
+      transition: opacity .16s ease, transform .16s ease, visibility .16s; }
+    .card-menu.open .card-menu-pop { opacity: 1; visibility: visible; transform: none; }
+    .card-menu-item { display: block; width: 100%; text-align: left; background: none; border: none;
+      color: var(--text); font-family: var(--body-font); font-size: 13.5px; font-weight: 600;
+      padding: 10px 12px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+    .card-menu-item:hover { background: var(--surface-hover); }
+    @media (max-width: 600px) { .card-menu-btn { opacity: 1; } }
+
     /* Centred play button */
     .card-play-center {
       position: absolute; left: 50%; top: 50%;
@@ -2959,8 +2979,12 @@ function makeWideCard(item) {
       <img src="${bp(item.folder,item.thumb)}" alt="${title}" loading="lazy"/>
       <div class="card-overlay"></div>
       ${HOVER}
-      <div class="progress-track"><div class="progress-fill" style="width:${item.progress}%"></div></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${itemProgress(item)}%"></div></div>
       <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
+      <div class="card-menu">
+        <button class="card-menu-btn" title="More options">${_DOTS}</button>
+        <div class="card-menu-pop"><button class="card-menu-item" data-reset="${escapeXml(title)}">Reset progress</button></div>
+      </div>
     </div>
     <div class="card-body">
       <div class="card-body-title">${title}</div>
@@ -3203,7 +3227,7 @@ function openDetail(item, kind) {
           <div class="dsc-cast"><span>Featuring:</span> ${cast}</div>
           <div class="dsc-actions">
             <button class="btn btn--primary btn--lg dsc-watch">${_PLAY_W}${kind === 'show' ? 'Watch S1 E1' : 'Watch Now'}</button>
-            <button class="btn btn--ghost btn--lg">${_PLUS}My List</button>
+            <button class="btn btn--ghost btn--lg dsc-mylist">${inWatchlist(title) ? _CHECK : _PLUS}My List</button>
           </div>
         </div>
       </div>
@@ -3235,6 +3259,15 @@ function openDetail(item, kind) {
     </div>`;
 
   screen._item = item; screen._kind = kind;
+
+  const listBtn = screen.querySelector('.dsc-mylist');
+  if (listBtn) listBtn.addEventListener('click', () => {
+    if (!AUTH.loggedIn) { _pendingAdd = title; openLogin(); return; }
+    const added = toggleWatchlist(title);
+    listBtn.innerHTML = (added ? _CHECK : _PLUS) + 'My List';
+    flashToast(added ? `${title} has been added to your list`
+                     : `${title} has been removed from your list`);
+  });
 
   const watchBtn = screen.querySelector('.dsc-watch');
   watchBtn.addEventListener('click', () => {
@@ -3361,6 +3394,45 @@ function closeDetail() {
 }
 
 // Make a card open the right destination: show/movie → detail, else → player
+// ─── CONTINUE WATCHING PROGRESS ──────────────────────────────────
+const PROGRESS_KEY = 'tamasha_progress';
+function progressOverrides() { try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch (e) { return {}; } }
+function itemProgress(item) {
+  const o = progressOverrides(), t = titleOf(item);
+  return o[t] !== undefined ? o[t] : item.progress;
+}
+function setItemProgress(title, val) {
+  const o = progressOverrides(); o[title] = val;
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(o)); } catch (e) {}
+}
+function resetProgress(title) {
+  setItemProgress(title, 0);
+  flashToast('Progress reset for ' + title);
+  renderContinue(_currentFilter);
+}
+
+// Three-dot menu: toggle, act, and close on outside click
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.card-menu-btn');
+  const item = e.target.closest('.card-menu-item');
+  if (item) {
+    e.stopPropagation();
+    const t = item.dataset.reset;
+    document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
+    if (t) resetProgress(t);
+    return;
+  }
+  if (btn) {
+    e.stopPropagation();
+    const menu = btn.closest('.card-menu');
+    const wasOpen = menu.classList.contains('open');
+    document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) menu.classList.add('open');
+    return;
+  }
+  document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
+});
+
 // ─── MY LIST (watchlist, persisted in localStorage) ──────────────
 const WATCHLIST_KEY = 'tamasha_watchlist';
 // Saved titles -> real content items (deduped, in dataset order)
@@ -3409,12 +3481,14 @@ function attachCardClick(el, item, kind) {
 
   el.addEventListener('click', e => {
     const add = e.target.closest('.card-action-btn:not(.play-btn)');
-    if (add) {   // "+" → toggle My List
+    if (add) {   // "+" → toggle My List (sign-in required)
       e.stopPropagation();
+      if (!AUTH.loggedIn) { _pendingAdd = titleOf(item); openLogin(); return; }
       const added = toggleWatchlist(titleOf(item));
       add.innerHTML = added ? _CHECK : _PLUS;
       add.classList.toggle('in-list', added);
-      flashToast(added ? 'Added to My List' : 'Removed from My List');
+      flashToast(added ? `${titleOf(item)} has been added to your list`
+                       : `${titleOf(item)} has been removed from your list`);
       return;
     }
     if (e.target.closest('.play-btn, .highlight-play, .continue-play-overlay')) {
@@ -3472,6 +3546,7 @@ const BILLING = [
 ];
 let _acctSection = 'overview';
 
+const _DOTS = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>`;
 const _CHEV_R = `<svg class="acct-row-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
 const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
@@ -3846,6 +3921,7 @@ function acctStub(what) { flashToast(what + ' — coming soon'); }
 // ─── LOGIN / LOGOUT ──────────────────────────────────────────────
 // Demo auth only — nothing is sent anywhere.
 //   1234 / 0000 → free account      1122 / 0000 → Tamasha PRO subscriber
+let _pendingAdd = null;    // title the user tried to save while logged out
 const DEMO_USERS = [
   { number:'1234', pin:'0000', pro:false },
   { number:'1122', pin:'0000', pro:true, planId:'monthly' },
@@ -3921,15 +3997,23 @@ function doLogin() {
   AUTH.loggedIn = true; AUTH.number = num;
   try { localStorage.setItem(AUTH_KEY, num); } catch (e) {}
   applyAuthUser(num);
-  syncAuthState(); syncProState();
+  syncAuthState(); syncProState(); renderContinue(_currentFilter);
   closeLogin(); navBack();
-  flashToast(u.pro ? 'Signed in — Tamasha PRO active' : 'Signed in as ' + ACCOUNT.name);
+
+  if (_pendingAdd) {                       // finish the save they started before signing in
+    const t = _pendingAdd; _pendingAdd = null;
+    if (!inWatchlist(t)) toggleWatchlist(t);
+    refreshListButtons();
+    flashToast(`${t} has been added to your list`);
+  } else {
+    flashToast(u.pro ? 'Signed in — Tamasha PRO active' : 'Signed in as ' + ACCOUNT.name);
+  }
 }
 function doLogout() {
-  AUTH.loggedIn = false; AUTH.number = null;
+  AUTH.loggedIn = false; AUTH.number = null; _pendingAdd = null;
   ACCOUNT.subscribed = false; ACCOUNT.planId = null; ACCOUNT.pendingCancel = false;
   try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
-  syncAuthState(); syncProState();
+  syncAuthState(); syncProState(); renderContinue(_currentFilter);
   closeAccount(); _nav = [];
   flashToast('Signed out');
 }
@@ -3937,6 +4021,19 @@ function doLogout() {
 function requireLogin(then) {
   if (AUTH.loggedIn) { then(); return; }
   openLogin();
+}
+
+// Re-sync every visible "+" button with the saved list
+function refreshListButtons() {
+  document.querySelectorAll('.card-wrap').forEach(w => {
+    const btn = w.querySelector('.card-action-btn:not(.play-btn)');
+    const t = (w.querySelector('.card-body-title') || {}).textContent
+           || (w.querySelector('img') || {}).alt || '';
+    if (!btn || !t) return;
+    const on = inWatchlist(t);
+    btn.innerHTML = on ? _CHECK : _PLUS;
+    btn.classList.toggle('in-list', on);
+  });
 }
 
 // Reflect PRO state across the app: navbar badge + tile badges/locks
@@ -4582,9 +4679,15 @@ function closeAllChannels() {
 });
 
 // Continue Watching is category-aware — rebuilt whenever the nav filter changes
+let _currentFilter = 'home';
 function renderContinue(filter) {
+  _currentFilter = filter || 'home';
   const row = document.getElementById('continueRow');
+  const sec = document.getElementById('sec-continue');
   if (!row) return;
+  // Continue Watching only exists for a signed-in user
+  if (sec) sec.style.display = AUTH.loggedIn ? '' : 'none';
+  if (!AUTH.loggedIn) { row.innerHTML = ''; return; }
   let cat = null;
   if (filter === 'movies' || filter === 'shorts') cat = 'movies';
   else if (filter === 'tv-shows')                 cat = 'tv-shows';
@@ -4594,8 +4697,10 @@ function renderContinue(filter) {
     const el = makeWideCard(item);
     // Continue Watching resumes playback directly — no detail screen
     el.style.cursor = 'pointer';
-    el.addEventListener('click', () =>
-      openPlayer(pickVimeo(titleOf(item)), titleOf(item), item.sub || 'Resume watching'));
+    el.addEventListener('click', e => {
+      if (e.target.closest('.card-menu')) return;      // menu handles its own clicks
+      openPlayer(pickVimeo(titleOf(item)), titleOf(item), item.sub || 'Resume watching');
+    });
     row.appendChild(el);
   });
   const eyebrow = document.querySelector('#sec-continue .section-eyebrow');
