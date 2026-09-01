@@ -2983,7 +2983,7 @@ function makeWideCard(item) {
       <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
       <div class="card-menu">
         <button class="card-menu-btn" title="More options">${_DOTS}</button>
-        <div class="card-menu-pop"><button class="card-menu-item" data-reset="${escapeXml(title)}">Reset progress</button></div>
+        <div class="card-menu-pop"><button class="card-menu-item" data-remove="${escapeXml(title)}">Remove title</button></div>
       </div>
     </div>
     <div class="card-body">
@@ -3405,9 +3405,13 @@ function setItemProgress(title, val) {
   const o = progressOverrides(); o[title] = val;
   try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(o)); } catch (e) {}
 }
-function resetProgress(title) {
-  setItemProgress(title, 0);
-  flashToast('Progress reset for ' + title);
+const CONTINUE_HIDDEN_KEY = 'tamasha_continue_removed';
+function removedContinue() { try { return JSON.parse(localStorage.getItem(CONTINUE_HIDDEN_KEY) || '[]'); } catch (e) { return []; } }
+function removeFromContinue(title) {
+  const list = removedContinue();
+  if (!list.includes(title)) list.push(title);
+  try { localStorage.setItem(CONTINUE_HIDDEN_KEY, JSON.stringify(list)); } catch (e) {}
+  flashToast(`${title} removed from Continue Watching`);
   renderContinue(_currentFilter);
 }
 
@@ -3417,9 +3421,9 @@ document.addEventListener('click', e => {
   const item = e.target.closest('.card-menu-item');
   if (item) {
     e.stopPropagation();
-    const t = item.dataset.reset;
+    const t = item.dataset.remove;
     document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
-    if (t) resetProgress(t);
+    if (t) removeFromContinue(t);
     return;
   }
   if (btn) {
@@ -4691,8 +4695,12 @@ function renderContinue(filter) {
   let cat = null;
   if (filter === 'movies' || filter === 'shorts') cat = 'movies';
   else if (filter === 'tv-shows')                 cat = 'tv-shows';
-  const items = cat ? continueData.filter(i => i.cat === cat) : continueData;
+  const gone = removedContinue();
+  const items = (cat ? continueData.filter(i => i.cat === cat) : continueData)
+    .filter(i => !gone.includes(titleOf(i)));
   row.innerHTML = '';
+  // nothing left to resume — hide the whole section
+  if (sec) sec.style.display = items.length ? '' : 'none';
   items.forEach(item => {
     const el = makeWideCard(item);
     // Continue Watching resumes playback directly — no detail screen
