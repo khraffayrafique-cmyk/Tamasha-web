@@ -2788,7 +2788,7 @@ function buildHeroV2() {
   // Featured movies + live sports matches share the hero carousel.
   // Always feature the PAK vs IND match, plus a couple of other live games.
   const pakInd = liveSportsData.find(s => /PAK.*IND|IND.*PAK/i.test(s.sub || s.label || ''));
-  const heroSportsExclude = /AFG\s*vs\s*SA/i;          // artwork doesn't crop well in the hero
+  const heroSportsExclude = /AFG\s*vs\s*SA|County\s*Championship/i;   // artwork doesn't crop well in the hero
   const sportItems = [pakInd, ...liveSportsData.filter(s =>
       s.live && s !== pakInd && !heroSportsExclude.test(s.label || ''))
     .slice(0, 2)]
