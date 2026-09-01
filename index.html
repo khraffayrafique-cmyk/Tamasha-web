@@ -97,6 +97,25 @@
     .coins-pill .material-icons { font-size: 18px; color: #facc15; }
     .coins-pill .coin-count { font-size: 13px; font-weight: 600; color: #facc15; }
 
+    .login-btn { background: var(--accent-from); color: #fff; border: none; border-radius: 8px;
+      padding: 9px 22px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background .15s; }
+    .login-btn:hover { background: #1b5fd9; }
+
+    /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
+    .login-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 200;
+      background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
+    .login-screen.open { display: block; }
+    .login-screen.visible { opacity: 1; }
+    .login-card { max-width: 400px; margin: 0 auto; padding: 56px 24px 80px; text-align: center; }
+    .login-logo { height: 52px; margin-bottom: 26px; }
+    .login-h { font-family: var(--heading-font); font-size: 27px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 26px; line-height: 1.55; }
+    .login-field { text-align: left; margin-bottom: 16px; }
+    .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
+    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; }
+    .login-err { color: #f87171; font-size: 13px; margin: 4px 0 0; min-height: 1px; text-align: left; }
+
     .avatar {
       width: 40px; height: 40px; border-radius: 50%;
       border: 2px solid #fff;
@@ -695,6 +714,20 @@
       opacity: 0; transition: opacity .18s;
       z-index: 5;
     }
+    /* Centred play button */
+    .card-play-center {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%,-50%) scale(.88);
+      width: 58px; height: 58px; border-radius: 50%;
+      background: var(--accent-from); border: none; color: #fff;
+      display: grid; place-items: center; cursor: pointer; z-index: 5;
+      opacity: 0; transition: opacity .18s, transform .18s;
+      box-shadow: 0 8px 26px rgba(0,0,0,.45);
+    }
+    .card-play-center svg { width: 24px; height: 24px; margin-left: 3px; }
+    .card-wrap:hover .card-play-center { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    .card-play-center:hover { background: #1b5fd9; }
+    @media (max-width: 600px) { .card-play-center { opacity: 1; width: 46px; height: 46px; } .card-play-center svg { width: 19px; height: 19px; } }
     .card-wrap:hover .card-hover-actions { opacity: 1; }
     .card-action-btn {
       width: 28px; height: 28px; border-radius: 50%;
@@ -1648,7 +1681,26 @@
       .nav-right { order: 1; margin-left: auto; gap: 12px; }
       /* Trim clutter: keep palette, search & avatar */
       .coins-pill, .bell-wrap, .nav-right > div:last-child { display: none; }
-      .avatar { width: 34px; height: 34px; font-size: 12px; }
+      .login-btn { background: var(--accent-from); color: #fff; border: none; border-radius: 8px;
+      padding: 9px 22px; font-family: var(--body-font); font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background .15s; }
+    .login-btn:hover { background: #1b5fd9; }
+
+    /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
+    .login-screen { position: fixed; top: 70px; left: 0; right: 0; bottom: 0; z-index: 200;
+      background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
+    .login-screen.open { display: block; }
+    .login-screen.visible { opacity: 1; }
+    .login-card { max-width: 400px; margin: 0 auto; padding: 56px 24px 80px; text-align: center; }
+    .login-logo { height: 52px; margin-bottom: 26px; }
+    .login-h { font-family: var(--heading-font); font-size: 27px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 26px; line-height: 1.55; }
+    .login-field { text-align: left; margin-bottom: 16px; }
+    .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
+    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; }
+    .login-err { color: #f87171; font-size: 13px; margin: 4px 0 0; min-height: 1px; text-align: left; }
+
+    .avatar { width: 34px; height: 34px; font-size: 12px; }
 
       /* Search bar collapses to zero height when closed so it adds no row */
       .search-bar-wrap { order: 3; flex: 0 0 0; width: 0; height: 0; overflow: hidden; }
@@ -1840,9 +1892,12 @@
       </svg>
     </div>
 
-    <!-- Avatar + PRO -->
-    <div class="avatar" onclick="openAccount('overview')" title="Account">JD</div>
-    <div style="display:flex;flex-direction:column;gap:3px;cursor:pointer" onclick="openAccount('overview')">
+    <!-- Login (logged out) -->
+    <button class="login-btn" id="navLoginBtn" onclick="openLogin()">Login</button>
+
+    <!-- Avatar + PRO (logged in) -->
+    <div class="avatar" id="navAvatar" onclick="openAccount('overview')" title="Account" style="display:none">JD</div>
+    <div id="navUser" style="display:none;flex-direction:column;gap:3px;cursor:pointer" onclick="openAccount('overview')">
       <span class="user-name">John Doe</span>
       <div class="pro-badge" id="navProBadge" style="display:none">
         <svg style="width:14px;height:10px;flex-shrink:0" viewBox="0 0 20 14" fill="none"><path d="M1.5 11.5L3.8 5.5 7 9.5 10 2.5 13 9.5 16.2 5.5 18.5 11.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2077,6 +2132,9 @@
 
 <!-- ════════════════ SEARCH SCREEN ════════════════════ -->
 <div class="search-screen" id="searchScreen"></div>
+
+<!-- ════════════════ LOGIN SCREEN ══════════════════════ -->
+<div class="login-screen" id="loginScreen"></div>
 
 <!-- ════════════════ ACCOUNT / PROFILE SCREEN ══════════ -->
 <div class="account-screen" id="accountScreen"></div>
@@ -2412,7 +2470,7 @@ const _DIAMOND = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentC
 
 // True while any full-screen overlay covers the homepage — hero media must stay silent
 function overlayActive() {
-  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen','accountScreen','proScreen']
+  return ['liveTVScreen','playerModal','detailScreen','browseScreen','searchScreen','accountScreen','proScreen','loginScreen']
     .some(id => { const el = document.getElementById(id); return el && el.classList.contains('open'); });
 }
 
@@ -2878,8 +2936,8 @@ function makePortraitCard(item) {
       ${item.pro ? LOCK : ''}
       ${item.pro ? BADGE : ''}
       ${HOVER}
+      <button class="card-play-center play-btn" title="Play">${_PLAY_W}</button>
       <div class="card-hover-actions">
-        <button class="card-action-btn play-btn" title="Play">${_PLAY_W}</button>
         <button class="card-action-btn" title="Add to My List">${_PLUS}</button>
       </div>
     </div>`;
@@ -3019,11 +3077,6 @@ function makeEpisodes(item, season) {
 // ctx (optional) = { item, season, title, episodes:[...], playingEp } enables the in-player episode switcher.
 let _playerCtx = null;
 function openPlayer(vimeoId, title, sub, ctx) {
-  const isOpen = id => document.getElementById(id).classList.contains('open');
-  if (!isOpen('playerModal')) {
-    _playerReturn = isOpen('browseScreen') ? 'browse' : isOpen('searchScreen') ? 'search' : null;
-  }
-  closeSearch();
   _playerCtx = ctx || null;
   const modal = document.getElementById('playerModal');
   const hasEps = ctx && ctx.episodes && ctx.episodes.length;
@@ -3116,7 +3169,7 @@ function openDetail(item, kind) {
   screen.innerHTML = `
     <div class="dsc-anim">
     <div class="dsc-hero">
-      <button class="dsc-back" onclick="closeDetail();navBack()">${_CHEVL}<span>Back</span></button>
+      <button class="dsc-back" onclick="navBack()">${_CHEVL}<span>Back</span></button>
       <div class="dsc-hero-bg">${poster ? `<img src="${poster}" alt="">` : ''}</div>
       <div class="dsc-hero-veil"></div>
       <div class="dsc-hero-inner${poster ? '' : ' no-poster'}">
@@ -3130,7 +3183,6 @@ function openDetail(item, kind) {
           <div class="dsc-actions">
             <button class="btn btn--primary btn--lg dsc-watch">${_PLAY_W}${kind === 'show' ? 'Watch S1 E1' : 'Watch Now'}</button>
             <button class="btn btn--ghost btn--lg">${_PLUS}My List</button>
-            <button class="btn btn--ghost btn--lg">${_BELL}Notify</button>
           </div>
         </div>
       </div>
@@ -3290,6 +3342,21 @@ function closeDetail() {
 // Make a card open the right destination: show/movie → detail, else → player
 // ─── MY LIST (watchlist, persisted in localStorage) ──────────────
 const WATCHLIST_KEY = 'tamasha_watchlist';
+// Saved titles -> real content items (deduped, in dataset order)
+function watchlistItems() {
+  const wl = getWatchlist();
+  const pool = [
+    ...moviesData.map(i => ({ item:i, kind:'movie' })),
+    ...topMoviesData.map(i => ({ item:i, kind:'movie' })),
+    ...tvShowsData.map(i => ({ item:i, kind:'show' })),
+    ...topTVData.map(i => ({ item:i, kind:'show' })),
+    ...liveSportsData.map(i => ({ item:i, kind:'sport' })),
+    ...highlightsData.map(i => ({ item:i, kind:'clip' })),
+  ];
+  const seen = new Set(); const out = [];
+  pool.forEach(x => { const t = titleOf(x.item); if (wl.includes(t) && !seen.has(t)) { seen.add(t); out.push(x); } });
+  return out;
+}
 function getWatchlist() { try { return JSON.parse(localStorage.getItem(WATCHLIST_KEY) || '[]'); } catch (e) { return []; } }
 function inWatchlist(id) { return getWatchlist().includes(id); }
 function toggleWatchlist(id) {
@@ -3309,7 +3376,9 @@ function flashToast(msg) {
   _catToastTimer = setTimeout(() => catToast.classList.remove('show'), 1400);
 }
 
-function subscribeNow() { openAccount('plans'); }
+const PLANS_URL = 'https://portal.tamashaweb.com/SPV/plans';
+function openPlansPortal() { window.open(PLANS_URL, '_blank', 'noopener'); }
+function subscribeNow() { openPlansPortal(); }
 
 function attachCardClick(el, item, kind) {
   el.style.cursor = 'pointer';
@@ -3342,6 +3411,13 @@ function attachCardClick(el, item, kind) {
 
 // ─── ACCOUNT / PROFILE ───────────────────────────────────────────
 // UI-only: nothing here collects real payment details; card data is masked mock data.
+const AUTH_KEY = 'tamasha_auth';
+const AUTH = { loggedIn: false, number: null };
+try {
+  const saved = localStorage.getItem(AUTH_KEY);
+  if (saved) { AUTH.loggedIn = true; AUTH.number = saved; }
+} catch (e) {}
+
 const ACCOUNT = {
   name: 'John Doe', memberSince: '2022', phone: '923071502316',
   email: 'john.doe@example.com', city: 'Bahawal Nagar', gender: 'Male', birthday: '',
@@ -3379,6 +3455,7 @@ const _CHEV_R = `<svg class="acct-row-chev" width="16" height="16" viewBox="0 0 
 const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function openAccount(section) {
+  if (!AUTH.loggedIn) { openLogin(); return; }
   navPush();
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true);
   _acctSection = section || 'overview';
@@ -3401,7 +3478,7 @@ function closeAccount() {
 }
 let _acctHistory = [];
 function acctGo(section, noPush) {
-  if (section === 'plans') { openProSubscribe(); return; }   // subscribe journey has its own screen
+  if (section === 'plans') { openPlansPortal(); return; }    // plans live on the Tamasha portal
   if (!noPush && _acctSection && _acctSection !== section) _acctHistory.push(_acctSection);
   _acctSection = section; renderAccount();
   document.getElementById('accountScreen').scrollTop = 0;
@@ -3410,14 +3487,13 @@ function acctGo(section, noPush) {
 function acctBack() {
   const prev = _acctHistory.pop();
   if (prev) { acctGo(prev, true); return; }
-  closeAccount(); navBack();
+  navBack();
 }
 
 const ACCT_NAV = [
   { id:'overview',   icon:'home',        label:'Overview' },
   { id:'membership', icon:'credit_card', label:'Membership', proOnly:true },
   { id:'security',   icon:'verified_user', label:'Security' },
-  { id:'devices',    icon:'devices',     label:'Devices' },
   { id:'profile',    icon:'person',      label:'Profile' },
 ];
 
@@ -3460,25 +3536,17 @@ function renderAccount() {
       </div>
       <div class="acct-label">Subscription</div>
       <div class="acct-card">
-        ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', ACCOUNT.subscribed ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).name : 'Ad-free, Ultra HD, unlimited access', "acctGo('plans')")}
+        ${acctRow('swap_horiz', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', ACCOUNT.subscribed ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).name : 'Ad-free, Ultra HD, unlimited access', "openPlansPortal()")}
         ${ACCOUNT.subscribed ? acctRow('credit_card', 'Manage payment method', payMethod().name, "acctGo('payment')") : ''}
       </div>
       ${ACCOUNT.subscribed ? `
       <div class="acct-label">Billing</div>
       <div class="acct-card">
         ${acctRow('receipt_long', 'View payment history', 'Invoices, coupons and refunds', "acctGo('billing')")}
-        ${acctRow('redeem', 'Redeem gift or promo code', '', "acctStub('Redeem promo code')")}
       </div>` : ''}
-      <div class="acct-label">Devices &amp; Access</div>
-      <div class="acct-card">
-        ${acctRow('devices', 'Manage access and devices', 'Manage signed-in devices', "acctGo('devices')")}
-        ${acctRow('download', 'Mobile download devices', 'Using 0 of 2 download devices', "acctStub('Download devices')")}
-      </div>
       <div class="acct-label">Security &amp; Privacy</div>
       <div class="acct-card">
-        ${acctRow('mail', 'Email', ACCOUNT.email, "acctGo('security')")}
-        ${acctRow('smartphone', 'Mobile phone', ACCOUNT.phone, "acctGo('security')")}
-        ${acctRow('verified_user', 'Security settings', 'Access, privacy and account data', "acctGo('security')")}
+        ${acctRow('verified_user', 'Security settings', 'Email, phone and account data', "acctGo('security')")}
       </div>`,
 
     membership: () => `
@@ -3491,7 +3559,7 @@ function renderAccount() {
             ? (PLANS.find(p => p.id === ACCOUNT.planId) || {}).desc
             : 'Subscribe to stream ad-free in Full HD with premium sports and originals.'}</div>
         </div>
-        ${acctRow('', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "acctGo('plans')")}
+        ${acctRow('', ACCOUNT.subscribed ? 'Change plan' : 'Choose a plan', '', "openPlansPortal()")}
       </div>
       <div class="acct-label">Payment Info</div>
       <div class="acct-card">
@@ -3555,7 +3623,7 @@ function renderAccount() {
               <button class="cx-btn cx-btn--alt" onclick="acctSwitchPlan('${cheaper.id}')">Change to ${cheaper.name}</button>
               <div class="cx-price"><s>${(PLANS.find(p=>p.id===ACCOUNT.planId)||{}).price}</s> → <strong>${cheaper.price}${cheaper.per}</strong></div>
               <div class="cx-note">${cheaper.desc}</div>
-              <a class="cx-link" href="#" onclick="event.preventDefault();acctGo('plans')">Compare All Plans</a>
+              <a class="cx-link" href="#" onclick="event.preventDefault();openPlansPortal()">Compare All Plans</a>
             </div>` : ''; })()}
           <div class="acct-card" style="padding:20px 22px;margin-top:16px;text-align:center">
             <div class="cx-stay">Want to stick around?</div>
@@ -3640,6 +3708,19 @@ function renderAccount() {
       </div>`,
 
 
+    mylist: () => {
+      const items = watchlistItems();
+      return `
+      <h1 class="acct-title">My List</h1>
+      <div class="acct-sub">${items.length ? `${items.length} title${items.length > 1 ? 's' : ''} saved for later.` : 'Titles you save with the + button appear here.'}</div>
+      ${items.length
+        ? `<div class="brs-grid" id="mylistGrid" style="padding:0"></div>`
+        : `<div class="acct-card" style="padding:34px;text-align:center;color:var(--text-dim)">
+             Nothing saved yet — tap <strong>+</strong> on any poster to add it.
+           </div>`}
+      <div class="acct-actions"><button class="btn btn--ghost btn--lg" onclick="acctBack()">Back</button></div>`;
+    },
+
     billing: () => `
       <h1 class="acct-title">Billing Details</h1>
       <div class="acct-sub">Your recent Tamasha payments.</div>
@@ -3668,23 +3749,11 @@ function renderAccount() {
       </div>
       <div class="acct-label">Access and Privacy</div>
       <div class="acct-card">
-        ${acctRow('devices', 'Access and devices', 'Manage signed-in devices', "acctGo('devices')")}
         ${acctRow('shield', 'Personal info access', 'Request a copy of your personal info', "acctStub('Personal info request')")}
         ${acctRow('description', 'Terms and Conditions', '', "acctStub('Terms and Conditions')")}
       </div>
       <div class="acct-card" style="margin-top:22px">
         <button class="acct-row acct-danger" onclick="acctGo('deleteIdentity')">Delete Account</button>
-      </div>`,
-
-    devices: () => `
-      <h1 class="acct-title">Devices</h1>
-      <div class="acct-label">Account Access</div>
-      <div class="acct-card">
-        ${acctRow('devices', 'Access and devices', 'Manage signed-in devices', "acctStub('Signed-in devices')")}
-      </div>
-      <div class="acct-label">Mobile Downloads</div>
-      <div class="acct-card">
-        ${acctRow('download', 'Mobile download devices', 'Using 0 of 2 download devices', "acctStub('Download devices')")}
       </div>`,
 
     profile: () => `
@@ -3701,30 +3770,17 @@ function renderAccount() {
       <div class="acct-actions" style="margin-bottom:8px">
         <button class="btn btn--primary" onclick="acctStub('Edit profile and photo')">Edit Profile and Photo</button>
       </div>
-      <div class="acct-label">Playback &amp; Language</div>
-      <div class="acct-card">
-        ${acctRow('translate', 'Languages', 'English, اردو', "acctStub('Language preferences')")}
-        ${acctRow('subtitles', 'Subtitle appearance', 'Customise the way subtitles appear', "acctStub('Subtitle appearance')")}
-        ${acctRow('play_circle_outline', 'Playback settings', 'Set autoplay and audio, video quality', "acctStub('Playback settings')")}
-      </div>
-      <div class="acct-label">Notifications</div>
-      <div class="acct-card">
-        ${acctRow('notifications_none', 'Notification settings', 'Manage notifications for email, text, push', "acctStub('Notification settings')")}
-        ${acctRow('local_offer', 'Offers and promotions', 'Hear about Tamasha deals and new releases', "acctStub('Offers and promotions')")}
-      </div>
       <div class="acct-label">Viewing</div>
       <div class="acct-card">
-        ${acctRow('history', 'Watch history', 'See everything you have watched', "acctStub('Watch history')")}
-        ${acctRow('download', 'Downloads', 'Manage your offline downloads', "acctStub('Downloads')")}
-        ${acctRow('playlist_add_check', 'My List', 'Titles you saved for later', "acctStub('My List')")}
+        ${acctRow('playlist_add_check', 'My List', `${watchlistItems().length} saved`, "acctGo('mylist')")}
       </div>
       <div class="acct-label">Account</div>
       <div class="acct-card">
-        ${ACCOUNT.subscribed ? acctRow('credit_card', 'Subscription and payments', payMethod().name, "acctGo('membership')") : acctRow('workspace_premium', 'Get Tamasha Pro', 'Subscribe for ad-free Ultra HD', "acctGo('plans')")}
+        ${ACCOUNT.subscribed ? acctRow('credit_card', 'Subscription and payments', payMethod().name, "acctGo('membership')") : acctRow('workspace_premium', 'Get Tamasha Pro', 'Subscribe for ad-free Ultra HD', "openPlansPortal()")}
         ${acctRow('description', 'Terms and Conditions', '', "acctStub('Terms and Conditions')")}
       </div>
       <div class="acct-card" style="margin-top:22px">
-        <button class="acct-row acct-danger" onclick="acctStub('Logout')">Logout</button>
+        <button class="acct-row acct-danger" onclick="doLogout()">Logout</button>
       </div>
       <div class="acct-card" style="margin-top:14px">
         <button class="acct-row acct-danger" onclick="acctGo('deleteIdentity')">Delete Account</button>
@@ -3745,12 +3801,115 @@ function renderAccount() {
       </aside>
       <main class="acct-main">${(body[_acctSection] || body.overview)()}</main>
     </div>`;
+
+  const mg = document.getElementById('mylistGrid');
+  if (mg) watchlistItems().forEach(({ item, kind }) => {
+    const el = KIND_BUILDER[kind](item);
+    attachCardClick(el, item, kind);
+    mg.appendChild(el);
+  });
   initSlides(screen);
   initOtp(screen);
 }
 
 // Placeholder for flows that need a real backend (payments, auth, etc.)
 function acctStub(what) { flashToast(what + ' — coming soon'); }
+
+// ─── LOGIN / LOGOUT ──────────────────────────────────────────────
+// Demo auth only — nothing is sent anywhere.
+//   1234 / 0000 → free account      1122 / 0000 → Tamasha PRO subscriber
+const DEMO_USERS = [
+  { number:'1234', pin:'0000', pro:false },
+  { number:'1122', pin:'0000', pro:true, planId:'monthly' },
+];
+function demoUser(n) { return DEMO_USERS.find(u => u.number === n); }
+
+// Apply the signed-in account's entitlements
+function applyAuthUser(n) {
+  const u = demoUser(n);
+  if (!u) return;
+  ACCOUNT.subscribed = !!u.pro;
+  ACCOUNT.planId = u.pro ? (u.planId || 'monthly') : null;
+  ACCOUNT.pendingCancel = false; ACCOUNT.paused = false;
+}
+
+function syncAuthState() {
+  const on = AUTH.loggedIn;
+  const set = (id, disp) => { const el = document.getElementById(id); if (el) el.style.display = disp; };
+  set('navLoginBtn', on ? 'none' : 'inline-flex');
+  set('navAvatar',   on ? 'flex' : 'none');
+  set('navUser',     on ? 'flex' : 'none');
+  if (!on) { const b = document.getElementById('navProBadge'); if (b) b.style.display = 'none'; }
+}
+
+function openLogin() {
+  navPush();
+  closeSearch(); closeBrowse(); closeDetail(); closeAccount(); closeLiveTV(true);
+  const scr = document.getElementById('loginScreen');
+  clearTimeout(scr._closeTimer);
+  scr.innerHTML = `
+    <div class="login-card">
+      <img class="login-logo" src="Tamashalogo.png" alt="Tamasha">
+      <div class="login-h">Sign in to Tamasha</div>
+      <div class="login-sub">Enter your 4-digit number and PIN to continue.</div>
+      <div class="login-field">
+        <label for="loginNum">Number</label>
+        <input class="pro-input" id="loginNum" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="1234">
+      </div>
+      <div class="login-field">
+        <label for="loginPin">PIN</label>
+        <input class="pro-input" id="loginPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+      </div>
+      <div class="login-err" id="loginErr"></div>
+      <button class="pro-cta" style="margin-top:18px" onclick="doLogin()">Sign In</button>
+      <div class="login-hint">Demo accounts — <strong>1234</strong> / 0000 (free) · <strong>1122</strong> / 0000 (Tamasha PRO).</div>
+    </div>`;
+  ['loginNum','loginPin'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => { el.value = el.value.replace(/\D/g, '').slice(0, 4); });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  });
+  scr.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => scr.classList.add('visible')));
+  setTimeout(() => { const n = document.getElementById('loginNum'); if (n) n.focus(); }, 120);
+  stopHeroTimer(); pauseHeroMedia();
+}
+function closeLogin() {
+  const scr = document.getElementById('loginScreen');
+  if (!scr.classList.contains('open')) return;
+  scr.classList.remove('visible');
+  clearTimeout(scr._closeTimer);
+  scr._closeTimer = setTimeout(() => { scr.classList.remove('open'); scr.innerHTML = ''; }, 260);
+}
+function doLogin() {
+  const num = (document.getElementById('loginNum') || {}).value || '';
+  const pin = (document.getElementById('loginPin') || {}).value || '';
+  const err = document.getElementById('loginErr');
+  const u = demoUser(num);
+  if (!u || u.pin !== pin) {
+    if (err) err.textContent = 'Incorrect number or PIN.';
+    return;
+  }
+  AUTH.loggedIn = true; AUTH.number = num;
+  try { localStorage.setItem(AUTH_KEY, num); } catch (e) {}
+  applyAuthUser(num);
+  syncAuthState(); syncProState();
+  closeLogin(); navBack();
+  flashToast(u.pro ? 'Signed in — Tamasha PRO active' : 'Signed in as ' + ACCOUNT.name);
+}
+function doLogout() {
+  AUTH.loggedIn = false; AUTH.number = null;
+  ACCOUNT.subscribed = false; ACCOUNT.planId = null; ACCOUNT.pendingCancel = false;
+  try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+  syncAuthState(); syncProState();
+  closeAccount(); _nav = [];
+  flashToast('Signed out');
+}
+// Screens that need an account bounce to login first
+function requireLogin(then) {
+  if (AUTH.loggedIn) { then(); return; }
+  openLogin();
+}
 
 // Reflect PRO state across the app: navbar badge + tile badges/locks
 function syncProState() {
@@ -3945,7 +4104,7 @@ function proGo(step, noPush) {
 function proBack() {
   const prev = _proHistory.pop();
   if (prev) { proGo(prev, true); return; }
-  closePro(); navBack();
+  navBack();
 }
 
 function proHeroHTML() {
@@ -4181,9 +4340,9 @@ function proStartWatching() {
 // ── PRO gating: locked content routes into the subscribe journey ──
 let _proGatePlay = null;
 function requiresPro(item) { return !!(item && item.pro) && !ACCOUNT.subscribed; }
-function gatePro(item, resume) {
-  _proGatePlay = resume || null;
-  openProSubscribe(titleOf(item));
+function gatePro(item) {
+  flashToast('Tamasha PRO required — opening plans');
+  openPlansPortal();
 }
 
 // ─── LIVE TV ─────────────────────────────────────────────────────
@@ -4252,7 +4411,9 @@ function closeLiveTV(skipHome) {
     document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
     const homeLink = document.querySelector('.nav-links a[data-filter="home"]');
     if (homeLink) homeLink.classList.add('active');
-    renderContinue('home'); syncProState();
+    renderContinue('home');
+if (AUTH.loggedIn && AUTH.number) applyAuthUser(AUTH.number);
+syncProState(); syncAuthState();
     const show = filterMap.home || [];
     document.getElementById('heroSection').style.display = '';
     document.querySelectorAll('.section[data-category]').forEach(s =>
@@ -4520,10 +4681,10 @@ function navSnapshot() {
 }
 function navPush() { if (!_navRestoring) _nav.push(navSnapshot()); }
 function navRestore(e) {
+  if (!e) return;                 // homepage — everything is already closed
   _navRestoring = true;
   try {
-    if (!e)                     { /* homepage — everything already closed */ }
-    else if (e.t === 'detail')  openDetail(e.item, e.kind);
+    if (e.t === 'detail')       openDetail(e.item, e.kind);
     else if (e.t === 'browse')  openBrowse(e.title, e.data, e.fn, e.kind);
     else if (e.t === 'search')  { openSearch(); const i = document.getElementById('searchInput'); if (i && e.q) { i.value = e.q; renderResults(e.q); } }
     else if (e.t === 'account') openAccount(e.section);
@@ -4531,8 +4692,17 @@ function navRestore(e) {
     else if (e.t === 'livetv')  openLiveTV(e.idx);
   } finally { _navRestoring = false; }
 }
+function closeAllOverlays() {
+  closeDetail(); closeBrowse(); closeSearch(); closeAccount(); closePro(); closeLiveTV(true); closeLogin();
+}
 // Single Back entry point used by every screen
-function navBack() { navRestore(_nav.pop()); }
+function navBack() {
+  const prev = _nav.pop();
+  _navRestoring = true;
+  try { closeAllOverlays(); } finally { _navRestoring = false; }
+  navRestore(prev);
+  if (!prev && _heroInView) { try { goToSlide(heroIdx); } catch (e) {} }
+}
 function openBrowse(title, data, fn, kind) {
   navPush();
   _lastBrowse = { title, data, fn, kind };
@@ -4540,7 +4710,7 @@ function openBrowse(title, data, fn, kind) {
   clearTimeout(screen._closeTimer);
   const shape = kind === 'live' ? 'brs-landscape' : (kind === 'clip' || kind === 'continue') ? 'brs-wide' : '';
   screen.innerHTML = `
-    <button class="dsc-back" onclick="closeBrowse();navBack()">${_CHEVL}<span>Back</span></button>
+    <button class="dsc-back" onclick="navBack()">${_CHEVL}<span>Back</span></button>
     <div class="dsc-anim">
       <div class="brs-head"><h1 class="brs-title">${title}</h1></div>
       <div class="brs-grid ${shape}" id="brsGrid"></div>
@@ -4658,8 +4828,8 @@ document.addEventListener('keydown', e => {
     return;
   }
   if (_isOpen('playerModal')) { closePlayer(); return; }
-  if (_isOpen('detailScreen'))      { closeDetail(); navBack(); return; }
-  if (_isOpen('browseScreen'))      { closeBrowse(); navBack(); return; }
+  if (_isOpen('loginScreen')) { navBack(); return; }
+  if (_isOpen('detailScreen') || _isOpen('browseScreen')) { navBack(); return; }
   if (_isOpen('proScreen'))         { proBack(); return; }
   if (_isOpen('accountScreen'))     { acctBack(); return; }
   closeSearch();
