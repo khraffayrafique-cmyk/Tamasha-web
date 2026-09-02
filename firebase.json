@@ -183,7 +183,9 @@
       "Tamasha Baneers 2/miss bala/**",
       "Tamasha Baneers 2/stand by me/**",
       "Tamasha Baneers 2/the walk/**",
-      "Live Channel logos/**"
+      "Live Channel logos/**",
+      "Ads/source-*",
+      "Ads/README.md"
     ],
     "headers": [
       {
