@@ -189,6 +189,12 @@
     ],
     "headers": [
       {
+        "source": "Ads/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300" }
+        ]
+      },
+      {
         "source": "**/*.html",
         "headers": [
           {

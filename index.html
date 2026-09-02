@@ -5574,6 +5574,10 @@ const AD_SLOTS = [
 ];
 const AD_ROTATE_KEY = 'tamasha_ad_rotate';
 const AD_CLOSE_DELAY = 5000;          // × appears after 5s
+// Bump whenever a creative file is replaced. The slot paths were live for one
+// deploy before the artwork existed, so browsers cached a 404 against them and
+// kept showing the house ad; the version query forces a fresh fetch.
+const AD_VERSION = '2';
 
 // Pick this page load's slot and advance the counter so a refresh alternates.
 // The 1000 wrap is even, so the alternation survives it.
@@ -5622,8 +5626,9 @@ function adHouseCreative(slot) {
 }
 
 function adCreative(slot) {
-  if (slot.img) return `<img class="ad-img" src="${slot.img}" alt="Advertisement" onerror="adImageFailed(this)">`;
-  return adHouseCreative(slot);
+  if (!slot.img) return adHouseCreative(slot);
+  const src = slot.img + (slot.img.includes('?') ? '&' : '?') + 'v=' + AD_VERSION;
+  return `<img class="ad-img" src="${src}" alt="Advertisement" onerror="adImageFailed(this)">`;
 }
 
 // A missing or broken creative falls back to the house ad rather than a blank slot
