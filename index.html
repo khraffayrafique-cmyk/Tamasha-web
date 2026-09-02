@@ -1950,6 +1950,96 @@
       .shop-redeem { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── CATFISH AD (guest + AVOD only — never for PRO) ─────────── */
+    /* Sits above the player modal (z 400) so it overlays playback too. */
+    .catfish {
+      position: fixed; left: 50%; bottom: 0; z-index: 450;
+      width: min(var(--ad-w, 728px), calc(100vw - 24px));
+      padding-bottom: 18px;
+      transform: translateX(-50%) translateY(130%);
+      transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+    }
+    .catfish.is-visible { transform: translateX(-50%) translateY(0); }
+    .catfish-inner {
+      position: relative; pointer-events: auto;
+      width: 100%; aspect-ratio: var(--ad-ar, 728 / 90);
+      border-radius: 10px; overflow: hidden;
+      background: #0E2C6B;
+      box-shadow: 0 14px 46px rgba(0, 0, 0, .6);
+      container-type: inline-size;   /* lets the creative scale with the slot */
+    }
+    .catfish-inner img.ad-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .catfish-tag {
+      position: absolute; top: 6px; left: 6px; z-index: 2;
+      background: rgba(0, 0, 0, .5); color: rgba(255, 255, 255, .85);
+      font-size: 9px; font-weight: 700; letter-spacing: .1em;
+      padding: 2px 6px; border-radius: 3px; pointer-events: none;
+    }
+    /* Countdown until the ad becomes closeable, then the × replaces it */
+    .catfish-timer, .catfish-close {
+      position: absolute; top: -11px; right: -11px; z-index: 3;
+      width: 34px; height: 34px; border-radius: 50%;
+      display: grid; place-items: center;
+      border: 2px solid var(--bg);
+      font-family: var(--body-font); font-size: 13px; font-weight: 800;
+      color: #fff;
+    }
+    .catfish-timer { background: rgba(0, 0, 0, .8); pointer-events: none; }
+    .catfish-close {
+      background: #1B5FD9; cursor: pointer; pointer-events: auto;
+      font-size: 15px; line-height: 1; padding: 0;
+      opacity: 0; transform: scale(.6);
+      transition: opacity .22s ease, transform .22s cubic-bezier(.34, 1.56, .64, 1), background .15s;
+    }
+    .catfish-close:hover { background: #2f74ef; }
+    .catfish.can-close .catfish-timer { display: none; }
+    .catfish.can-close .catfish-close { opacity: 1; transform: scale(1); }
+
+    /* House creative — swapped out whenever a slot supplies a real image */
+    .ad-house {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; gap: 2.4cqw;
+      padding: 0 2.6cqw 0 2.2cqw;
+      background: linear-gradient(100deg, #0B2559 0%, #14418F 48%, #1B5FD9 100%);
+      cursor: pointer;
+    }
+    .ad-house-glyph {
+      flex-shrink: 0; display: grid; place-items: center;
+      width: 8.4cqw; height: 8.4cqw; max-width: 58px; max-height: 58px;
+      border-radius: 10px; background: rgba(255, 255, 255, .14);
+    }
+    .ad-house-glyph svg { width: 60%; height: 60%; }
+    .ad-house-copy { min-width: 0; flex: 1; }
+    .ad-house-title {
+      font-family: var(--heading-font); font-weight: 800; color: #fff;
+      font-size: 16px; font-size: 3.1cqw; line-height: 1.15;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ad-house-sub {
+      color: rgba(255, 255, 255, .78); margin-top: .5cqw;
+      font-size: 11px; font-size: 1.85cqw; line-height: 1.25;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ad-house-cta {
+      flex-shrink: 0; background: #fff; color: #0E2C6B;
+      font-weight: 800; white-space: nowrap;
+      font-size: 11px; font-size: 1.95cqw;
+      padding: 1.5cqw 3cqw; border-radius: 999px;
+    }
+    /* A 728/970-wide strip scaled onto a phone is only ~34px tall, so the house
+       ad drops to a single legible line rather than three unreadable ones. */
+    @container (max-width: 560px) {
+      .ad-house { gap: 2.5cqw; padding: 0 3cqw; }
+      .ad-house-glyph, .ad-house-sub { display: none; }
+      .ad-house-title { font-size: 4.4cqw; }
+      .ad-house-cta { font-size: 3.2cqw; padding: 1.6cqw 3.4cqw; }
+    }
+    @media (max-width: 600px) {
+      .catfish { padding-bottom: 12px; }
+      .catfish-timer, .catfish-close { width: 28px; height: 28px; top: -9px; right: -9px; font-size: 12px; }
+    }
+
     .brs-grid.brs-square .card-wrap.game .card-inner { height: auto !important; aspect-ratio: 1 / 1; }
     .brs-grid .card-wrap.voucher .card-inner { height: auto !important; aspect-ratio: 16 / 9; }
     .brs-grid.brs-square { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
@@ -2301,6 +2391,9 @@
 
 <!-- ════════════════ VIDEO PLAYER MODAL ════════════════ -->
 <div class="player-modal" id="playerModal"></div>
+
+<!-- ════════════════ CATFISH AD SLOT ═══════════════════ -->
+<div class="catfish" id="catfishAd" hidden></div>
 
 <script>
 // ─── PATHS ───────────────────────────────────────────────────────
@@ -5304,6 +5397,142 @@ window.addEventListener('DOMContentLoaded', () => {
   window.__lenis = lenis;
   (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })(0);
 });
+
+// ─── CATFISH ADS ─────────────────────────────────────────────────
+// Shown to guests and signed-in AVOD users on the homepage, on movie /
+// TV show detail pages, and over playback (movies, shows, Live TV).
+// PRO subscribers never see one.
+//
+// Two IAB sizes alternate on every page load. To serve a real creative,
+// give a slot an `img` (and an optional click-through `href`) — the house
+// ad below is only the fallback.
+const AD_SLOTS = [
+  { id: 'leaderboard', w: 728, h: 90, img: '', href: '',
+    title: 'Get Tamasha Pro',
+    sub: 'Ad-free streaming · Ultra HD · Download & watch offline',
+    cta: 'Subscribe' },
+  { id: 'billboard', w: 970, h: 90, img: '', href: '',
+    title: 'Tamasha Pro — 50% off',
+    sub: 'Watch without interruptions. First 3 months at Rs 299/mo. Cancel anytime.',
+    cta: 'Get the offer' },
+];
+const AD_ROTATE_KEY = 'tamasha_ad_rotate';
+const AD_CLOSE_DELAY = 5000;          // × appears after 5s
+
+// Pick this page load's slot and advance the counter so a refresh alternates.
+// The 1000 wrap is even, so the alternation survives it.
+const adSlot = (() => {
+  let n = null;
+  try {
+    n = parseInt(localStorage.getItem(AD_ROTATE_KEY) || '0', 10) || 0;
+    localStorage.setItem(AD_ROTATE_KEY, String((n + 1) % 1000));
+  } catch (e) { n = null; }
+  // No storage (private window, blocked cookies) — still vary the slot per load
+  if (n === null) n = Math.floor(Math.random() * AD_SLOTS.length);
+  return AD_SLOTS[n % AD_SLOTS.length];
+})();
+
+// Dismissals last until the next refresh only, and are per surface — closing
+// the homepage ad still leaves one to show over playback.
+const _adDismissed = new Set();
+let _adTimer = null, _adTick = null;
+
+function adsEnabled() { return !ACCOUNT.subscribed; }
+
+// Which surface is on top right now — null where no ad should run
+function adContext() {
+  if (_isOpen('loginScreen') || _isOpen('accountScreen') || _isOpen('proScreen')) return null;
+  if (_isOpen('playerModal'))  return 'player';
+  if (_isOpen('liveTVScreen')) return 'livetv';
+  if (_isOpen('detailScreen')) return 'detail';
+  if (_isOpen('browseScreen') || _isOpen('searchScreen')) return null;
+  return 'home';
+}
+
+function adCreative(slot) {
+  if (slot.img) return `<img class="ad-img" src="${slot.img}" alt="Advertisement">`;
+  return `
+    <div class="ad-house">
+      <div class="ad-house-glyph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6"/></svg>
+      </div>
+      <div class="ad-house-copy">
+        <div class="ad-house-title">${escapeXml(slot.title)}</div>
+        <div class="ad-house-sub">${escapeXml(slot.sub)}</div>
+      </div>
+      <span class="ad-house-cta">${escapeXml(slot.cta)}</span>
+    </div>`;
+}
+
+function adClick() {
+  if (adSlot.href) window.open(adSlot.href, '_blank', 'noopener');
+  else openPlansPortal();
+}
+
+function showCatfish(ctx) {
+  const el = document.getElementById('catfishAd');
+  if (!el) return;
+  clearTimeout(el._hideTimer);
+  el.dataset.ctx = ctx;
+  el.style.setProperty('--ad-w', adSlot.w + 'px');
+  el.style.setProperty('--ad-ar', adSlot.w + ' / ' + adSlot.h);
+  el.innerHTML = `
+    <div class="catfish-inner" role="img" aria-label="Advertisement">
+      <span class="catfish-tag">AD</span>
+      ${adCreative(adSlot)}
+    </div>
+    <span class="catfish-timer" id="catfishTimer">5</span>
+    <button class="catfish-close" onclick="closeCatfish()" aria-label="Close ad">✕</button>`;
+  el.querySelector('.catfish-inner').addEventListener('click', adClick);
+  el.hidden = false;
+  el.classList.remove('can-close');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-visible')));
+
+  clearTimeout(_adTimer); clearInterval(_adTick);
+  let left = Math.ceil(AD_CLOSE_DELAY / 1000);
+  const t = el.querySelector('#catfishTimer');
+  if (t) t.textContent = left;
+  _adTick = setInterval(() => {
+    left -= 1;
+    if (t) t.textContent = Math.max(left, 0);
+    if (left <= 0) clearInterval(_adTick);
+  }, 1000);
+  _adTimer = setTimeout(() => { clearInterval(_adTick); el.classList.add('can-close'); }, AD_CLOSE_DELAY);
+}
+
+function hideCatfish() {
+  const el = document.getElementById('catfishAd');
+  if (!el || el.hidden) return;
+  clearTimeout(_adTimer); clearInterval(_adTick);
+  el.classList.remove('is-visible', 'can-close');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => { el.hidden = true; el.innerHTML = ''; delete el.dataset.ctx; }, 400);
+}
+
+function closeCatfish() {
+  const el = document.getElementById('catfishAd');
+  if (el && el.dataset.ctx) _adDismissed.add(el.dataset.ctx);
+  hideCatfish();
+}
+
+function updateCatfish() {
+  const el = document.getElementById('catfishAd');
+  if (!el) return;
+  const ctx = adsEnabled() ? adContext() : null;
+  if (!ctx || _adDismissed.has(ctx)) { hideCatfish(); return; }
+  if (el.dataset.ctx === ctx && !el.hidden) return;   // already running for this surface
+  showCatfish(ctx);
+}
+
+// Follow the overlays instead of patching every open/close function; the body
+// class carries PRO state, so subscribing or logging out re-evaluates too.
+(function watchAdSurfaces() {
+  const obs = new MutationObserver(() => updateCatfish());
+  ['playerModal','detailScreen','liveTVScreen','browseScreen','searchScreen','accountScreen','proScreen','loginScreen']
+    .forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'] }); });
+  obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  updateCatfish();
+})();
 </script>
 </body>
 </html>
