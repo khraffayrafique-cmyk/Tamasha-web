@@ -1950,6 +1950,68 @@
       .shop-redeem { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── SKELETON LOADING ───────────────────────────────────────── */
+    @keyframes skelShimmer { 100% { transform: translateX(100%); } }
+    .skel {
+      position: relative; overflow: hidden;
+      background: rgba(255, 255, 255, .065);
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .skel::after {
+      content: ''; position: absolute; inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .07), transparent);
+      animation: skelShimmer 1.5s infinite;
+    }
+    @media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
+
+    /* Full-screen shell shown while the homepage boots */
+    .skel-screen {
+      position: fixed; inset: 0; z-index: 900;
+      background: var(--bg); overflow: hidden;
+      opacity: 1; transition: opacity .35s ease;
+    }
+    .skel-screen.is-done { opacity: 0; pointer-events: none; }
+    .skel-nav {
+      height: 70px; display: flex; align-items: center; gap: 20px;
+      padding: 0 40px; background: #000;
+    }
+    .skel-nav-links { display: flex; gap: 18px; flex: 1; }
+    .skel-hero { position: relative; height: 62vh; min-height: 380px; padding: 0 60px; }
+    .skel-hero .skel-bg { position: absolute; inset: 0; border-radius: 0; }
+    .skel-hero-copy {
+      position: absolute; left: 60px; bottom: 62px; right: 60px;
+      display: flex; flex-direction: column; gap: 12px; max-width: 520px;
+    }
+    .skel-btns { display: flex; gap: 12px; margin-top: 8px; }
+    .skel-section { padding: 26px 60px 0; }
+    .skel-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+    .skel-row { display: flex; gap: 10px; overflow: hidden; }
+
+    /* Detail-page skeleton — mirrors the poster + info + related layout */
+    .skel-dsc { padding: 128px 60px 0; }
+    .skel-dsc-hero { display: flex; gap: 40px; align-items: flex-start; }
+    .skel-dsc-poster { width: 240px; aspect-ratio: 2/3; border-radius: 14px; }
+    .skel-dsc-info { flex: 1; display: flex; flex-direction: column; gap: 14px; padding-top: 10px; min-width: 0; }
+    .skel-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    @media (max-width: 900px) {
+      .skel-nav { padding: 0 24px; }
+      .skel-hero { padding: 0 24px; height: 46vh; min-height: 280px; }
+      .skel-hero-copy { left: 24px; right: 24px; bottom: 40px; }
+      .skel-section { padding: 20px 24px 0; }
+      .skel-dsc { padding: 104px 24px 0; }
+      .skel-dsc-hero { flex-direction: column; gap: 22px; }
+      .skel-dsc-poster { width: 168px; }
+    }
+    @media (max-width: 600px) {
+      .skel-nav { padding: 0 14px; gap: 12px; }
+      .skel-hero { padding: 0 14px; }
+      .skel-hero-copy { left: 14px; right: 14px; }
+      .skel-section { padding: 18px 14px 0; }
+      .skel-dsc { padding: 96px 16px 0; }
+    }
+
     /* ─── CATFISH AD (guest + AVOD only — never for PRO) ─────────── */
     /* Sits above the player modal (z 400) so it overlays playback too. */
     .catfish {
@@ -2068,6 +2130,55 @@
   </style>
 </head>
 <body>
+
+<!-- ═══════════════ HOMEPAGE SKELETON ══════════════════════ -->
+<!-- Sits in the initial HTML so it paints before any script runs -->
+<div class="skel-screen" id="skelHome">
+  <div class="skel-nav">
+    <div class="skel" style="width:104px;height:30px"></div>
+    <div class="skel-nav-links">
+      <div class="skel" style="width:48px;height:12px"></div>
+      <div class="skel" style="width:64px;height:12px"></div>
+      <div class="skel" style="width:54px;height:12px"></div>
+      <div class="skel" style="width:52px;height:12px"></div>
+      <div class="skel" style="width:48px;height:12px"></div>
+    </div>
+    <div class="skel" style="width:20px;height:20px;border-radius:50%"></div>
+    <div class="skel" style="width:34px;height:34px;border-radius:50%"></div>
+  </div>
+
+  <div class="skel-hero">
+    <div class="skel skel-bg"></div>
+    <div class="skel-hero-copy">
+      <div class="skel" style="width:150px;height:26px;border-radius:999px"></div>
+      <div class="skel" style="width:100%;height:34px"></div>
+      <div class="skel" style="width:64%;height:34px"></div>
+      <div class="skel" style="width:82%;height:12px;margin-top:6px"></div>
+      <div class="skel" style="width:72%;height:12px"></div>
+      <div class="skel-btns">
+        <div class="skel" style="width:118px;height:42px;border-radius:8px"></div>
+        <div class="skel" style="width:118px;height:42px;border-radius:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skel-section">
+    <div class="skel-head">
+      <div class="skel" style="width:88px;height:9px"></div>
+      <div class="skel" style="width:186px;height:20px"></div>
+    </div>
+    <div class="skel-row">
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+      <div class="skel" style="width:220px;height:148px"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════ NAVBAR ════════════════════════ -->
 <nav class="navbar">
@@ -2402,6 +2513,9 @@ const C = "Live%20Channels%20New/";
 const S = "Sports/";
 const G  = "Tamasha%20Games/";
 const SH = "Tamasha%20Shop/";
+
+// How long the skeleton placeholder stays up on the homepage and on detail pages
+const SKELETON_MS = 1200;
 const T = "TV%20Show%20Trailers/";
 function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
 function cp(file)         { return C + encodeURIComponent(file); }
@@ -3552,9 +3666,54 @@ function closePlayer() {
 }
 
 // Open the show / movie detail screen
+// The detail screen opens on a skeleton, then swaps in the real content.
+function detailSkeleton(kind) {
+  const line = (w, h) => `<div class="skel" style="width:${w};height:${h}"></div>`;
+  return `
+    <div class="skel-dsc">
+      ${line('96px', '38px')}
+      <div class="skel-dsc-hero" style="margin-top:26px">
+        <div class="skel skel-dsc-poster"></div>
+        <div class="skel-dsc-info">
+          ${line('54px', '10px')}
+          ${line('min(560px,80%)', '42px')}
+          <div class="skel-chips">
+            ${line('74px', '26px')}${line('58px', '26px')}${line('84px', '26px')}${line('66px', '26px')}
+          </div>
+          ${line('min(620px,96%)', '12px')}
+          ${line('min(540px,86%)', '12px')}
+          ${line('min(380px,60%)', '12px')}
+          <div class="skel-btns">
+            ${line('158px', '46px')}${line('138px', '46px')}
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:44px">
+        ${line('190px', '22px')}
+        <div class="skel-row" style="margin-top:20px">
+          ${Array.from({ length: 8 }, () => line('180px', '270px')).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
 function openDetail(item, kind) {
   navPush();
   closeSearch(); closeBrowse();
+  const screen = document.getElementById('detailScreen');
+  screen._item = item; screen._kind = kind;
+  screen.innerHTML = detailSkeleton(kind);
+  document.querySelector('.navbar').classList.add('scrolled');
+  clearTimeout(screen._closeTimer);
+  clearTimeout(screen._skelTimer);
+  screen.classList.add('open');
+  screen.scrollTop = 0;
+  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
+  pauseHeroMedia(); stopHeroTimer();
+  screen._skelTimer = setTimeout(() => buildDetail(item, kind), SKELETON_MS);
+}
+
+function buildDetail(item, kind) {
   const screen  = document.getElementById('detailScreen');
   const title   = titleOf(item);
   const poster  = posterOf(item) || placeholderPoster(titleOf(item));
@@ -3657,13 +3816,7 @@ function openDetail(item, kind) {
     relRow.appendChild(el);
   });
 
-  document.querySelector('.navbar').classList.add('scrolled');
-  clearTimeout(screen._closeTimer);
-  screen.classList.add('open');
-  screen.scrollTop = 0;
-  // next frames: flip to visible so opacity/transform transitions run
-  requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add('visible')));
-  pauseHeroMedia(); stopHeroTimer();
+  // openDetail already opened the screen and paused the hero for the skeleton
 }
 
 // Trailers / behind-the-scenes clips for a show
@@ -3752,6 +3905,7 @@ function closeDetail() {
   const screen = document.getElementById('detailScreen');
   if (!screen.classList.contains('open')) return;
   screen.classList.remove('visible');   // fade + slide back out
+  clearTimeout(screen._skelTimer);      // don't build into a screen that's closing
   clearTimeout(screen._closeTimer);
   screen._closeTimer = setTimeout(() => {
     screen.classList.remove('open');
@@ -5406,12 +5560,14 @@ window.addEventListener('DOMContentLoaded', () => {
 // Two IAB sizes alternate on every page load. To serve a real creative,
 // give a slot an `img` (and an optional click-through `href`) — the house
 // ad below is only the fallback.
+// Drop a creative at the path below at exactly the slot's pixel size and it is
+// served automatically; if the file is missing the house ad renders instead.
 const AD_SLOTS = [
-  { id: 'leaderboard', w: 728, h: 90, img: '', href: '',
+  { id: 'leaderboard', w: 728, h: 90, img: 'Ads/leaderboard-728x90.png', href: '',
     title: 'Get Tamasha Pro',
     sub: 'Ad-free streaming · Ultra HD · Download & watch offline',
     cta: 'Subscribe' },
-  { id: 'billboard', w: 970, h: 90, img: '', href: '',
+  { id: 'billboard', w: 970, h: 90, img: 'Ads/billboard-970x90.png', href: '',
     title: 'Tamasha Pro — 50% off',
     sub: 'Watch without interruptions. First 3 months at Rs 299/mo. Cancel anytime.',
     cta: 'Get the offer' },
@@ -5440,7 +5596,9 @@ let _adTimer = null, _adTick = null;
 function adsEnabled() { return !ACCOUNT.subscribed; }
 
 // Which surface is on top right now — null where no ad should run
+let _bootDone = false;
 function adContext() {
+  if (!_bootDone) return null;            // hold the ad back until the skeleton clears
   if (_isOpen('loginScreen') || _isOpen('accountScreen') || _isOpen('proScreen')) return null;
   if (_isOpen('playerModal'))  return 'player';
   if (_isOpen('liveTVScreen')) return 'livetv';
@@ -5449,8 +5607,7 @@ function adContext() {
   return 'home';
 }
 
-function adCreative(slot) {
-  if (slot.img) return `<img class="ad-img" src="${slot.img}" alt="Advertisement">`;
+function adHouseCreative(slot) {
   return `
     <div class="ad-house">
       <div class="ad-house-glyph">
@@ -5462,6 +5619,17 @@ function adCreative(slot) {
       </div>
       <span class="ad-house-cta">${escapeXml(slot.cta)}</span>
     </div>`;
+}
+
+function adCreative(slot) {
+  if (slot.img) return `<img class="ad-img" src="${slot.img}" alt="Advertisement" onerror="adImageFailed(this)">`;
+  return adHouseCreative(slot);
+}
+
+// A missing or broken creative falls back to the house ad rather than a blank slot
+function adImageFailed(img) {
+  const inner = img.closest('.catfish-inner');
+  if (inner) inner.innerHTML = `<span class="catfish-tag">AD</span>` + adHouseCreative(adSlot);
 }
 
 function adClick() {
@@ -5532,6 +5700,21 @@ function updateCatfish() {
     .forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'] }); });
   obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   updateCatfish();
+})();
+
+// ─── BOOT SKELETON ───────────────────────────────────────────────
+// The homepage placeholder ships in the HTML so it paints on first frame;
+// clear it after SKELETON_MS and only then let the catfish ad run.
+(function bootSkeleton() {
+  setTimeout(() => {
+    _bootDone = true;
+    const sk = document.getElementById('skelHome');
+    if (sk) {
+      sk.classList.add('is-done');
+      setTimeout(() => sk.remove(), 400);
+    }
+    updateCatfish();
+  }, SKELETON_MS);
 })();
 </script>
 </body>
