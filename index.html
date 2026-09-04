@@ -1950,6 +1950,44 @@
       .shop-redeem { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── BRAND LOADER ───────────────────────────────────────────── */
+    /* Sits above the skeleton: loader → skeleton → content */
+    .loader-screen {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      opacity: 1; transition: opacity .45s ease;
+    }
+    .loader-screen.is-done { opacity: 0; pointer-events: none; }
+    .loader-logo {
+      width: min(320px, 66vw); height: auto; display: block;
+      animation: loaderBreathe 2.2s ease-in-out infinite;
+    }
+    /* the logo file carries transparent padding — pull the ring back up into it */
+    .loader-ring {
+      width: 44px; height: 44px; border-radius: 50%;
+      margin-top: -26px;
+      background: conic-gradient(from 0deg,
+        #CC0C48, #F07818, #FCC000, #249C48, #00609C, #CC0C48);
+      -webkit-mask: radial-gradient(farthest-side, transparent 61%, #000 63%);
+              mask: radial-gradient(farthest-side, transparent 61%, #000 63%);
+      animation: loaderSpin .9s linear infinite;
+    }
+    .loader-word {
+      margin-top: 18px; font-size: 12px; font-weight: 700;
+      letter-spacing: .22em; color: rgba(255, 255, 255, .38);
+    }
+    @keyframes loaderSpin   { to { transform: rotate(360deg); } }
+    @keyframes loaderBreathe {
+      0%, 100% { opacity: .82; transform: translateY(0); }
+      50%      { opacity: 1;   transform: translateY(-5px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .loader-logo { animation: none; opacity: 1; }
+      .loader-ring { animation-duration: 2.4s; }
+    }
+
     /* ─── SKELETON LOADING ───────────────────────────────────────── */
     @keyframes skelShimmer { 100% { transform: translateX(100%); } }
     .skel {
@@ -2130,6 +2168,13 @@
   </style>
 </head>
 <body>
+
+<!-- ═══════════════ BRAND LOADER ═══════════════════════════ -->
+<div class="loader-screen" id="appLoader">
+  <img class="loader-logo" src="Tamashalogo.png" alt="Tamasha">
+  <div class="loader-ring"></div>
+  <div class="loader-word">LOADING</div>
+</div>
 
 <!-- ═══════════════ HOMEPAGE SKELETON ══════════════════════ -->
 <!-- Sits in the initial HTML so it paints before any script runs -->
@@ -2516,6 +2561,10 @@ const SH = "Tamasha%20Shop/";
 
 // How long the skeleton placeholder stays up on the homepage and on detail pages
 const SKELETON_MS = 1200;
+// Brand loader shown before the skeleton: at least LOADER_MS and until the page
+// has loaded, capped at LOADER_MAX_MS so a stalled asset can never hang it
+const LOADER_MS = 800;
+const LOADER_MAX_MS = 2500;
 const T = "TV%20Show%20Trailers/";
 function bp(folder, file) { return B + encodeURIComponent(folder) + '/' + encodeURIComponent(file); }
 function cp(file)         { return C + encodeURIComponent(file); }
@@ -5707,19 +5756,34 @@ function updateCatfish() {
   updateCatfish();
 })();
 
-// ─── BOOT SKELETON ───────────────────────────────────────────────
-// The homepage placeholder ships in the HTML so it paints on first frame;
-// clear it after SKELETON_MS and only then let the catfish ad run.
-(function bootSkeleton() {
-  setTimeout(() => {
+// ─── BOOT SEQUENCE ───────────────────────────────────────────────
+// Brand loader → homepage skeleton → content. Both ship in the HTML so
+// they paint on the first frame instead of waiting for this script.
+(function boot() {
+  let handedOff = false;
+
+  const revealContent = () => {
     _bootDone = true;
     const sk = document.getElementById('skelHome');
-    if (sk) {
-      sk.classList.add('is-done');
-      setTimeout(() => sk.remove(), 400);
-    }
-    updateCatfish();
-  }, SKELETON_MS);
+    if (sk) { sk.classList.add('is-done'); setTimeout(() => sk.remove(), 400); }
+    updateCatfish();          // the catfish ad waits for the skeleton to clear
+  };
+
+  const hideLoader = () => {
+    if (handedOff) return;
+    handedOff = true;
+    const el = document.getElementById('appLoader');
+    if (el) { el.classList.add('is-done'); setTimeout(() => el.remove(), 500); }
+    setTimeout(revealContent, SKELETON_MS);
+  };
+
+  // Hold the loader for at least LOADER_MS, and until the page has finished
+  // loading — but never longer than LOADER_MAX_MS if an asset stalls.
+  setTimeout(() => {
+    if (document.readyState === 'complete') hideLoader();
+    else window.addEventListener('load', hideLoader, { once: true });
+  }, LOADER_MS);
+  setTimeout(hideLoader, LOADER_MAX_MS);
 })();
 </script>
 </body>
