@@ -52,9 +52,9 @@
        (the same two states toffeelive.com uses). Bottom edge stays at 70px in
        both states so every overlay pinned to top:70px still lines up. */
     .navbar {
-      position: fixed; top: 6px; left: 24px; right: 24px;
+      position: fixed; top: 12px; left: 24px; right: 24px;
       max-width: 1200px; margin: 0 auto;
-      height: 64px;
+      height: 58px;
       border-radius: 999px;
       background: rgba(255, 255, 255, .07);
       border: 1px solid rgba(255, 255, 255, .11);
@@ -79,10 +79,10 @@
       box-shadow: none;
     }
     .logo { flex-shrink: 0; margin-right: 30px; }
-    .logo img { height: 54px; width: auto; object-fit: contain; }
+    .logo img { height: 48px; width: auto; object-fit: contain; transition: height .3s ease; }
+    .navbar.scrolled .logo img { height: 54px; }   /* more room once expanded */
 
-    /* links sit centred between the logo and the actions, as on Toffee */
-    .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; margin: 0 auto; }
+    .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; }
     .nav-links a {
       color: var(--text); text-decoration: none;
       font-family: var(--body-font);
@@ -1690,6 +1690,19 @@
       .dsc-actions .btn { padding: 10px 15px; font-size: 13px; }
       .dsc-section { padding: 22px 16px; }
       .dsc-eps { grid-template-columns: 1fr; gap: 18px; }
+    }
+
+    /* Centre the links on the bar itself. They can't be centred by flex margins
+       because .search-bar-wrap is flex:1 and swallows the free space, which left
+       the links sitting hard against the logo. Only above the tablet breakpoint —
+       narrower than that the logo and actions would overlap them. */
+    @media (min-width: 901px) {
+      .nav-links {
+        position: absolute; left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+      }
+      .navbar.search-open .nav-links { transform: translateX(-50%) translateY(-5px); }
     }
 
     /* ─── TABLET ─────────────────────────────────────────────────── */
