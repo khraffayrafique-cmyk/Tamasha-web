@@ -2130,6 +2130,84 @@
       .skel-dsc { padding: 96px 16px 0; }
     }
 
+    /* ─── GLASS CONFIRM DIALOG ───────────────────────────────────── */
+    .cfm-backdrop {
+      position: fixed; inset: 0; z-index: 1100;
+      display: none; align-items: center; justify-content: center;
+      padding: 24px;
+      background: rgba(6, 8, 14, .58);
+      backdrop-filter: blur(14px) saturate(1.25);
+      -webkit-backdrop-filter: blur(14px) saturate(1.25);
+      opacity: 0; transition: opacity .26s ease;
+    }
+    .cfm-backdrop.open { display: flex; }
+    .cfm-backdrop.visible { opacity: 1; }
+
+    .cfm-card {
+      width: 100%; max-width: 470px;
+      padding: 34px 34px 30px;
+      text-align: center;
+      border-radius: 24px;
+      background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.055) 58%, rgba(255,255,255,.03) 100%);
+      border: 1px solid rgba(255, 255, 255, .18);
+      backdrop-filter: blur(28px) saturate(1.7);
+      -webkit-backdrop-filter: blur(28px) saturate(1.7);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
+      transform: translateY(14px) scale(.96);
+      transition: transform .3s cubic-bezier(.34, 1.4, .64, 1);
+    }
+    .cfm-backdrop.visible .cfm-card { transform: none; }
+
+    .cfm-logo { height: 46px; width: auto; object-fit: contain; margin-bottom: 20px; }
+    .cfm-icon {
+      width: 56px; height: 56px; margin: 0 auto 18px;
+      border-radius: 50%; display: grid; place-items: center;
+      background: rgba(36, 114, 252, .16);
+      border: 1px solid rgba(36, 114, 252, .38);
+    }
+    .cfm-icon svg { width: 27px; height: 27px; }
+    .cfm-card.is-danger .cfm-icon {
+      background: rgba(237, 43, 31, .15);
+      border-color: rgba(237, 43, 31, .42);
+    }
+    .cfm-title {
+      font-family: var(--heading-font); font-size: 23px; font-weight: 800;
+      color: var(--accent-from); margin-bottom: 12px; line-height: 1.25;
+    }
+    .cfm-card.is-danger .cfm-title { color: #fff; }
+    .cfm-msg {
+      font-size: 14.5px; line-height: 1.6; color: rgba(255, 255, 255, .76);
+      margin-bottom: 26px;
+    }
+    .cfm-msg strong { color: #fff; font-weight: 700; }
+    .cfm-actions { display: flex; flex-direction: column; gap: 10px; }
+    .cfm-btn {
+      width: 100%; padding: 14px 20px; border-radius: 12px;
+      font-family: var(--body-font); font-size: 15px; font-weight: 700;
+      cursor: pointer; border: 1px solid transparent;
+      transition: background .18s ease, border-color .18s ease, transform .12s ease;
+    }
+    .cfm-btn:hover { transform: translateY(-1px); }
+    .cfm-btn--primary { background: var(--accent-from); color: #fff; }
+    .cfm-btn--primary:hover { background: #4a8bff; }
+    .cfm-btn--danger { background: #ED2B1F; color: #fff; }
+    .cfm-btn--danger:hover { background: #f4483d; }
+    .cfm-btn--ghost {
+      background: rgba(255, 255, 255, .08); color: #fff;
+      border-color: rgba(255, 255, 255, .2);
+    }
+    .cfm-btn--ghost:hover { background: rgba(255, 255, 255, .16); }
+
+    @media (max-width: 600px) {
+      .cfm-card { padding: 28px 22px 24px; border-radius: 20px; }
+      .cfm-title { font-size: 20px; }
+      .cfm-logo { height: 38px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cfm-backdrop, .cfm-card { transition: opacity .2s ease; }
+      .cfm-card { transform: none; }
+    }
+
     /* ─── CATFISH AD (guest + AVOD only — never for PRO) ─────────── */
     /* Sits above the player modal (z 400) so it overlays playback too. */
     .catfish {
@@ -2636,6 +2714,9 @@
 
 <!-- ════════════════ CATFISH AD SLOT ═══════════════════ -->
 <div class="catfish" id="catfishAd" hidden></div>
+
+<!-- ════════════════ GLASS CONFIRM DIALOG ══════════════ -->
+<div class="cfm-backdrop" id="confirmModal" role="dialog" aria-modal="true"></div>
 
 <script>
 // ─── PATHS ───────────────────────────────────────────────────────
@@ -4680,7 +4761,70 @@ function doLogin() {
     flashToast(u.pro ? 'Signed in — Tamasha PRO active' : 'Signed in as ' + ACCOUNT.name);
   }
 }
+// ─── GLASS CONFIRM DIALOG ────────────────────────────────────────
+// Shared by every "are you sure?" moment so they all look and behave alike.
+const _CFM_ICONS = {
+  warn: `<svg viewBox="0 0 24 24" fill="none" stroke="#ED2B1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>`,
+  info: `<svg viewBox="0 0 24 24" fill="none" stroke="#2472FC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>`,
+};
+let _cfmOnConfirm = null;
+
+function openConfirm(o) {
+  const el = document.getElementById('confirmModal');
+  if (!el) return;
+  _cfmOnConfirm = o.onConfirm || null;
+  clearTimeout(el._closeTimer);
+  el.innerHTML = `
+    <div class="cfm-card${o.danger ? ' is-danger' : ''}" role="document">
+      <img class="cfm-logo" src="Tamashalogo.png" alt="Tamasha">
+      <div class="cfm-icon">${_CFM_ICONS[o.icon || (o.danger ? 'warn' : 'info')]}</div>
+      <h2 class="cfm-title">${o.title}</h2>
+      <p class="cfm-msg">${o.message}</p>
+      <div class="cfm-actions">
+        <button class="cfm-btn ${o.danger ? 'cfm-btn--danger' : 'cfm-btn--primary'}" id="cfmYes">${o.confirmLabel || 'Confirm'}</button>
+        <button class="cfm-btn cfm-btn--ghost" onclick="closeConfirm()">${o.cancelLabel || 'Cancel'}</button>
+      </div>
+    </div>`;
+  el.querySelector('#cfmYes').addEventListener('click', () => {
+    const fn = _cfmOnConfirm;
+    closeConfirm();
+    if (fn) fn();
+  });
+  el.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  setTimeout(() => { const b = el.querySelector('#cfmYes'); if (b) b.focus(); }, 60);
+}
+
+function closeConfirm() {
+  const el = document.getElementById('confirmModal');
+  if (!el || !el.classList.contains('open')) return;
+  _cfmOnConfirm = null;
+  el.classList.remove('visible');
+  clearTimeout(el._closeTimer);
+  el._closeTimer = setTimeout(() => { el.classList.remove('open'); el.innerHTML = ''; }, 280);
+}
+
+// Click the backdrop or press Escape to dismiss — same as choosing Cancel
+document.addEventListener('click', e => {
+  const el = document.getElementById('confirmModal');
+  if (el && el.classList.contains('open') && e.target === el) closeConfirm();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeConfirm();
+});
+
 function doLogout() {
+  openConfirm({
+    danger: true,
+    title: 'Log out of Tamasha?',
+    message: `You're signed in as <strong>${escapeXml(ACCOUNT.name)}</strong>. You'll need your number and PIN to sign back in, and Continue Watching won't show until you do.`,
+    confirmLabel: 'Log out',
+    cancelLabel: 'Stay signed in',
+    onConfirm: performLogout,
+  });
+}
+
+function performLogout() {
   AUTH.loggedIn = false; AUTH.number = null; _pendingAdd = null;
   ACCOUNT.subscribed = false; ACCOUNT.planId = null; ACCOUNT.pendingCancel = false;
   try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
@@ -4821,7 +4965,17 @@ const _SHIELD = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 function _proPayIsCard() { return ACCOUNT.payMethod === 'card'; }
 
 // ── Cancel membership (takes effect at period end, like Netflix) ──
-function acctDoCancel() { ACCOUNT.pendingCancel = true; acctGo('cancelDone'); }
+function acctDoCancel() {
+  const plan = PLANS.find(p => p.id === ACCOUNT.planId);
+  openConfirm({
+    danger: true,
+    title: 'Confirm cancellation?',
+    message: `Your <strong>${escapeXml(plan ? plan.name : 'Tamasha Pro')}</strong> membership ends on <strong>${escapeXml(ACCOUNT.nextPayment)}</strong>. You can keep watching ad-free until then — after that, ads return and PRO titles lock. Your list and watch history stay on your account.`,
+    confirmLabel: 'Yes, cancel membership',
+    cancelLabel: 'Keep my membership',
+    onConfirm: () => { ACCOUNT.pendingCancel = true; acctGo('cancelDone'); },
+  });
+}
 function acctPause() { ACCOUNT.paused = true; flashToast('Membership paused for 1 month'); acctGo('overview'); }
 function acctSwitchPlan(id) { ACCOUNT.planId = id; flashToast('Switched to the ' + (PLANS.find(p => p.id === id) || {}).name + ' plan'); acctGo('membership'); }
 function acctRestart() { ACCOUNT.pendingCancel = false; ACCOUNT.paused = false; flashToast('Membership restarted'); acctGo('overview'); }
