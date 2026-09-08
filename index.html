@@ -70,7 +70,11 @@
     .navbar.scrolled {
       top: 0; left: 0; right: 0; max-width: 100vw;
       height: 70px; border-radius: 0;
-      padding: 0 40px;
+      /* Only the background spans the screen — the logo, links and actions stay
+         in the same 1200px column they occupy while floating, so nothing jumps
+         sideways as the bar expands. */
+      padding-left:  max(40px, calc((100vw - 1200px) / 2 + 20px));
+      padding-right: max(40px, calc((100vw - 1200px) / 2 + 12px));
       background: rgba(0, 0, 0, .34);
       border-color: transparent;
       border-bottom-color: rgba(255, 255, 255, .2);
@@ -253,7 +257,9 @@
 
     /* ─── HERO ─────────────────────────────────────────────────── */
     .hero {
-      margin-top: 70px;
+      /* starts at the very top so the floating navbar overlays the artwork
+         instead of hovering above it over an empty strip */
+      margin-top: 0;
       position: relative; height: 520px; overflow: hidden;
     }
     .hero-track {
