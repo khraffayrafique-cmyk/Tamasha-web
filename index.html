@@ -48,22 +48,41 @@
     }
 
     /* ─── NAVBAR ─────────────────────────────────────────────── */
+    /* Floating capsule over the hero; expands into a frosted bar once scrolled
+       (the same two states toffeelive.com uses). Bottom edge stays at 70px in
+       both states so every overlay pinned to top:70px still lines up. */
     .navbar {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 70px;
-      background: #000;
+      position: fixed; top: 6px; left: 24px; right: 24px;
+      max-width: 1200px; margin: 0 auto;
+      height: 64px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .11);
+      backdrop-filter: blur(18px) saturate(1.6);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      box-shadow: 0 10px 34px rgba(0, 0, 0, .34);
       display: flex; align-items: center;
-      padding: 0 40px; z-index: 200; gap: 20px;
-      transition: background .3s;
+      padding: 0 12px 0 20px; z-index: 200; gap: 20px;
+      transition: top .3s ease, left .3s ease, right .3s ease, max-width .3s ease,
+                  height .3s ease, border-radius .3s ease, padding .3s ease,
+                  background .3s ease, border-color .3s ease, box-shadow .3s ease;
     }
     .navbar.scrolled {
-      background: #000;
-      backdrop-filter: blur(12px);
+      top: 0; left: 0; right: 0; max-width: 100vw;
+      height: 70px; border-radius: 0;
+      padding: 0 40px;
+      background: rgba(0, 0, 0, .34);
+      border-color: transparent;
+      border-bottom-color: rgba(255, 255, 255, .2);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      box-shadow: none;
     }
     .logo { flex-shrink: 0; margin-right: 30px; }
-    .logo img { height: 58px; width: auto; object-fit: contain; }
+    .logo img { height: 54px; width: auto; object-fit: contain; }
 
-    .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; }
+    /* links sit centred between the logo and the actions, as on Toffee */
+    .nav-links { display: flex; gap: 22px; list-style: none; flex-shrink: 0; margin: 0 auto; }
     .nav-links a {
       color: var(--text); text-decoration: none;
       font-family: var(--body-font);
@@ -96,6 +115,21 @@
     .coins-pill:hover { background: rgba(255,200,0,0.12); }
     .coins-pill .material-icons { font-size: 18px; color: #facc15; }
     .coins-pill .coin-count { font-size: 13px; font-weight: 600; color: #facc15; }
+
+    /* Gradient Subscribe pill (Toffee has one; ours uses the Tamasha blues) */
+    .nav-subscribe {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: none; border-radius: 999px; cursor: pointer;
+      padding: 9px 18px 9px 15px;
+      font-family: var(--body-font); font-size: 13.5px; font-weight: 800;
+      color: #fff; white-space: nowrap;
+      background: linear-gradient(100deg, #2F74EF 0%, #1B5FD9 48%, #0E2C6B 100%);
+      box-shadow: 0 6px 18px rgba(27, 95, 217, .38);
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .nav-subscribe:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 9px 24px rgba(27, 95, 217, .5); }
+    .nav-subscribe svg { width: 15px; height: 15px; flex-shrink: 0; }
+    body.is-pro .nav-subscribe { display: none; }   /* subscribers have nothing to buy */
 
     .login-btn { display: inline-flex; align-items: center; gap: 10px; background: none; border: none;
       color: var(--text); font-family: var(--body-font); font-size: 14px; font-weight: 500; cursor: pointer;
@@ -1660,8 +1694,10 @@
 
     /* ─── TABLET ─────────────────────────────────────────────────── */
     @media (max-width: 900px) {
-      .navbar { padding: 0 20px; gap: 14px; }
+      .navbar { padding: 0 10px 0 16px; gap: 14px; left: 14px; right: 14px; }
+      .navbar.scrolled { padding: 0 20px; }
       .nav-links { gap: 16px; }
+      .nav-subscribe { padding: 8px 14px 8px 12px; font-size: 12.5px; }
       .user-name { display: none; }
       .coins-pill { padding: 4px 10px 4px 7px; }
 
@@ -1689,7 +1725,12 @@
         height: auto; min-height: 54px;
         flex-wrap: wrap; padding: 8px 14px;
         gap: 10px; row-gap: 6px;
+        /* two rows here, so a rounded rectangle rather than a full pill */
+        top: 6px; left: 10px; right: 10px; border-radius: 20px;
       }
+      .navbar.scrolled { top: 0; left: 0; right: 0; border-radius: 0; padding: 8px 14px; }
+      .nav-links { margin: 0; }   /* auto-centring fights the wrapped link strip */
+      .nav-subscribe { padding: 7px 12px 7px 10px; font-size: 12px; }
       .logo { order: 0; }
       .logo img { height: 42px; }
       .nav-right { order: 1; margin-left: auto; gap: 12px; }
@@ -2253,6 +2294,12 @@
   </div>
 
   <div class="nav-right">
+    <!-- Subscribe (hidden for PRO members) -->
+    <button class="nav-subscribe" id="navSubscribe" onclick="openPlansPortal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6"/></svg>
+      Subscribe
+    </button>
+
     <!-- Search -->
     <div class="search-icon" id="searchTrigger" onclick="openSearch()">
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
