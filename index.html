@@ -92,6 +92,9 @@
 
     .nav-links { display: flex; gap: 28px; list-style: none; flex-shrink: 0; }
     .nav-links a {
+      position: relative;
+      /* padded top and bottom equally so the underline never shifts the label */
+      padding: 7px 0;
       color: var(--text); text-decoration: none;
       font-family: var(--body-font);
       font-size: 16px; font-weight: 500;
@@ -99,6 +102,19 @@
     }
     .nav-links a:hover { opacity: 1; }
     .nav-links a.active { opacity: 1; font-weight: 700; }
+
+    /* Active/hover underline — grows out from the centre */
+    .nav-links a::after {
+      content: '';
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 3px; border-radius: 3px;
+      background: var(--accent-from);
+      opacity: 0; transform: scaleX(0);
+      transition: transform .26s cubic-bezier(.4, 0, .2, 1), opacity .2s ease;
+    }
+    .nav-links a:hover::after  { opacity: .5; transform: scaleX(1); }
+    .nav-links a.active::after { opacity: 1;  transform: scaleX(1); }
+    @media (prefers-reduced-motion: reduce) { .nav-links a::after { transition: opacity .2s ease; transform: scaleX(1); } }
 
     /* Font fixed to Manrope — no switcher needed */
 
