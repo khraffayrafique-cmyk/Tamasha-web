@@ -4833,6 +4833,9 @@ document.addEventListener('keydown', e => {
 function closeLogin() {
   const scr = document.getElementById('loginScreen');
   if (!scr.classList.contains('open')) return;
+  // Backing out abandons whatever they were signing in for — otherwise it would
+  // fire on some later, unrelated login. doLogin claims it before calling this.
+  _pendingAction = null;
   scr.classList.remove('visible');
   clearTimeout(scr._closeTimer);
   scr._closeTimer = setTimeout(() => { scr.classList.remove('open'); scr.innerHTML = ''; }, 260);
@@ -4851,9 +4854,10 @@ function doLogin() {
   applyAuthUser(num);
   syncAuthState(); syncProState(); renderContinue(_currentFilter);
   refreshListButtons();
+
+  const resume = _pendingAction; _pendingAction = null;   // claim before closeLogin clears it
   closeLogin();          // popup only — the page underneath never went anywhere
 
-  const resume = _pendingAction; _pendingAction = null;
   if (resume) {
     // let the popup finish fading before landing them on what they clicked
     setTimeout(resume, 280);
