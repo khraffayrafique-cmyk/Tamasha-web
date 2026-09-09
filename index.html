@@ -164,18 +164,52 @@
     .login-avatar svg { width: 25px; height: 25px; }
 
     /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
-    .login-screen { position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; z-index: 200;
-      background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
-    .login-screen.open { display: block; }
+    /* Popup over whatever the user was already looking at, not a separate page */
+    .login-screen {
+      position: fixed; inset: 0; z-index: 1100;
+      display: none; align-items: center; justify-content: center;
+      padding: 24px; overflow-y: auto;
+      background: rgba(6, 8, 14, .58);
+      backdrop-filter: blur(14px) saturate(1.25);
+      -webkit-backdrop-filter: blur(14px) saturate(1.25);
+      opacity: 0; transition: opacity .26s ease;
+    }
+    .login-screen.open { display: flex; }
     .login-screen.visible { opacity: 1; }
-    .login-card { max-width: 400px; margin: 0 auto; padding: 56px 24px 80px; text-align: center; }
-    .login-logo { height: 52px; margin-bottom: 26px; }
-    .login-h { font-family: var(--heading-font); font-size: 27px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 26px; line-height: 1.55; }
+    .login-card {
+      position: relative;
+      width: 100%; max-width: 430px; margin: auto;
+      padding: 38px 36px 32px; text-align: center;
+      border-radius: 24px;
+      background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.055) 58%, rgba(255,255,255,.03) 100%);
+      border: 1px solid rgba(255, 255, 255, .18);
+      backdrop-filter: blur(28px) saturate(1.7);
+      -webkit-backdrop-filter: blur(28px) saturate(1.7);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
+      transform: translateY(14px) scale(.96);
+      transition: transform .3s cubic-bezier(.34, 1.4, .64, 1);
+    }
+    .login-screen.visible .login-card { transform: none; }
+    .login-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18);
+      color: #fff; font-size: 15px; line-height: 1; cursor: pointer;
+      display: grid; place-items: center; transition: background .15s ease;
+    }
+    .login-close:hover { background: rgba(255, 255, 255, .2); }
+    .login-logo { height: 46px; margin-bottom: 20px; }
+    .login-h { font-family: var(--heading-font); font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.55; }
     .login-field { text-align: left; margin-bottom: 16px; }
     .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
-    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; }
+    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; line-height: 1.5; }
     .login-err { color: #f87171; font-size: 13px; margin: 4px 0 0; min-height: 1px; text-align: left; }
+    @media (max-width: 600px) {
+      .login-card { padding: 30px 22px 26px; border-radius: 20px; }
+      .login-h { font-size: 21px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .login-card { transform: none; } }
 
     .avatar {
       width: 46px; height: 46px; border-radius: 50%;
@@ -1784,18 +1818,52 @@
     .login-avatar svg { width: 22px; height: 22px; }
 
     /* ─── LOGIN SCREEN ───────────────────────────────────────────── */
-    .login-screen { position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; z-index: 200;
-      background: var(--bg); overflow-y: auto; display: none; opacity: 0; transition: opacity .25s ease; }
-    .login-screen.open { display: block; }
+    /* Popup over whatever the user was already looking at, not a separate page */
+    .login-screen {
+      position: fixed; inset: 0; z-index: 1100;
+      display: none; align-items: center; justify-content: center;
+      padding: 24px; overflow-y: auto;
+      background: rgba(6, 8, 14, .58);
+      backdrop-filter: blur(14px) saturate(1.25);
+      -webkit-backdrop-filter: blur(14px) saturate(1.25);
+      opacity: 0; transition: opacity .26s ease;
+    }
+    .login-screen.open { display: flex; }
     .login-screen.visible { opacity: 1; }
-    .login-card { max-width: 400px; margin: 0 auto; padding: 56px 24px 80px; text-align: center; }
-    .login-logo { height: 52px; margin-bottom: 26px; }
-    .login-h { font-family: var(--heading-font); font-size: 27px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 26px; line-height: 1.55; }
+    .login-card {
+      position: relative;
+      width: 100%; max-width: 430px; margin: auto;
+      padding: 38px 36px 32px; text-align: center;
+      border-radius: 24px;
+      background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.055) 58%, rgba(255,255,255,.03) 100%);
+      border: 1px solid rgba(255, 255, 255, .18);
+      backdrop-filter: blur(28px) saturate(1.7);
+      -webkit-backdrop-filter: blur(28px) saturate(1.7);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
+      transform: translateY(14px) scale(.96);
+      transition: transform .3s cubic-bezier(.34, 1.4, .64, 1);
+    }
+    .login-screen.visible .login-card { transform: none; }
+    .login-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18);
+      color: #fff; font-size: 15px; line-height: 1; cursor: pointer;
+      display: grid; place-items: center; transition: background .15s ease;
+    }
+    .login-close:hover { background: rgba(255, 255, 255, .2); }
+    .login-logo { height: 46px; margin-bottom: 20px; }
+    .login-h { font-family: var(--heading-font); font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .login-sub { font-size: 14.5px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.55; }
     .login-field { text-align: left; margin-bottom: 16px; }
     .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
-    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; }
+    .login-hint { font-size: 12.5px; color: var(--text-dim); margin-top: 18px; line-height: 1.5; }
     .login-err { color: #f87171; font-size: 13px; margin: 4px 0 0; min-height: 1px; text-align: left; }
+    @media (max-width: 600px) {
+      .login-card { padding: 30px 22px 26px; border-radius: 20px; }
+      .login-h { font-size: 21px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .login-card { transform: none; } }
 
     .avatar { width: 34px; height: 34px; font-size: 12px; }
 
@@ -4698,13 +4766,15 @@ function syncAuthState() {
   if (!on) { const b = document.getElementById('navProBadge'); if (b) b.style.display = 'none'; }
 }
 
+// Opens as a popup over the current page — the screen behind it is left intact
+// and simply blurred, so signing in returns the user exactly where they were.
 function openLogin() {
-  navPush();
-  closeSearch(); closeBrowse(); closeDetail(); closeAccount(); closeLiveTV(true);
   const scr = document.getElementById('loginScreen');
+  if (scr.classList.contains('open')) return;
   clearTimeout(scr._closeTimer);
   scr.innerHTML = `
     <div class="login-card">
+      <button class="login-close" onclick="closeLogin()" aria-label="Close">✕</button>
       <img class="login-logo" src="Tamashalogo.png" alt="Tamasha">
       <div class="login-h">Sign in to Tamasha</div>
       <div class="login-sub">Enter your 4-digit number and PIN to continue.</div>
@@ -4730,6 +4800,15 @@ function openLogin() {
   setTimeout(() => { const n = document.getElementById('loginNum'); if (n) n.focus(); }, 120);
   stopHeroTimer(); pauseHeroMedia();
 }
+
+// Backdrop click and Escape dismiss the login popup
+document.addEventListener('click', e => {
+  const scr = document.getElementById('loginScreen');
+  if (scr && scr.classList.contains('open') && e.target === scr) closeLogin();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLogin();
+});
 function closeLogin() {
   const scr = document.getElementById('loginScreen');
   if (!scr.classList.contains('open')) return;
@@ -4750,7 +4829,8 @@ function doLogin() {
   try { localStorage.setItem(AUTH_KEY, num); } catch (e) {}
   applyAuthUser(num);
   syncAuthState(); syncProState(); renderContinue(_currentFilter);
-  closeLogin(); navBack();
+  refreshListButtons();
+  closeLogin();          // popup only — the page underneath never went anywhere
 
   if (_pendingAdd) {                       // finish the save they started before signing in
     const t = _pendingAdd; _pendingAdd = null;
