@@ -6209,6 +6209,75 @@ function setOverlayLock() {
   updateCatfish(); setOverlayLock();
 })();
 
+// ─── DEEP LINKS ──────────────────────────────────────────────────
+// Every screen here is an overlay with no URL of its own, so design tools that
+// import a page (html.to.design and friends) only ever see the homepage.
+// ?screen=… opens one directly so each surface has an address to import.
+//
+//   ?screen=login                    ?screen=account&section=billing
+//   ?screen=detail&kind=show&i=0     ?screen=player
+//   ?screen=livetv&ch=3&guide=1      ?screen=search&q=spider
+//   ?screen=browse&row=moviesRow     ?screen=pro&step=details
+//   ?screen=voucher&i=0              ?screen=dialog&d=logout
+//   add &tier=guest|avod|pro to any of them
+function applyDeepLink() {
+  const q = new URLSearchParams(location.search);
+  const screen = (q.get('screen') || '').toLowerCase();
+  const tier = (q.get('tier') || '').toLowerCase();
+  if (!screen && !tier) return;
+
+  if (tier === 'guest') {
+    AUTH.loggedIn = false; AUTH.number = null;
+    ACCOUNT.subscribed = false; ACCOUNT.planId = null;
+  } else if (tier === 'avod' || tier === 'pro') {
+    const num = tier === 'pro' ? '1122' : '1234';
+    AUTH.loggedIn = true; AUTH.number = num; applyAuthUser(num);
+  }
+  if (tier) { syncAuthState(); syncProState(); renderContinue(_currentFilter); updateCatfish(); }
+
+  const idx = parseInt(q.get('i') || '0', 10) || 0;
+  const pick = (arr) => arr[Math.min(Math.max(idx, 0), arr.length - 1)];
+
+  switch (screen) {
+    case '': break;
+    case 'login':   openLogin(); break;
+    case 'account': openAccount(q.get('section') || 'overview'); break;
+    case 'search':  openSearch(); {
+      const t = q.get('q');
+      if (t) setTimeout(() => { const i = document.getElementById('searchInput'); if (i) { i.value = t; renderResults(t); } }, 120);
+    } break;
+    case 'browse': {
+      const cfg = ROW_CONFIG[q.get('row') || 'moviesRow'] || ROW_CONFIG.moviesRow;
+      openBrowse(q.get('title') || 'Browse', cfg.data(), cfg.fn, cfg.kind);
+    } break;
+    case 'detail': {
+      const kind = q.get('kind') === 'show' ? 'show' : 'movie';
+      openDetail(pick(kind === 'show' ? tvShowsData : moviesData), kind);
+    } break;
+    case 'player': {
+      const m = pick(moviesData);
+      openPlayer(pickVimeo(titleOf(m)), titleOf(m), 'Feature Film');
+    } break;
+    case 'livetv':
+      openLiveTV(parseInt(q.get('ch') || '0', 10) || 0);
+      if (q.get('guide') === '0') setTimeout(() => { const g = document.getElementById('ltvGuide'); if (g) g.classList.remove('open'); }, 400);
+      else _ltvHovering = true;   // hold the guide open for the capture
+      if (q.get('all') === '1') setTimeout(openAllChannels, 500);
+      break;
+    case 'pro':
+      openProSubscribe();
+      if (q.get('step')) setTimeout(() => proGo(q.get('step'), true), 120);
+      break;
+    case 'voucher': openVoucher(pick(shopData)); break;
+    case 'dialog': {
+      const d = (q.get('d') || '').toLowerCase();
+      if (d === 'logout') doLogout();
+      else if (d === 'cancel') acctDoCancel();
+    } break;
+    default: console.warn('Unknown ?screen=' + screen);
+  }
+}
+
 // ─── BOOT SEQUENCE ───────────────────────────────────────────────
 // Brand loader → homepage skeleton → content. Both ship in the HTML so
 // they paint on the first frame instead of waiting for this script.
@@ -6220,6 +6289,7 @@ function setOverlayLock() {
     const sk = document.getElementById('skelHome');
     if (sk) { sk.classList.add('is-done'); setTimeout(() => sk.remove(), 400); }
     updateCatfish();          // the catfish ad waits for the skeleton to clear
+    setTimeout(applyDeepLink, 120);
   };
 
   const hideLoader = () => {
@@ -6229,6 +6299,18 @@ function setOverlayLock() {
     if (el) { el.classList.add('is-done'); setTimeout(() => el.remove(), 500); }
     setTimeout(revealContent, SKELETON_MS);
   };
+
+  // A deep-linked load is being captured by a design tool, not read by a
+  // person — skip the loader and skeleton so the screen is up straight away.
+  if (new URLSearchParams(location.search).has('screen')) {
+    const el = document.getElementById('appLoader');
+    if (el) el.remove();
+    const sk = document.getElementById('skelHome');
+    if (sk) sk.remove();
+    handedOff = true;
+    revealContent();
+    return;
+  }
 
   // Hold the loader for at least LOADER_MS, and until the page has finished
   // loading — but never longer than LOADER_MAX_MS if an asset stalls.
