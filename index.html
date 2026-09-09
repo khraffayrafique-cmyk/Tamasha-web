@@ -1299,7 +1299,9 @@
     .cat-toast {
       position: fixed; bottom: 40px; left: 50%;
       transform: translateX(-50%) translateY(16px) scale(.96);
-      z-index: 300; padding: 9px 20px; border-radius: 999px;
+      /* above the catfish ad (450) — both sit bottom-centre, and the toast
+         has to read over it rather than disappear behind it */
+      z-index: 470; padding: 9px 20px; border-radius: 999px;
       background: var(--accent-grad); color: #fff;
       font-family: var(--heading-font); font-weight: 700; font-size: 14px;
       letter-spacing: .02em; white-space: nowrap;
