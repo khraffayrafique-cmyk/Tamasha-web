@@ -3272,13 +3272,19 @@ function goToSlide(idx) {
   const activeSlide = document.querySelectorAll('.hero-slide')[heroIdx];
   if (activeSlide) {
     const activeVimeo = activeSlide.querySelector('.hero-vimeo-wrap iframe');
-    if (activeVimeo) {
+    const startVideo = () => {
+      if (!activeVimeo) return;
+      vimeoCmd(activeVimeo, 'setCurrentTime', 0);   // always open on frame 0
       vimeoCmd(activeVimeo, 'play');
       setTimeout(() => vimeoCmd(activeVimeo, 'setVolume', _heroMuted ? 0 : 1), 300);
       _vimeoStopTimer = setTimeout(() => vimeoCmd(activeVimeo, 'pause'), 30000);
-    }
+    };
     if (activeSlide.querySelector('.hero-cover')) {
-      _heroCoverTimer = setTimeout(() => activeSlide.classList.add('video-live'), HERO_COVER_MS);
+      // hold on the key art: video stays paused, then starts as the cover fades
+      if (activeVimeo) { vimeoCmd(activeVimeo, 'pause'); vimeoCmd(activeVimeo, 'setCurrentTime', 0); }
+      _heroCoverTimer = setTimeout(() => { activeSlide.classList.add('video-live'); startVideo(); }, HERO_COVER_MS);
+    } else {
+      startVideo();
     }
   }
   // restart the 25s countdown for this slide
@@ -3292,6 +3298,18 @@ let _vimeoStopTimer = null;
 // How long the key art holds before the trailer takes over
 const HERO_COVER_MS = 3000;
 let _heroCoverTimer = null;
+
+// Vimeo background embeds start themselves regardless of autoplay=0, and the
+// player ignores commands until it's ready — so pin it back a few times.
+function heroHoldVideo(fr) {
+  const slide = fr.closest('.hero-slide');
+  if (!slide) return;
+  [0, 150, 400, 900].forEach(d => setTimeout(() => {
+    if (slide.classList.contains('video-live')) return;   // cover already cleared
+    vimeoCmd(fr, 'pause');
+    vimeoCmd(fr, 'setCurrentTime', 0);
+  }, d));
+}
 
 function vimeoCmd(iframe, method, value) {
   try {
@@ -3482,7 +3500,11 @@ function buildHeroLive() {
 
 function _heroBg(m, i) {
   if (m.vimeo) {
-    return `<div class="hero-vimeo-wrap"><iframe src="https://player.vimeo.com/video/${m.vimeo}?background=1&autoplay=1&muted=1&loop=1&autopause=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+    // Covered slides load the trailer but hold it on frame 0 — it only starts
+    // when the key art clears, so nothing plays (or sounds) behind the cover.
+    const frame = `<iframe src="https://player.vimeo.com/video/${m.vimeo}?background=1&autoplay=${m.cover ? 0 : 1}&muted=1&loop=1&autopause=0"`
+      + ` frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen${m.cover ? ' onload="heroHoldVideo(this)"' : ''}></iframe>`;
+    return `<div class="hero-vimeo-wrap">${frame}</div>`
       + (m.cover ? `<img class="hero-cover" src="${m.cover}" alt="${escapeXml(m.title)}" loading="${i === 0 ? 'eager' : 'lazy'}">` : '');
   }
   if (m.trailer) {
