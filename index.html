@@ -1297,7 +1297,8 @@
     .section.cat-out { opacity: 0; transform: translateY(16px); }
 
     .cat-toast {
-      position: fixed; bottom: 40px; left: 50%;
+      /* sits clear of the catfish ad when one is on screen */
+      position: fixed; bottom: calc(40px + var(--catfish-h, 0px)); left: 50%;
       transform: translateX(-50%) translateY(16px) scale(.96);
       /* above the catfish ad (450) — both sit bottom-centre, and the toast
          has to read over it rather than disappear behind it */
@@ -1312,7 +1313,7 @@
     }
     .cat-toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
     .cat-toast .material-icons { font-size: 18px; }
-    @media (max-width: 600px) { .cat-toast { bottom: 24px; font-size: 13px; padding: 8px 16px; } }
+    @media (max-width: 600px) { .cat-toast { bottom: calc(24px + var(--catfish-h, 0px)); font-size: 13px; padding: 8px 16px; } }
 
     /* ─── DETAIL SCREEN (show / movie page) ──────────────────────── */
     .detail-screen { position: fixed; inset: 0; z-index: 150; background: var(--bg); overflow-y: auto; overflow-x: hidden; display: none; opacity: 0; transition: opacity .3s ease; }
@@ -6139,6 +6140,9 @@ function showCatfish(ctx) {
   el.querySelector('.catfish-inner').addEventListener('click', adClick);
   el.hidden = false;
   el.classList.remove('can-close');
+  // tell the toast how much room the banner takes so it can sit above it
+  const inner = el.querySelector('.catfish-inner');
+  if (inner) document.body.style.setProperty('--catfish-h', Math.round(inner.getBoundingClientRect().height) + 22 + 'px');
   requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-visible')));
 
   clearTimeout(_adTimer); clearInterval(_adTick);
@@ -6157,6 +6161,7 @@ function hideCatfish() {
   const el = document.getElementById('catfishAd');
   if (!el || el.hidden) return;
   clearTimeout(_adTimer); clearInterval(_adTick);
+  document.body.style.removeProperty('--catfish-h');
   el.classList.remove('is-visible', 'can-close');
   clearTimeout(el._hideTimer);
   el._hideTimer = setTimeout(() => { el.hidden = true; el.innerHTML = ''; delete el.dataset.ctx; }, 400);
