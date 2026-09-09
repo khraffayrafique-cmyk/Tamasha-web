@@ -2266,6 +2266,17 @@
     }
     .cfm-btn--ghost:hover { background: rgba(255, 255, 255, .16); }
 
+    /* Voucher detail reuses the confirm dialog's glass card */
+    .vch-art {
+      width: 100%; aspect-ratio: 400 / 224; object-fit: cover;
+      border-radius: 14px; display: block; margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, .14);
+    }
+    .vch-brand {
+      font-size: 11px; font-weight: 800; letter-spacing: .14em;
+      color: var(--accent-from); margin-bottom: 6px;
+    }
+
     @media (max-width: 600px) {
       .cfm-card { padding: 28px 22px 24px; border-radius: 20px; }
       .cfm-title { font-size: 20px; }
@@ -4073,13 +4084,12 @@ function buildDetail(item, kind) {
   screen._item = item; screen._kind = kind;
 
   const listBtn = screen.querySelector('.dsc-mylist');
-  if (listBtn) listBtn.addEventListener('click', () => {
-    if (!AUTH.loggedIn) { _pendingAdd = title; openLogin(); return; }
+  if (listBtn) listBtn.addEventListener('click', () => requireAuth(() => {
     const added = toggleWatchlist(title);
     listBtn.innerHTML = (added ? _CHECK : _PLUS) + 'My List';
     flashToast(added ? `${title} has been added to your list`
                      : `${title} has been removed from your list`);
-  });
+  }));
 
   const watchBtn = screen.querySelector('.dsc-watch');
   watchBtn.addEventListener('click', () => {
@@ -4286,13 +4296,14 @@ function subscribeNow() { openPlansPortal(); }
 
 function attachCardClick(el, item, kind) {
   el.style.cursor = 'pointer';
-  // Games and Shop have no backend yet — acknowledge the tap and stop there
-  if (kind === 'game' || kind === 'shop') {
-    el.addEventListener('click', () => {
-      flashToast(kind === 'game'
-        ? `${item.title} — coming soon on Tamasha Games`
-        : `${item.brand} · ${item.title} — redemption coming soon`);
-    });
+  // Games have no backend yet — acknowledge the tap and stop there
+  if (kind === 'game') {
+    el.addEventListener('click', () => flashToast(`${item.title} — coming soon on Tamasha Games`));
+    return;
+  }
+  // Shop vouchers are tied to an account, so they need a signed-in user
+  if (kind === 'shop') {
+    el.addEventListener('click', () => requireAuth(() => openVoucher(item)));
     return;
   }
   // reflect existing My List state on the "+" button
@@ -4303,12 +4314,13 @@ function attachCardClick(el, item, kind) {
     const add = e.target.closest('.card-action-btn:not(.play-btn)');
     if (add) {   // "+" → toggle My List (sign-in required)
       e.stopPropagation();
-      if (!AUTH.loggedIn) { _pendingAdd = titleOf(item); openLogin(); return; }
-      const added = toggleWatchlist(titleOf(item));
-      add.innerHTML = added ? _CHECK : _PLUS;
-      add.classList.toggle('in-list', added);
-      flashToast(added ? `${titleOf(item)} has been added to your list`
-                       : `${titleOf(item)} has been removed from your list`);
+      requireAuth(() => {
+        const added = toggleWatchlist(titleOf(item));
+        add.innerHTML = added ? _CHECK : _PLUS;
+        add.classList.toggle('in-list', added);
+        flashToast(added ? `${titleOf(item)} has been added to your list`
+                         : `${titleOf(item)} has been removed from your list`);
+      });
       return;
     }
     if (e.target.closest('.play-btn, .highlight-play, .continue-play-overlay')) {
@@ -4371,7 +4383,7 @@ const _CHEV_R = `<svg class="acct-row-chev" width="16" height="16" viewBox="0 0 
 const _TICK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function openAccount(section) {
-  if (!AUTH.loggedIn) { openLogin(); return; }
+  if (!AUTH.loggedIn) { requireAuth(() => openAccount(section)); return; }
   navPush();
   closeSearch(); closeBrowse(); closeDetail(); closePlayer(); closeLiveTV(true);
   _acctSection = section || 'overview';
@@ -4741,7 +4753,16 @@ function acctStub(what) { flashToast(what + ' — coming soon'); }
 // ─── LOGIN / LOGOUT ──────────────────────────────────────────────
 // Demo auth only — nothing is sent anywhere.
 //   1234 / 0000 → free account      1122 / 0000 → Tamasha PRO subscriber
-let _pendingAdd = null;    // title the user tried to save while logged out
+// What the user was trying to do when we interrupted them to sign in. Replayed
+// once they're through, so login always returns them to the thing they clicked.
+let _pendingAction = null;
+
+function requireAuth(action) {
+  if (AUTH.loggedIn) { action(); return true; }
+  _pendingAction = action;
+  openLogin();
+  return false;
+}
 const DEMO_USERS = [
   { number:'1234', pin:'0000', pro:false },
   { number:'1122', pin:'0000', pro:true, planId:'monthly' },
@@ -4832,11 +4853,10 @@ function doLogin() {
   refreshListButtons();
   closeLogin();          // popup only — the page underneath never went anywhere
 
-  if (_pendingAdd) {                       // finish the save they started before signing in
-    const t = _pendingAdd; _pendingAdd = null;
-    if (!inWatchlist(t)) toggleWatchlist(t);
-    refreshListButtons();
-    flashToast(`${t} has been added to your list`);
+  const resume = _pendingAction; _pendingAction = null;
+  if (resume) {
+    // let the popup finish fading before landing them on what they clicked
+    setTimeout(resume, 280);
   } else {
     flashToast(u.pro ? 'Signed in — Tamasha PRO active' : 'Signed in as ' + ACCOUNT.name);
   }
@@ -4875,6 +4895,31 @@ function openConfirm(o) {
   setTimeout(() => { const b = el.querySelector('#cfmYes'); if (b) b.focus(); }, 60);
 }
 
+// Tamasha Shop voucher — the destination a signed-out user lands on after login
+function openVoucher(item) {
+  const el = document.getElementById('confirmModal');
+  if (!el) return;
+  _cfmOnConfirm = null;
+  clearTimeout(el._closeTimer);
+  el.innerHTML = `
+    <div class="cfm-card" role="document">
+      <img class="vch-art" src="${shp(item.file)}" alt="${escapeXml(item.brand + ' — ' + item.title)}">
+      <div class="vch-brand">${escapeXml(item.brand.toUpperCase())}</div>
+      <h2 class="cfm-title">${escapeXml(item.title)}</h2>
+      <p class="cfm-msg">Reserved for <strong>${escapeXml(ACCOUNT.name)}</strong>. Redeem it in the ${escapeXml(item.brand)} app — the code lands in your Tamasha account.</p>
+      <div class="cfm-actions">
+        <button class="cfm-btn cfm-btn--primary" id="vchRedeem">Redeem voucher</button>
+        <button class="cfm-btn cfm-btn--ghost" onclick="closeConfirm()">Close</button>
+      </div>
+    </div>`;
+  el.querySelector('#vchRedeem').addEventListener('click', () => {
+    closeConfirm();
+    flashToast(`${item.brand} · ${item.title} — redemption coming soon`);
+  });
+  el.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+}
+
 function closeConfirm() {
   const el = document.getElementById('confirmModal');
   if (!el || !el.classList.contains('open')) return;
@@ -4905,7 +4950,7 @@ function doLogout() {
 }
 
 function performLogout() {
-  AUTH.loggedIn = false; AUTH.number = null; _pendingAdd = null;
+  AUTH.loggedIn = false; AUTH.number = null; _pendingAction = null;
   ACCOUNT.subscribed = false; ACCOUNT.planId = null; ACCOUNT.pendingCancel = false;
   try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
   syncAuthState(); syncProState(); renderContinue(_currentFilter);
@@ -4913,10 +4958,7 @@ function performLogout() {
   flashToast('Signed out');
 }
 // Screens that need an account bounce to login first
-function requireLogin(then) {
-  if (AUTH.loggedIn) { then(); return; }
-  openLogin();
-}
+function requireLogin(then) { requireAuth(then); }
 
 // Re-sync every visible "+" button with the saved list
 function refreshListButtons() {
