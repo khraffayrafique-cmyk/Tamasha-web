@@ -70,6 +70,18 @@
                   height .3s ease, border-radius .3s ease, padding .3s ease,
                   background .3s ease, border-color .3s ease, box-shadow .3s ease;
     }
+    /* While a full-screen surface is open the bar must not be see-through —
+       the overlays start below it, so the homepage would show in that strip. */
+    .navbar.is-solid {
+      background: #0B0B0D;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      border-color: transparent;
+      border-bottom-color: rgba(255, 255, 255, .10);
+      box-shadow: none;
+    }
+    /* Page underneath must not scroll behind an overlay */
+    body.overlay-open { overflow: hidden; }
+
     .navbar.scrolled {
       top: 0; left: 0; right: 0; max-width: 100vw;
       height: var(--nav-h); border-radius: 0;
@@ -6114,12 +6126,29 @@ function updateCatfish() {
 
 // Follow the overlays instead of patching every open/close function; the body
 // class carries PRO state, so subscribing or logging out re-evaluates too.
+// ─── OVERLAY LOCK ────────────────────────────────────────────────
+// Whenever a full-screen surface is up: freeze the page behind it and make
+// the navbar opaque, since the overlays begin below the bar and the homepage
+// would otherwise scroll past inside that strip.
+function setOverlayLock() {
+  const on = overlayActive() || _isOpen('confirmModal');
+  document.body.classList.toggle('overlay-open', on);
+  const nav = document.querySelector('.navbar');
+  if (nav) {
+    nav.classList.toggle('is-solid', on);
+    if (on) nav.classList.add('scrolled');
+    else if (window.scrollY < 40) nav.classList.remove('scrolled');
+  }
+  // Lenis drives its own scrolling, so CSS overflow alone won't stop it
+  if (window.__lenis) { on ? window.__lenis.stop() : window.__lenis.start(); }
+}
+
 (function watchAdSurfaces() {
-  const obs = new MutationObserver(() => updateCatfish());
-  ['playerModal','detailScreen','liveTVScreen','browseScreen','searchScreen','accountScreen','proScreen','loginScreen']
+  const obs = new MutationObserver(() => { updateCatfish(); setOverlayLock(); });
+  ['playerModal','detailScreen','liveTVScreen','browseScreen','searchScreen','accountScreen','proScreen','loginScreen','confirmModal']
     .forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'] }); });
   obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  updateCatfish();
+  updateCatfish(); setOverlayLock();
 })();
 
 // ─── BOOT SEQUENCE ───────────────────────────────────────────────
