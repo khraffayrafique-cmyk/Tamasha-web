@@ -1327,12 +1327,16 @@
     .dsc-back {
       position: absolute; top: 88px; left: 40px; z-index: 5;
       display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(18,18,18,.72); border: 1px solid rgba(255,255,255,.18); color: #fff;
+      background: linear-gradient(158deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.055) 100%);
+      border: 1px solid rgba(255,255,255,.18); color: #fff;
       padding: 9px 18px 9px 13px; border-radius: 999px; cursor: pointer;
       font-family: var(--body-font); font-size: 14px; font-weight: 600;
-      backdrop-filter: blur(10px); box-shadow: 0 6px 22px rgba(0,0,0,.4);
-      transition: background .15s, border-color .15s;
+      backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      box-shadow: 0 8px 26px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.16);
+      transition: background .18s ease, border-color .18s ease, transform .12s ease;
     }
+    .dsc-back:hover { background: linear-gradient(158deg, rgba(255,255,255,.24) 0%, rgba(255,255,255,.1) 100%);
+      border-color: rgba(255,255,255,.3); transform: translateY(-1px); }
     .dsc-back:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.36); }
     .dsc-back svg { width: 15px; height: 15px; }
 
@@ -1399,8 +1403,16 @@
     .acct-wrap { display: grid; grid-template-columns: 260px 1fr; gap: 56px; max-width: 1180px; margin: 0 auto; padding: 40px 40px 80px; }
 
     .acct-side { position: sticky; top: 24px; align-self: start; }
-    .acct-back { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; color: var(--text); font-family: var(--body-font); font-size: 15px; font-weight: 600; cursor: pointer; padding: 0 0 26px; }
-    .acct-back:hover { opacity: .75; }
+    .acct-back { display: inline-flex; align-items: center; gap: 9px; color: var(--text);
+      font-family: var(--body-font); font-size: 14.5px; font-weight: 600; cursor: pointer;
+      padding: 9px 18px 9px 13px; border-radius: 999px; margin-bottom: 22px; align-self: flex-start;
+      background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 100%);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.14);
+      transition: background .18s ease, border-color .18s ease, transform .12s ease; }
+    .acct-back:hover { background: linear-gradient(158deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.09) 100%);
+      border-color: rgba(255,255,255,.26); transform: translateY(-1px); }
     .acct-nav { display: flex; flex-direction: column; gap: 2px; }
     .acct-nav-item { display: flex; align-items: center; gap: 14px; background: none; border: none; color: var(--text-dim); font-family: var(--body-font); font-size: 15px; font-weight: 600; cursor: pointer; padding: 11px 12px; border-radius: 10px; text-align: left; transition: background .12s, color .12s; }
     .acct-nav-item:hover { background: var(--surface-hover); color: var(--text); }
@@ -2230,9 +2242,26 @@
     /* ─── ACCOUNT — DESIGN V2 ────────────────────────────────────── */
     /* Rebuild of the profile area from the Tamasha Profile Figma exports:
        left profile card with its own nav, right detail pane. */
-    .pf2 { display: grid; grid-template-columns: 332px 1fr; gap: 48px; padding: 34px 60px 90px; max-width: 1512px; margin: 0 auto; align-items: start; }
-    .pf2-side { background: #16181E; border-radius: 18px; padding: 22px 20px; min-height: 760px; }
-    .pf2-me { display: flex; align-items: center; gap: 16px; padding: 0 4px 22px; }
+    /* Ambient wash so the frosted cards have something to refract */
+    .pf2-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+      background:
+        radial-gradient(720px 420px at 14% 8%,  rgba(36,114,252,.20), transparent 68%),
+        radial-gradient(620px 380px at 88% 22%, rgba(124,58,237,.16), transparent 66%),
+        radial-gradient(760px 460px at 62% 96%, rgba(36,114,252,.10), transparent 70%);
+    }
+    .pf2 { position: relative; display: grid; grid-template-columns: 340px 1fr; gap: 44px;
+      padding: 44px 60px 110px; max-width: 1512px; margin: 0 auto; align-items: start; }
+
+    .pf2-side {
+      border-radius: 20px; padding: 28px 22px; min-height: 700px;
+      background: linear-gradient(162deg, rgba(255,255,255,.085) 0%, rgba(255,255,255,.035) 52%, rgba(255,255,255,.018) 100%);
+      border: 1px solid rgba(255,255,255,.11);
+      backdrop-filter: blur(26px) saturate(1.55);
+      -webkit-backdrop-filter: blur(26px) saturate(1.55);
+      box-shadow: 0 22px 60px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .pf2-me { display: flex; align-items: center; gap: 16px; padding: 4px 4px 26px; }
     .pf2-avatar { width: 88px; height: 88px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
       border: 3px solid var(--accent-from); background: linear-gradient(135deg,#c084fc,#818cf8);
       display: grid; place-items: center; font-weight: 800; font-size: 26px; color: #fff; }
@@ -2261,22 +2290,36 @@
     .pf2-navitem .pf2-chev { margin-left: auto; }
 
     .pf2-main { min-width: 0; padding-top: 4px; }
-    .pf2-back { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
-      background: #1E2128; color: #fff; display: grid; place-items: center; margin-bottom: 22px; transition: background .15s; }
-    .pf2-back:hover { background: #2A2E36; }
+    .pf2-back { width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+      background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 100%);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(18px) saturate(1.5);
+      -webkit-backdrop-filter: blur(18px) saturate(1.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.16);
+      color: #fff; display: grid; place-items: center; margin-bottom: 26px;
+      transition: background .18s ease, border-color .18s ease, transform .12s ease; }
+    .pf2-back:hover { background: linear-gradient(158deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.09) 100%);
+      border-color: rgba(255,255,255,.26); transform: translateY(-1px); }
     .pf2-h1 { font-family: var(--heading-font); font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
     .pf2-sub2 { font-size: 15.5px; color: rgba(255,255,255,.55); margin-top: 6px; }
     .pf2-rule { height: 1px; background: rgba(255,255,255,.09); margin: 20px 0 26px; }
 
-    .pf2-card { background: linear-gradient(160deg, #22262F 0%, #1A1D24 60%); border-radius: 14px; padding: 22px 24px; }
-    .pf2-card + .pf2-card { margin-top: 18px; }
-    .pf2-card-h { font-family: var(--heading-font); font-size: 17.5px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .pf2-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px 0;
-      border-bottom: 1px solid rgba(255,255,255,.07); font-size: 15.5px; }
+    .pf2-card {
+      border-radius: 16px; padding: 26px 28px;
+      background: linear-gradient(158deg, rgba(255,255,255,.095) 0%, rgba(255,255,255,.04) 55%, rgba(255,255,255,.022) 100%);
+      border: 1px solid rgba(255,255,255,.11);
+      backdrop-filter: blur(24px) saturate(1.55);
+      -webkit-backdrop-filter: blur(24px) saturate(1.55);
+      box-shadow: 0 20px 56px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .pf2-card + .pf2-card { margin-top: 20px; }
+    .pf2-card-h { font-family: var(--heading-font); font-size: 17.5px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .pf2-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08); font-size: 15.5px; }
     .pf2-row:last-child { border-bottom: none; }
     .pf2-row .k { color: rgba(255,255,255,.72); }
     .pf2-row .v { color: #fff; text-align: right; }
-    .pf2-row.is-final { background: rgba(255,255,255,.05); margin: 0 -24px; padding: 14px 24px; border-bottom: none; }
+    .pf2-row.is-final { background: rgba(255,255,255,.07); margin: 0 -28px; padding: 16px 28px; border-bottom: none; }
     .pf2-row.is-final .k, .pf2-row.is-final .v { font-weight: 800; font-size: 16.5px; }
     .pf2-link { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 16px;
       background: none; border: none; cursor: pointer; padding: 15px 0 2px; margin-top: 6px;
@@ -2286,8 +2329,10 @@
     .pf2-link:hover .pf2-chev { color: var(--accent-from); }
 
     .pf2-plan { position: relative; }
-    .pf2-plan-price { position: absolute; top: 0; right: 0; background: #2C313A; color: #fff;
-      font-size: 14px; font-weight: 800; padding: 7px 14px; border-radius: 0 14px 0 12px; }
+    .pf2-plan-price { position: absolute; top: 0; right: 0; color: #fff;
+      background: rgba(255,255,255,.12); border-left: 1px solid rgba(255,255,255,.12);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      font-size: 14px; font-weight: 800; padding: 8px 16px; border-radius: 0 16px 0 14px; }
     .pf2-plan-price span { font-weight: 500; color: rgba(255,255,255,.65); font-size: 12.5px; }
     .pf2-plan-head { display: flex; align-items: center; gap: 12px; padding: 6px 0 4px; }
     .pf2-plan-head img { height: 34px; width: auto; }
@@ -2343,7 +2388,7 @@
       color: rgba(255,255,255,.6); transition: background .15s, color .15s; }
     .pf2-switch button.is-on { background: var(--accent-from); color: #fff; }
     .pf2-switch button:not(.is-on):hover { color: #fff; }
-    .acct-skin-bar { display: flex; justify-content: flex-end; padding: 18px 60px 0; max-width: 1512px; margin: 0 auto; }
+    .acct-skin-bar { position: relative; display: flex; justify-content: flex-end; padding: 28px 60px 0; max-width: 1512px; margin: 0 auto; }
 
     @media (max-width: 1100px) {
       .pf2 { grid-template-columns: 1fr; gap: 26px; padding: 26px 24px 80px; }
@@ -4701,6 +4746,10 @@ function renderAccountV2() {
   const price = ACCOUNT.subscribed && plan ? plan.price + (plan.per || '') : '—';
   const initials = ACCOUNT.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const b = BILLING[Math.min(_pf2Txn, BILLING.length - 1)];
+  // no chip at all when there's nothing to price — an empty pill reads as broken
+  const priceChip = ACCOUNT.subscribed && plan
+    ? `<div class="pf2-plan-price">${escapeXml(plan.price)}<span>${escapeXml(plan.per || '')}</span></div>`
+    : '';
 
   const views = {
     plan: () => `
@@ -4721,7 +4770,7 @@ function renderAccountV2() {
       <div class="pf2-sub2">Plan details</div>
       <div class="pf2-rule"></div>
       <div class="pf2-card pf2-plan">
-        <div class="pf2-plan-price">${escapeXml(price.replace(/\/.*$/, ''))}<span>${price.includes('/') ? '/' + price.split('/')[1] : ''}</span></div>
+        ${priceChip}
         <div class="pf2-plan-head"><img src="Tamashalogo.png" alt="Tamasha"><b>${escapeXml(planName)}</b></div>
         <div class="pf2-plan-desc">Enjoy HD streaming, an ad-free experience, and endless entertainment over Wi-Fi.</div>
         <button class="pf2-link" onclick="openPlansPortal()">Change Plan ${_PF2_CHEV}</button>
@@ -4741,7 +4790,7 @@ function renderAccountV2() {
       <div class="pf2-sub2">Your ${ACCOUNT.subscribed ? 'monthly' : ''} payments</div>
       <div class="pf2-rule"></div>
       <div class="pf2-card pf2-plan">
-        <div class="pf2-plan-price">${escapeXml(price.replace(/\/.*$/, ''))}<span>${price.includes('/') ? '/' + price.split('/')[1] : ''}</span></div>
+        ${priceChip}
         <div class="pf2-plan-head"><img src="Tamashalogo.png" alt="Tamasha"><b>${escapeXml(planName)}</b></div>
         <div class="pf2-plan-desc">Enjoy HD streaming, an ad-free experience, and endless entertainment over Wi-Fi.</div>
       </div>
@@ -4829,6 +4878,7 @@ function renderAccountV2() {
 
   const active = _PF2_PARENT[_acctSection] || 'plan';
   screen.innerHTML = `
+    <div class="pf2-bg"></div>
     <div class="acct-skin-bar">${skinSwitch()}</div>
     <div class="pf2">
       <aside class="pf2-side">
