@@ -6333,6 +6333,22 @@ function renderContinue(filter) {
 }
 renderContinue('home');
 
+// Bring a stored session back on load. Without this the app knows it is signed
+// in — AUTH.loggedIn is restored from storage — but nothing reflects it: the
+// navbar still shows Login and a PRO member silently drops to the free tier.
+function restoreSession() {
+  if (AUTH.loggedIn && AUTH.number) {
+    if (demoUser(AUTH.number)) {
+      applyAuthUser(AUTH.number);                  // re-apply plan and entitlement
+    } else {
+      AUTH.loggedIn = false; AUTH.number = null;   // account no longer exists
+      try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+    }
+  }
+  syncAuthState(); syncProState(); renderContinue(_currentFilter);
+}
+restoreSession();
+
 // ─── NAV FILTER ──────────────────────────────────────────────────
 const filterMap = {
   home:       ['continue','movies','live-tv','tv-shows','sports','promo','games','shop'],
