@@ -2289,6 +2289,14 @@
     .pf2-navitem svg.pf2-ico { width: 20px; height: 20px; flex-shrink: 0; }
     .pf2-navitem .pf2-chev { margin-left: auto; }
 
+    /* destructive rail actions, held apart from the section nav */
+    .pf2-danger { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.09);
+      display: flex; flex-direction: column; gap: 2px; }
+    .pf2-danger .pf2-navitem { color: #FF6B60; }
+    .pf2-danger .pf2-navitem:hover { background: rgba(255,107,96,.12); color: #FF8B82; }
+    .pf2-danger .pf2-navitem .pf2-chev { color: rgba(255,107,96,.55); }
+    .pf2-danger .pf2-navitem.is-danger-active { background: rgba(255,107,96,.16); color: #FF8B82; }
+
     .pf2-main { min-width: 0; padding-top: 4px; }
     .pf2-back { width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
       background: linear-gradient(158deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 100%);
@@ -4632,7 +4640,7 @@ function openAccount(section) {
   // the two skins have different view names — land on one this skin can render
   const V2_ONLY = ['plan', 'txn', 'invoice', 'terms'];
   let sec = section || (ACCT_SKIN === 'v2' ? 'plan' : 'overview');
-  if (ACCT_SKIN === 'v2' && !_PF2_PARENT[sec]) sec = 'plan';
+  if (ACCT_SKIN === 'v2' && !(sec in _PF2_PARENT)) sec = 'plan';
   if (ACCT_SKIN !== 'v2' && V2_ONLY.includes(sec)) sec = 'overview';
   _acctSection = sec;
   _acctHistory = [];
@@ -4716,7 +4724,9 @@ const _PF2_NAV = [
 ];
 
 // Which nav row lights up for a given view
-const _PF2_PARENT = { plan: 'plan', payment: 'payment', billing: 'billing', txn: 'billing', invoice: 'billing', terms: 'terms' };
+const _PF2_PARENT = { plan: 'plan', payment: 'payment', billing: 'billing', txn: 'billing', invoice: 'billing', terms: 'terms',
+  // delete lives in the rail's danger group, so no section nav row lights up
+  deleteIdentity: '', deleteVerify: '', deleteConfirm: '' };
 
 let _pf2Txn = 0;                       // transaction being inspected
 function pf2Go(section, i) {
@@ -4866,6 +4876,55 @@ function renderAccountV2() {
         <div class="pf2-row"><span class="k">Renewal date</span><span class="v">${escapeXml(b.renewal)}</span></div>
       </div>`,
 
+    deleteIdentity: () => `
+      <h1 class="pf2-h1">First, let's confirm your identity</h1>
+      <div class="pf2-sub2">Before you make any changes, we need to be sure it's you.</div>
+      <div class="pf2-rule"></div>
+      <div class="pf2-card">
+        <button class="pf2-link" style="border-top:none;padding-top:2px" onclick="pf2Go('deleteVerify')">
+          <span>Confirm payment details<br><span style="font-weight:400;font-size:14px;color:rgba(255,255,255,.55)">${escapeXml(payMethod().sub)}</span></span> ${_PF2_CHEV}
+        </button>
+      </div>
+      <div class="pf2-secl">Rather not go?</div>
+      <div class="pf2-card">
+        <div class="pf2-plan-desc" style="margin-top:0">Cancelling keeps your profile, list and viewing history for 10 months in case you come back.</div>
+        <button class="pf2-link" onclick="pf2Go('payment')">Cancel my membership instead ${_PF2_CHEV}</button>
+      </div>`,
+
+    deleteVerify: () => `
+      <h1 class="pf2-h1">Verify your payment info</h1>
+      <div class="pf2-sub2">You won't be charged — re-enter the ${escapeXml(payMethod().name.toLowerCase())} on file to protect your account.</div>
+      <div class="pf2-rule"></div>
+      <div class="pf2-card">
+        <input class="pro-input" id="verifyPay" autocomplete="off" inputmode="numeric"
+               placeholder="${_proPayIsCard() ? 'Debit or Credit Card Number' : 'Mobile number on file'}">
+        <div class="pf2-sub2" style="margin:10px 0 0;font-size:13.5px">Demo only — not connected to a payment processor.</div>
+        <div class="pf2-actions">
+          <button class="pf2-btn pf2-btn--dark" onclick="acctBack()">Try another way</button>
+          <button class="pf2-btn pf2-btn--light" onclick="pf2Go('deleteConfirm')">Continue</button>
+        </div>
+      </div>`,
+
+    deleteConfirm: () => `
+      <h1 class="pf2-h1">Deleting your account is permanent</h1>
+      <div class="pf2-sub2">This cannot be undone once your final billing period ends.</div>
+      <div class="pf2-rule"></div>
+      <div class="pf2-card">
+        <div class="pf2-card-h">If you delete your account</div>
+        <div class="pf2-row"><span class="k">Account activity and preferences</span><span class="v">Permanently lost</span></div>
+        <div class="pf2-row"><span class="k">My List and watch history</span><span class="v">Permanently lost</span></div>
+        <div class="pf2-row"><span class="k">Deleted on</span><span class="v">${escapeXml(ACCOUNT.nextPayment)}</span></div>
+        <label class="cx-check" style="margin-top:18px">
+          <input type="checkbox" id="delAgree" onchange="document.getElementById('delGo').disabled=!this.checked">
+          Yes, permanently delete my Tamasha account at the end of my current billing period on ${escapeXml(ACCOUNT.nextPayment)}.
+        </label>
+        <div class="pf2-actions">
+          <button class="pf2-btn pf2-btn--dark" onclick="pf2Go('plan')">Keep my account</button>
+          <button class="pf2-btn pf2-btn--light" id="delGo" disabled style="opacity:.45;cursor:not-allowed"
+                  onclick="acctFinishDelete()">Delete account</button>
+        </div>
+      </div>`,
+
     terms: () => `
       <h1 class="pf2-h1">Terms and conditions</h1>
       <div class="pf2-sub2">Last updated ${escapeXml(ACCOUNT.nextPayment)}</div>
@@ -4876,7 +4935,7 @@ function renderAccountV2() {
       </div>`,
   };
 
-  const active = _PF2_PARENT[_acctSection] || 'plan';
+  const active = _acctSection in _PF2_PARENT ? _PF2_PARENT[_acctSection] : 'plan';
   screen.innerHTML = `
     <div class="pf2-bg"></div>
     <div class="acct-skin-bar">${skinSwitch()}</div>
@@ -4902,10 +4961,16 @@ function renderAccountV2() {
           ${_PF2_NAV.map(n => `<button class="pf2-navitem${n.id === active ? ' is-active' : ''}" onclick="pf2Go('${n.id}')">
             ${_PF2_ICONS[n.id]}<span>${n.label}</span>${_PF2_CHEV}</button>`).join('')}
         </nav>
-        <button class="pf2-navitem" style="margin-top:6px;color:#FF6B60" onclick="doLogout()">
-          <svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5"/><path d="M20 12H9"/><path d="M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/></svg>
-          <span>Logout</span>
-        </button>
+        <div class="pf2-danger">
+          <button class="pf2-navitem" onclick="doLogout()">
+            <svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5"/><path d="M20 12H9"/><path d="M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/></svg>
+            <span>Logout</span>
+          </button>
+          <button class="pf2-navitem${_acctSection.startsWith('delete') ? ' is-danger-active' : ''}" onclick="pf2Go('deleteIdentity')">
+            <svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>
+            <span>Delete account</span>${_PF2_CHEV}
+          </button>
+        </div>
       </aside>
       <main class="pf2-main">
         <button class="pf2-back" onclick="acctBack()" aria-label="Back">
