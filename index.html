@@ -2289,6 +2289,58 @@
     .pf2-navitem svg.pf2-ico { width: 20px; height: 20px; flex-shrink: 0; }
     .pf2-navitem .pf2-chev { margin-left: auto; }
 
+    /* ── Manage Account ── */
+    .pf2-card--hi { border-color: var(--accent-from); box-shadow: 0 20px 56px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 1px rgba(36,114,252,.35); }
+    .pf2-pro-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .pf2-pro-logo { height: 34px; width: auto; }
+    .pf2-pro-cost { text-align: right; }
+    .pf2-was { display: inline-block; background: #D42B20; color: #fff; font-size: 12.5px; font-weight: 700;
+      padding: 2px 9px; border-radius: 5px; text-decoration: line-through; }
+    .pf2-now { font-family: var(--heading-font); font-size: 25px; font-weight: 800; color: #fff; margin-top: 6px; }
+    .pf2-promo { font-size: 12.5px; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .pf2-pro-name { font-family: var(--heading-font); font-size: 21px; font-weight: 700; color: #fff; margin-top: 20px; }
+    .pf2-hr { height: 1px; background: rgba(255,255,255,.12); margin: 18px 0; }
+    .pf2-perk-h { font-size: 15px; color: rgba(255,255,255,.68); }
+    .pf2-perks { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-direction: column; gap: 10px; }
+    .pf2-perks li { display: flex; align-items: center; gap: 12px; font-size: 15.5px; color: #fff; }
+    .pf2-perks--lg li { font-size: 16px; gap: 14px; }
+    .pf2-tick { width: 19px; height: 19px; flex-shrink: 0; color: rgba(255,255,255,.85); }
+    .pf2-manage-note { font-size: 13.5px; color: rgba(255,255,255,.6); margin-top: 18px; line-height: 1.6; }
+    .pf2-a { color: var(--accent-from); text-decoration: none; }
+    .pf2-a:hover { text-decoration: underline; }
+    .pf2-del-note { font-size: 14.5px; color: rgba(255,255,255,.6); margin: 22px 0 14px; }
+    .pf2-free { font-family: var(--heading-font); font-size: 38px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+    .pf2-triple { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
+    @media (max-width: 820px) { .pf2-triple { grid-template-columns: 1fr; } }
+
+    .pf2-btn--blue { background: #1B5FD9; color: #fff; width: 100%; }
+    .pf2-btn--blue:hover { background: #2f74ef; }
+    .pf2-btn--mute { background: rgba(255,255,255,.14); color: #fff; width: 100%; }
+    .pf2-btn--mute:hover { background: rgba(255,255,255,.22); }
+    .pf2-btn--mute:disabled { opacity: .45; cursor: not-allowed; }
+    .pf2-btn--danger { background: #C4271C; color: #fff; width: 100%; }
+    .pf2-btn--danger:hover { background: #d8362b; }
+    .pf2-btn--del { width: 100%; margin-top: 18px; background: rgba(255,255,255,.16); color: rgba(255,255,255,.55); cursor: not-allowed; }
+    .pf2-btn--del:not(:disabled) { background: #fff; color: #D42B20; cursor: pointer; }
+    .pf2-btn--del:not(:disabled):hover { filter: brightness(.93); }
+
+    .pf2-lose-intro { list-style: disc; margin: 8px 0 0; padding-left: 20px; font-size: 15px; color: rgba(255,255,255,.82); line-height: 1.55; }
+    .pf2-lose { list-style: none; margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 11px; }
+    .pf2-lose li { display: flex; align-items: center; gap: 13px; font-size: 15.5px; color: rgba(255,255,255,.92); }
+    .pf2-lose-i { width: 22px; text-align: center; opacity: .85; }
+    .pf2-consent { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: rgba(255,255,255,.9); line-height: 1.5; cursor: pointer; }
+    .pf2-consent input { width: 19px; height: 19px; margin-top: 2px; flex-shrink: 0; accent-color: var(--accent-from); cursor: pointer; }
+
+    /* celebration modal */
+    .pf2-perkmodal { max-width: 560px; text-align: center; position: relative; }
+    .pf2-perkmodal-logo { height: 42px; width: auto; margin-bottom: 18px; }
+    .pf2-perkmodal-h { font-family: var(--heading-font); font-size: 25px; font-weight: 600; color: #fff; line-height: 1.28; margin-bottom: 22px; }
+    .pf2-perkmodal-list { list-style: none; padding: 0; margin: 0 0 24px; }
+    .pf2-perkmodal-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 15px 2px; border-bottom: 1px solid rgba(255,255,255,.12); font-size: 15.5px; color: #fff; text-align: left; }
+    .pf2-perkmodal-list li:last-child { border-bottom: none; }
+    .pf2-perkmodal-list .pf2-tick { width: 22px; height: 22px; color: rgba(255,255,255,.55); }
+
     /* destructive rail actions, held apart from the section nav */
     .pf2-danger { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.09);
       display: flex; flex-direction: column; gap: 2px; }
@@ -4599,7 +4651,7 @@ try {
 const ACCOUNT = {
   name: 'John Doe', memberSince: '2022', phone: '923071502316',
   email: 'john.doe@example.com', city: 'Bahawal Nagar', gender: 'Male', birthday: '',
-  subscribed: false, planId: null, pendingCancel: false, paused: false, cardLast4: '0687', nextPayment: 'Mar 19, 2026',
+  subscribed: false, planId: null, pendingCancel: false, paused: false, pendingDelete: false, deleteOn: null, cardLast4: '0687', nextPayment: 'Mar 19, 2026',
   payMethod: 'card',
 };
 // Payment options (display only — no real card/account details are collected)
@@ -4614,7 +4666,7 @@ const PRO_PERKS = ['AD - Free Streaming', 'Ultra HD Viewing', 'Unlimited Content
 const PLANS = [
   { id:'daily',   name:'Pro Daily',   price:'PKR 10',  per:'/day',   tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
   { id:'weekly',  name:'Pro Weekly',  price:'PKR 120', per:'/week',  tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
-  { id:'monthly', name:'Pro Monthly', price:'PKR 360', per:'/month', tab:'standard', desc:'Enjoy Premium Experience with Tamasha Pro' },
+  { id:'monthly', name:'Pro Monthly', price:'PKR 360', per:'/month', tab:'standard', was:'PKR 575', desc:'Enjoy Premium Experience with Tamasha Pro' },
   { id:'season',  name:'Season Pass', price:'PKR 899', per:'/season',tab:'season',   desc:'Full season access to premium sports and originals' },
 ];
 const BILLING = [
@@ -4712,21 +4764,47 @@ function setAcctSkin(skin) {
 const _PF2_ICONS = {
   plan:    `<svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>`,
   payment: `<svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/></svg>`,
+  manage:  `<svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M16 12h3"/><circle cx="13" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>`,
   billing: `<svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-2.3-1.6L14.4 21l-2.4-1.6L9.6 21l-2.3-1.6L5 21z"/><path d="M9 8h6M9 12h6"/></svg>`,
   terms:   `<svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>`,
 };
 const _PF2_CHEV = `<span class="pf2-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>`;
+const _PF2_TICK = `<svg class="pf2-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><polyline points="8.2 12.4 11 15 15.8 9.6"/></svg>`;
+
 const _PF2_NAV = [
   { id: 'plan',    label: 'Subscriptions Plan' },
   { id: 'payment', label: 'Payment & Membership' },
+  { id: 'manage',  label: 'Manage Account' },
   { id: 'billing', label: 'Billing Details' },
   { id: 'terms',   label: 'Terms and conditions' },
 ];
 
+// Perks as written in the designs
+const PF2_PERKS_FREE = [
+  '2 GB data, 24 Hours Free Data',
+  'Ad-free experience without interruption',
+  'Access to all premium content in Full HD',
+  'Watch offline without Wi-Fi or mobile data',
+  'Get free streaming data* for Jazz users',
+];
+const PF2_PERKS_PRO = ['AD - Free Streaming', 'Ultra HD Viewing', 'Unlimited Content Access'];
+const PF2_LOSE = [
+  { icon: '☆', label: 'Your Rewards Coins' },
+  { icon: '⚽', label: 'Premium Live Sports' },
+  { icon: '🖵', label: 'Movies & Tv Shows' },
+];
+const PF2_MANAGE_URL = 'https://tinyurl.com/tamashaSPV';
+
+// Deletion is scheduled 30 days out rather than applied immediately
+function pf2DeleteDate() {
+  const d = new Date(); d.setDate(d.getDate() + 30);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/ (\w+) /, ' $1, ');
+}
+
 // Which nav row lights up for a given view
 const _PF2_PARENT = { plan: 'plan', payment: 'payment', billing: 'billing', txn: 'billing', invoice: 'billing', terms: 'terms',
   // delete lives in the rail's danger group, so no section nav row lights up
-  deleteIdentity: '', deleteVerify: '', deleteConfirm: '' };
+  manage: 'manage', deleteConsent: 'manage', deleteDone: 'manage' };
 
 let _pf2Txn = 0;                       // transaction being inspected
 function pf2Go(section, i) {
@@ -4876,54 +4954,74 @@ function renderAccountV2() {
         <div class="pf2-row"><span class="k">Renewal date</span><span class="v">${escapeXml(b.renewal)}</span></div>
       </div>`,
 
-    deleteIdentity: () => `
-      <h1 class="pf2-h1">First, let's confirm your identity</h1>
-      <div class="pf2-sub2">Before you make any changes, we need to be sure it's you.</div>
+    manage: () => ACCOUNT.pendingDelete ? `
+      <h1 class="pf2-h1">Manage Account</h1>
       <div class="pf2-rule"></div>
       <div class="pf2-card">
-        <button class="pf2-link" style="border-top:none;padding-top:2px" onclick="pf2Go('deleteVerify')">
-          <span>Confirm payment details<br><span style="font-weight:400;font-size:14px;color:rgba(255,255,255,.55)">${escapeXml(payMethod().sub)}</span></span> ${_PF2_CHEV}
-        </button>
+        <div class="pf2-card-h">Deletion scheduled</div>
+        <div class="pf2-plan-desc" style="margin-top:6px">Your account is set to be deleted on <strong>${escapeXml(ACCOUNT.deleteOn)}</strong>. You can undo this any time before then.</div>
+        <div class="pf2-actions">
+          <button class="pf2-btn pf2-btn--light" onclick="pf2Restore()">Restore my account</button>
+          <span></span>
+        </div>
+      </div>` : ACCOUNT.subscribed ? `
+      <h1 class="pf2-h1">Manage Account</h1>
+      <div class="pf2-rule"></div>
+      <div class="pf2-card pf2-card--hi">
+        <div class="pf2-pro-top">
+          <img class="pf2-pro-logo" src="Tamashalogo.png" alt="Tamasha Pro">
+          <div class="pf2-pro-cost">
+            ${plan && plan.was ? `<span class="pf2-was">${escapeXml(plan.was)}</span>` : ''}
+            <div class="pf2-now">${escapeXml(price)}</div>
+            ${plan && plan.was ? `<div class="pf2-promo">*Promo applied</div>` : ''}
+          </div>
+        </div>
+        <div class="pf2-pro-name">${escapeXml(planName)}</div>
+        <div class="pf2-hr"></div>
+        <div class="pf2-perk-h">Enjoy Premium Experience with Tamasha Pro</div>
+        <ul class="pf2-perks">${PF2_PERKS_PRO.map(t => `<li>${_PF2_TICK}<span>${escapeXml(t)}</span></li>`).join('')}</ul>
+        <div class="pf2-manage-note">To manage your account go to:<br>
+          <a class="pf2-a" href="${PF2_MANAGE_URL}" target="_blank" rel="noopener">${PF2_MANAGE_URL}</a></div>
       </div>
-      <div class="pf2-secl">Rather not go?</div>
-      <div class="pf2-card">
-        <div class="pf2-plan-desc" style="margin-top:0">Cancelling keeps your profile, list and viewing history for 10 months in case you come back.</div>
-        <button class="pf2-link" onclick="pf2Go('payment')">Cancel my membership instead ${_PF2_CHEV}</button>
+      <div class="pf2-del-note">Deleting your account will permanently remove all your personalized data and you will lose access to it.</div>
+      <button class="pf2-btn pf2-btn--danger" onclick="pf2Go('deleteConsent')">Delete your account</button>` : `
+      <h1 class="pf2-h1">Manage Account</h1>
+      <div class="pf2-rule"></div>
+      <h2 class="pf2-free">Free Plan</h2>
+      <div class="pf2-perk-h" style="margin:14px 0 12px">Your included perks:</div>
+      <ul class="pf2-perks pf2-perks--lg">${PF2_PERKS_FREE.map(t => `<li>${_PF2_TICK}<span>${escapeXml(t)}</span></li>`).join('')}</ul>
+      <div class="pf2-triple">
+        <button class="pf2-btn pf2-btn--blue" onclick="openPlansPortal()">More Plans</button>
+        <button class="pf2-btn pf2-btn--mute" onclick="acctDoCancel()" ${ACCOUNT.subscribed ? '' : 'disabled'}>Cancel membership</button>
+        <button class="pf2-btn pf2-btn--danger" onclick="pf2Go('deleteConsent')">Delete your account</button>
       </div>`,
 
-    deleteVerify: () => `
-      <h1 class="pf2-h1">Verify your payment info</h1>
-      <div class="pf2-sub2">You won't be charged — re-enter the ${escapeXml(payMethod().name.toLowerCase())} on file to protect your account.</div>
+    deleteConsent: () => `
+      <h1 class="pf2-h1">Delete Your Account</h1>
       <div class="pf2-rule"></div>
+      <div class="pf2-sub2" style="margin-bottom:20px">Proceeding will delete your Tamasha account. <strong style="color:#fff">This action is irreversible.</strong></div>
       <div class="pf2-card">
-        <input class="pro-input" id="verifyPay" autocomplete="off" inputmode="numeric"
-               placeholder="${_proPayIsCard() ? 'Debit or Credit Card Number' : 'Mobile number on file'}">
-        <div class="pf2-sub2" style="margin:10px 0 0;font-size:13.5px">Demo only — not connected to a payment processor.</div>
-        <div class="pf2-actions">
-          <button class="pf2-btn pf2-btn--dark" onclick="acctBack()">Try another way</button>
-          <button class="pf2-btn pf2-btn--light" onclick="pf2Go('deleteConfirm')">Continue</button>
-        </div>
-      </div>`,
-
-    deleteConfirm: () => `
-      <h1 class="pf2-h1">Deleting your account is permanent</h1>
-      <div class="pf2-sub2">This cannot be undone once your final billing period ends.</div>
-      <div class="pf2-rule"></div>
-      <div class="pf2-card">
-        <div class="pf2-card-h">If you delete your account</div>
-        <div class="pf2-row"><span class="k">Account activity and preferences</span><span class="v">Permanently lost</span></div>
-        <div class="pf2-row"><span class="k">My List and watch history</span><span class="v">Permanently lost</span></div>
-        <div class="pf2-row"><span class="k">Deleted on</span><span class="v">${escapeXml(ACCOUNT.nextPayment)}</span></div>
-        <label class="cx-check" style="margin-top:18px">
-          <input type="checkbox" id="delAgree" onchange="document.getElementById('delGo').disabled=!this.checked">
-          Yes, permanently delete my Tamasha account at the end of my current billing period on ${escapeXml(ACCOUNT.nextPayment)}.
+        <div class="pf2-card-h">Delete</div>
+        <ul class="pf2-lose-intro">
+          <li>You will permanently lose access to your account preferences and data at the end of your billing month on <strong>${escapeXml(ACCOUNT.deleteOn || pf2DeleteDate())}</strong>, including:</li>
+        </ul>
+        <ul class="pf2-lose">${PF2_LOSE.map(x => `<li><span class="pf2-lose-i">${x.icon}</span><span>${escapeXml(x.label)}</span></li>`).join('')}</ul>
+        <div class="pf2-hr"></div>
+        <label class="pf2-consent">
+          <input type="checkbox" id="delAgree" onchange="pf2ConsentToggle(this.checked)">
+          <span>Yes I want to permanently delete my Tamasha account at the end of my current billing period on <strong>${escapeXml(ACCOUNT.deleteOn || pf2DeleteDate())}</strong>.</span>
         </label>
-        <div class="pf2-actions">
-          <button class="pf2-btn pf2-btn--dark" onclick="pf2Go('plan')">Keep my account</button>
-          <button class="pf2-btn pf2-btn--light" id="delGo" disabled style="opacity:.45;cursor:not-allowed"
-                  onclick="acctFinishDelete()">Delete account</button>
-        </div>
+        <button class="pf2-btn pf2-btn--del" id="delGo" disabled onclick="pf2ConfirmDelete()">Permanently delete</button>
       </div>`,
+
+    deleteDone: () => `
+      <h1 class="pf2-h1">Delete Your Account</h1>
+      <div class="pf2-rule"></div>
+      <div class="pf2-card-h" style="font-size:20px;margin-bottom:10px">We are sad to see you go.</div>
+      <div class="pf2-sub2" style="margin:0">An SMS confirmation was sent to <strong style="color:#fff">${escapeXml(ACCOUNT.phone.slice(0, 2))}xxxxxxxxx</strong>.</div>
+      <div class="pf2-sub2" style="margin:2px 0 0">Your account will be deleted in 30 days on <strong style="color:#fff">${escapeXml(ACCOUNT.deleteOn)}</strong>.</div>
+      <div class="pf2-sub2" style="margin-top:18px">If you want to undo deleting your account, you can do so from your
+        <a class="pf2-a" href="#" onclick="event.preventDefault();pf2Go('manage')">profile page</a>.</div>`,
 
     terms: () => `
       <h1 class="pf2-h1">Terms and conditions</h1>
@@ -4966,10 +5064,6 @@ function renderAccountV2() {
             <svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5"/><path d="M20 12H9"/><path d="M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/></svg>
             <span>Logout</span>
           </button>
-          <button class="pf2-navitem${_acctSection.startsWith('delete') ? ' is-danger-active' : ''}" onclick="pf2Go('deleteIdentity')">
-            <svg class="pf2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>
-            <span>Delete account</span>${_PF2_CHEV}
-          </button>
         </div>
       </aside>
       <main class="pf2-main">
@@ -4979,6 +5073,47 @@ function renderAccountV2() {
         ${(views[_acctSection] || views.plan)()}
       </main>
     </div>`;
+}
+
+// Celebration modal from the designs — after restoring, and after unlocking Pro
+function openPerksModal(kind) {
+  const el = document.getElementById('confirmModal');
+  if (!el) return;
+  _cfmOnConfirm = null;
+  clearTimeout(el._closeTimer);
+  const restored = kind === 'restored';
+  const perks = restored ? PF2_PERKS_PRO : PF2_PERKS_FREE;
+  const title = restored
+    ? 'You have restored your account and your TamashaPro Subscription!'
+    : 'You’ve unlocked TamashaPro';
+  el.innerHTML = `
+    <div class="cfm-card pf2-perkmodal" role="document">
+      <button class="login-close" onclick="closeConfirm()" aria-label="Close">✕</button>
+      <img class="pf2-perkmodal-logo" src="Tamashalogo.png" alt="Tamasha Pro">
+      <h2 class="pf2-perkmodal-h">${escapeXml(title)}</h2>
+      <ul class="pf2-perkmodal-list">
+        ${perks.map(t => `<li><span>${escapeXml(t)}</span>${_PF2_TICK}</li>`).join('')}
+      </ul>
+      <button class="cfm-btn pf2-btn--light" onclick="closeConfirm()">Start Watching</button>
+    </div>`;
+  el.classList.add('open');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+}
+
+function pf2ConsentToggle(on) {
+  const b = document.getElementById('delGo');
+  if (b) b.disabled = !on;
+}
+function pf2ConfirmDelete() {
+  ACCOUNT.pendingDelete = true;
+  ACCOUNT.deleteOn = ACCOUNT.deleteOn || pf2DeleteDate();
+  pf2Go('deleteDone');
+}
+function pf2Restore() {
+  const wasPro = ACCOUNT.subscribed;
+  ACCOUNT.pendingDelete = false; ACCOUNT.deleteOn = null;
+  pf2Go('manage');
+  openPerksModal(wasPro ? 'restored' : 'unlocked');
 }
 
 function skinSwitch() {
