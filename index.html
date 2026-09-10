@@ -2249,6 +2249,7 @@
     .pf2-avatar { width: 88px; height: 88px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
       border: 3px solid var(--accent-from); background: linear-gradient(135deg,#c084fc,#818cf8);
       display: grid; place-items: center; font-weight: 800; font-size: 26px; color: #fff; }
+    img.pf2-avatar { display: block; }
     .pf2-name { font-family: var(--heading-font); font-size: 21px; font-weight: 800; color: #fff; line-height: 1.15; }
     .pf2-phone { font-size: 16px; color: #E6E8EE; margin-top: 2px; }
     .pf2-since { font-size: 12.5px; color: rgba(255,255,255,.42); margin-top: 5px; }
@@ -2272,6 +2273,24 @@
     .pf2-navitem.is-active .pf2-chev { color: rgba(255,255,255,.85); }
     .pf2-navitem svg.pf2-ico { width: 20px; height: 20px; flex-shrink: 0; }
     .pf2-navitem .pf2-chev { margin-left: auto; }
+
+    /* ── Account identity header (classic skin) ── */
+    .acct-who { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .acct-avatar-img { border-radius: 50%; object-fit: cover; flex-shrink: 0;
+      border: 3px solid var(--accent-from); display: block; }
+    .acct-avatar-fb { border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+      background: linear-gradient(135deg,#c084fc,#818cf8); color: #fff; font-weight: 800;
+      border: 3px solid var(--accent-from); }
+    .acct-who-text { min-width: 0; }
+    .acct-who-name { font-family: var(--heading-font); font-size: 22px; font-weight: 800; color: #fff; line-height: 1.2; }
+    .acct-who-sub { font-size: 16px; color: rgba(255,255,255,.82); margin-top: 3px; }
+    .acct-who-meta { font-size: 13px; color: var(--text-dim); margin-top: 5px; }
+    .acct-who-edit { margin-left: auto; flex-shrink: 0; }
+    @media (max-width: 600px) { .acct-who-edit { margin-left: 0; } }
+
+    /* navbar avatar carries the photo */
+    .avatar { overflow: hidden; padding: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── Manage Account ── */
     .pf2-card--hi { border-color: var(--accent-from); }
@@ -2755,7 +2774,7 @@
     </div>
 
     <!-- Avatar + PRO (logged in) -->
-    <div class="avatar" id="navAvatar" onclick="openAccount('overview')" title="Account" style="display:none">JD</div>
+    <div class="avatar" id="navAvatar" onclick="openAccount('overview')" title="Account" style="display:none"><img src="Profile/avatar.jpg" alt=""></div>
     <div id="navUser" style="display:none;flex-direction:column;gap:3px;cursor:pointer" onclick="openAccount('overview')">
       <span class="user-name">John Doe</span>
       <div class="pro-badge" id="navProBadge" style="display:none">
@@ -4624,7 +4643,7 @@ try {
 } catch (e) {}
 
 const ACCOUNT = {
-  name: 'John Doe', memberSince: '2022', phone: '923071502316',
+  name: 'John Doe', memberSince: '2022', phone: '923071502316', photo: 'Profile/avatar.jpg',
   email: 'john.doe@example.com', city: 'Bahawal Nagar', gender: 'Male', birthday: '',
   subscribed: false, planId: null, pendingCancel: false, paused: false, pendingDelete: false, deleteOn: null, cardLast4: '0687', nextPayment: 'Mar 19, 2026',
   payMethod: 'card',
@@ -4635,6 +4654,20 @@ const PAY_METHODS = [
   { id:'jazzcash',  name:'JazzCash',            sub:'Mobile account · 923071502316', badge:'JAZZ', cls:'jazz' },
   { id:'easypaisa', name:'Easypaisa',           sub:'Mobile account · 923071502316', badge:'EP',   cls:'ep' },
 ];
+// Account photo, falling back to initials if the image is missing
+function acctInitials() {
+  return ACCOUNT.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+function acctAvatar(size) {
+  const px = size + 'px';
+  if (ACCOUNT.photo) {
+    return `<img class="acct-avatar-img" style="width:${px};height:${px}" src="${ACCOUNT.photo}"
+      alt="${escapeXml(ACCOUNT.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),
+      {className:'acct-avatar-fb',style:'width:${px};height:${px};font-size:${Math.round(size/2.9)}px',textContent:'${acctInitials()}'}))">`;
+  }
+  return `<div class="acct-avatar-fb" style="width:${px};height:${px};font-size:${Math.round(size/2.9)}px">${acctInitials()}</div>`;
+}
+
 function payMethod() { return PAY_METHODS.find(p => p.id === ACCOUNT.payMethod) || PAY_METHODS[0]; }
 function payBadge(m) { return `<span class="acct-pay-brand ${m.cls}">${m.badge}</span>`; }
 const PRO_PERKS = ['AD - Free Streaming', 'Ultra HD Viewing', 'Unlimited Content Access'];
@@ -4703,9 +4736,9 @@ function acctBack() {
 
 const ACCT_NAV = [
   { id:'overview',   icon:'home',        label:'Overview' },
+  { id:'profile',    icon:'person',      label:'Profile' },
   { id:'membership', icon:'credit_card', label:'Membership', proOnly:true },
   { id:'security',   icon:'verified_user', label:'Security' },
-  { id:'profile',    icon:'person',      label:'Profile' },
 ];
 
 function acctRow(icon, title, sub, onclick, extra) {
@@ -5014,7 +5047,9 @@ function renderAccountV2() {
     <div class="pf2">
       <aside class="pf2-side">
         <div class="pf2-me">
-          <div class="pf2-avatar">${escapeXml(initials)}</div>
+          ${ACCOUNT.photo
+            ? `<img class="pf2-avatar" src="${ACCOUNT.photo}" alt="${escapeXml(ACCOUNT.name)}">`
+            : `<div class="pf2-avatar">${escapeXml(initials)}</div>`}
           <div>
             <div class="pf2-name">${escapeXml(ACCOUNT.name)}</div>
             <div class="pf2-phone">${escapeXml(ACCOUNT.phone)}</div>
@@ -5113,6 +5148,16 @@ function renderAccount() {
         <span>Your membership is paused for 1 month.
         <a class="cx-link" href="#" onclick="event.preventDefault();acctRestart()">Unpause</a></span></div>` : ''}
       <h1 class="acct-title">Account</h1>
+      <div class="acct-label">Profile</div>
+      <div class="acct-card acct-who">
+        ${acctAvatar(76)}
+        <div class="acct-who-text">
+          <div class="acct-who-name">${escapeXml(ACCOUNT.name)}</div>
+          <div class="acct-who-sub">${escapeXml(ACCOUNT.phone)}</div>
+          <div class="acct-who-meta">Member since ${escapeXml(ACCOUNT.memberSince)}${ACCOUNT.city ? ' · ' + escapeXml(ACCOUNT.city) : ''}</div>
+        </div>
+        <button class="btn btn--ghost btn--sm acct-who-edit" onclick="acctGo('profile')">View profile</button>
+      </div>
       <div class="acct-label">Membership Details</div>
       <div class="acct-card">
         <div class="acct-card-top">
@@ -5357,6 +5402,14 @@ function renderAccount() {
     profile: () => `
       <h1 class="acct-title">Profile Settings</h1>
       <div class="acct-sub">For ${ACCOUNT.name}</div>
+      <div class="acct-card acct-who" style="margin-bottom:22px">
+        ${acctAvatar(88)}
+        <div class="acct-who-text">
+          <div class="acct-who-name">${escapeXml(ACCOUNT.name)}</div>
+          <div class="acct-who-sub">${escapeXml(ACCOUNT.phone)}</div>
+          <div class="acct-who-meta">Member since ${escapeXml(ACCOUNT.memberSince)}</div>
+        </div>
+      </div>
       <div class="acct-label">Your Details</div>
       <div class="acct-fields">
         <div class="acct-field"><div class="acct-field-label">Name</div><div class="acct-field-value">${ACCOUNT.name}</div></div>
