@@ -2275,7 +2275,9 @@
     .pf2-navitem .pf2-chev { margin-left: auto; }
 
     /* ── Account identity header (classic skin) ── */
-    .acct-who { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    /* .acct-card has no padding of its own — the other cards get theirs from
+       .acct-card-top / .acct-row, so this one matches those numbers directly. */
+    .acct-who { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 22px 24px; }
     .acct-avatar-img { border-radius: 50%; object-fit: cover; flex-shrink: 0;
       border: 3px solid var(--accent-from); display: block; }
     .acct-avatar-fb { border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
